@@ -29,7 +29,7 @@ Let $\alpha \coloneqq \frac{n-1}{n}$ equation (1.2) can be rewritten as:
     \hat{m}_n = \alpha \hat{m}_{k-1} + (1 - \alpha) z_k \tag{1.3}
 \]
 
-This is an example of an recursive (average) filter.
+This is an example of an recursive (average) filter. hello
 
 
 
