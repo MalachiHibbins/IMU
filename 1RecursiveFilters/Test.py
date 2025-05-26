@@ -1,13 +1,27 @@
 import GetVolt
-import RcsAvrFilter
+import RcsAvgFilter
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 value = 5.0
 size = 30
 rng = np.random.default_rng(seed=42)
+n = 0
+rolling_avg = []
 
-
+# Generate a noisy signal
 signal = GetVolt.GetVolt(value, rng, std=0.5, size=size)
-for s in signal:
-    rolling_avg = s
+
+# Apply the recursive average filter
+rolling_avg = RcsAvgFilter.filter(signal, n)
+
+# Plot results
+fig, ax = plt.subplots()
+ax.scatter(signal.index, signal, label='Noisy Signal', color='blue')
+ax.plot(rolling_avg, label='Average', color='orange')
+ax.hlines(value, 0, size, colors='green', linestyles='dashed', label='True Value')
+ax.set_xlabel('Sample Index')
+ax.set_ylabel('Value')
+ax.set_title('Rolling Average Filter')
+ax.legend()
+plt.show()
