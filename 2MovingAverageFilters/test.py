@@ -7,7 +7,7 @@ import numpy as np
 length= 1000
 noise = 0.5
 rng = np.random.default_rng(seed=45)
-window_size = 25
+window_size = 5
 frequency_of_points = 5
 speed1 = 1.33
 speed2 = 7
