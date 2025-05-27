@@ -1,3 +1,5 @@
+import numpy as np
+
 def calcualte(x, p, z, A = 1, H = 1, Q = 0, R = 4):
     # Predict state error
     x_p = A*x
@@ -18,6 +20,6 @@ def filter(signal, x_i = 5, p_i = 0, **kwargs):
         x, p = calcualte(x, p, z, **kwargs)
         filtered_signal.append(x)
     
-    return filtered_signal
+    return np.array(filtered_signal)
     
     

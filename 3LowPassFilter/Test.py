@@ -15,7 +15,7 @@ speed3 = 16
 A1 = 1
 A2 = 0.4
 A3 = 0.2
-alpha = 0.90
+alpha = 0.95
 
 # Generate a test signal with noise
 signal_noisy, signal_true = GenTestSig.generate_test_signal(length, noise, rng, frequency_of_points=frequency_of_points,

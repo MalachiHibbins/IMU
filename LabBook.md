@@ -6,68 +6,90 @@
 
 IMU measures: angular rotation, force and magnetic field, measured using a: gyroscope, accelarometer and a magnetometer respectivly. Each of these measurments has serious issues: the accelarometer is easy to confuse with shaky motion but is accurate with slow steady miotion, the magnetometer will lose its pointing accuracy over time but is accurate in shaky motion. These problems are rectified using sensor fusion.
 
-## Kalman filters
+## Kalman Filters
 
-Kalman filters are a form of optimal estimation algorithm. The measurments from gyroscope, accelarometer and magnetometer are each prone to drift over time. However by combining these sensors it is possible for our estimates to converge towards the real value. The state observer $\hat{m}$ represents the estimated state vector from a set of measuremnts ($m$) which include noise. 
+Kalman filters are a form of optimal estimation algorithm. The measurments from gyroscope, accelarometer and magnetometer are each prone to drift over time. However by combining these sensors it is possible for our estimates to converge towards the real value. The state observer $\hat{x}$ represents the estimated state vector from a set of measuremnts ($z$) which include noise. 
 
 ### 1 Reccursive Average filters
 
 The estimated state (in this case the mean state) is evalauluated as:
 
 \[ 
-    \hat{m}_n = \frac{m_1+m_2+m_3+...+m_n}{n} \tag{1.1}
+    \hat{x}_k = \frac{z_1+z_2+z_3+...+z_k}{k} \tag{1.1}
 \] 
 
 
 Which can be written recursivly as:
 \[ 
-    \hat{m}_n = (\frac{n-1}{n})\hat{m}_{n-1} + \frac{m_n}{n} \tag{1.2}
+    \hat{x}_k = (\frac{k-1}{k})\hat{x}_{k-1} + \frac{z_k}{k} \tag{1.2}
 \]
-which is sifnificantly easier to compute.
+which is more efficent to compute.
 
-Let $\alpha \coloneqq \frac{n-1}{n}$ equation (1.2) can be rewritten as:
+Let $\alpha \coloneqq \frac{k-1}{k}$ equation (1.2) can be rewritten as:
 
 \[
-    \hat{m}_n = \alpha \hat{m}_{n-1} + (1 - \alpha) m_n \tag{1.3}
+    \hat{m}_k = \alpha \hat{m}_{k-1} + (1 - \alpha) m_k \tag{1.3}
 \]
 
-This is an example of an recursive (average) filter. hello
+This is an example of an recursive (average) filter. 
+
+
+
+![alt text](image-8.png)
+_figure 1.1: A noisy signal with mean 25 and standard deviation 0.5._
+The filter is efficent and converges to the correct value very quickly. Due to random variation the filter fluctuates around the correct value. For obvious reasons this filter will not work for a constantly varying signal.
 
 ### 2 Moving Average filters
 
 The moving average $\hat{r}_n$ is used to remove noise over a constantly varying signal. Here $n$ represents the index of the moving average and $k$ represents the window size.
 
 \[
-    \hat{m}_n = \frac{m_{m-k+1} + m_{m-k+2}+...+m_n}{k} \tag{2.1}
+    \hat{x}_n = \frac{z_{n-k+1} + z_{n-k+2}+...+z_n}{k} \tag{2.1}
 \]
 
-$\hat{r}_n$ can be written reccursivly as:
+$\hat{x}_n$ can be written reccursivly as:
 
 \[
-    \hat{m}_n = \hat{m}_{n-1} + \frac{m_n - m_{m-k}}{k} \tag{2.2}
+    \hat{x}_n = \hat{x}_{n-1} + \frac{z_n - z_{m-k}}{k} \tag{2.2}
 \]
 
 Look into the effects of $k$ on the observed real signal.
 
-There are limitations of the moving average. All terms in $(2.1)$ have equal weighting $1/n$ however it makes more sense to give more recent terms a larger weighting.
+![alt text](image-9.png)
+
+_Figure 2.1: Moving average filter applied to a noisy signal_
+The moving average lags behind the true signal but has roughly the right shape. There are limitations of the moving average. All terms in $(2.1)$ have equal weighting ($1/n$). However it makes more sense to give more recent terms a larger weighting.
 
 ### 3 Low pass filter
 
-Allows low frequencies to pass through but filters out high frequencies. Noise is usually high frequency. Below is an example of a first order low pass filter.
+A low pass filter allows low frequencies to pass through but filters out high frequencies. Noise is usually high frequency. Below is an example of a first order low pass filter.
 
 \[
-    \hat{m}_n = \alpha \hat{m}_{k-1} + (1 - \alpha) m_k \quad 0<\alpha<1 \tag{3.1} 
+    \hat{x}_n = \alpha \hat{x}_{k-1} + (1 - \alpha) z_k \quad 0<\alpha<1 \tag{3.1} 
 \]
-Looks like expression (1.3) except here $\alpha$ is a free parameter to be chosen.  
+Looks like expression (1.3) except here $\alpha$ is a free parameter to be chosen. It is also true that:
 \[
-    \hat{m}_{n-1} = \alpha \hat{m}_{k-2} + (1 - \alpha) m_{k-1} \quad 0<\alpha<1 \tag{3.2}
+    \hat{x}_{n-1} = \alpha \hat{x}_{k-2} + (1 - \alpha) z_{k-1} \quad 0<\alpha<1 \tag{3.2}
 \]
-Combining these equations helps to overcome problems associated with the moving average:
+Combining these equations helps to overcome some problems associated with the moving average:
 
 \[
-    \hat{m}_n = \alpha^2 \hat{m}_{n-2} + \alpha(1-\alpha) m_{n-1} + (1-\alpha)m_n \quad 0<\alpha<1 \tag{3.3}
+    \hat{x}_n = \alpha^2 \hat{x}_{n-2} + \alpha(1-\alpha) z_{n-1} + (1-\alpha)z_n \quad 0<\alpha<1 \tag{3.3}
 \]
 Due to the restiruction on alpha larger $n$ means greater weighting on $\hat{m}_n$ since $\alpha(1-\alpha)\leq 1-\alpha$. Previous data gets weighted exponentially less. 
+
+![alt text](image-10.png)
+_Figure 3.1 On the left is the moving average filter from figure 2.1 on the right is the low pass filter with optimised $\alpha = 0.9$ by eye._
+The low pass filter has a smaller delay compared to the moving average filter. However the low pass filter didn't remove as much noise as the moving average filter did.
+
+![alt text](image-13.png)
+_Figure 3.2: Low pass filter with $\alpha = 0.8$_
+Here the delay is less significant but the filter doesn't remove as much noise as it did when $\alpha = 0.9$, since the moving average is more easily influenced by more recent measurments.
+
+![alt text](image-14.png)
+_Figure 3.3 Low pass filter with $\alpha = 0.95$_
+Here the delay is more significant since results are given more similar weightings, hence figure 3.3 looks most simular to the moving average filter but with a smaller delay. The choice of $\alpha$ represents a tradeoff between a noisy signal and a delayed signal, meaing there is an optimal choice of $\alpha$ exists ensuring that the overall effects of both are minimised.
+
 
 ### 4 Kalman filters
 
@@ -122,6 +144,61 @@ The kalman filter deals with the linear state model. Where the state $x_{k+1} = 
 - $Q$ is the covariance matrix of $w_k$ ($n\times n$ diagonal matrix)
 - $R$ is the covariance matrix of $v_k$ ($m\times m$ diagonal matrix)
 
+**Example 1: using a kalman filter to fit the voltage output of a battery**
+- $n = 1$ since state is a scalar, $m = 1$ since measurment is a scalar
+- Assume no linear process noise ($w_k$ = 0) hence $Q = 0$ and $x_{k+1} = Ax_k$ since the voltage stays the same $x_k = x_{k+1}$ therefore $A=1$
+- There measurment sensor directly observes the voltage therefore $H = 1$
+- Tried different values of $R$ since there is still linear measument noise.
 
+![
+](image-2.png)
+_Figure 4.1: Kalman filter used to sucessfully fit the a non varying signal with a large amount of noise._
+Figure 4.1 shows the rate of convergence is exponentially fast and much more efficent than the average filter even with a large amount of noise.
+
+![alt text](image-3.png)
+_Figure 4.2: Figure 4.1 but with smaller R_
+Figure 4.2 shows smaller R appears to make the rate of convergence faster but after 500 samples it is further from the mean than when $R=4$.
+![](image-4.png)
+_Figure 4.3 but with larger R._
+Figure 4.3 shows slower convergence than figures 4.1 and 4.2 but has the smoothest convergence of the three. Figure 4.1 seems to be best as it has a good tradeoff between a noise free filtered signal and fast convergence.
+![alt text](image-5.png)
+_Figure 4.4: Figure 4.1 with H set to $1.115$ rather than $1$._
+Varing H will lead to the kalman filter converging to the wrong value since the measurment directly measures the state only satisfied by $H = 1$.
+
+![alt text](image-6.png)
+_Figure 4.5 Figure 4.1 with A set to 1.004 rather than 1._
+This causes the kalman filter to diverge since only $A=1$ describes a straight line.
+![alt text](image-7.png) 
+_Figure 4.6 Figure 4.1 except with $Q = 0.817$ rather than 1_
+Setting Q to anything other than $0$ in this example makes the filtered signal noisy since the filter is expecting linear process noise which doesn't exist in this model.
+
+
+**Example 2: estimating velocity from position**
+- $m = 2$ since $x_k = \begin{bmatrix}
+s \\
+v
+\end{bmatrix}_k$ where $s$ is the position and $v$ is the velocity.
+- $n = 1$ since $z_k = s_k$
+
+- $A = 
+\begin{bmatrix}
+1 & \Delta t \\
+0 & 1
+\end{bmatrix}$ where $\Delta t$ is the timestep between measurments
+- $H = \begin{bmatrix}
+1 &
+0
+\end{bmatrix}$ since $z_{k+1} = Hx_k + v_k$
+- $x_{k+1} = \begin{bmatrix}
+s_k + v_k\Delta t \\ v_k 
+\end{bmatrix}$
+- Q is given $Q = \begin{bmatrix}
+Q_s & 0 \\
+0 & Q_v
+\end{bmatrix} = \begin{bmatrix}
+1 & 0 \\
+0 & 3
+\end{bmatrix}$ 
+- $R$ obtained by tuning
 
 
