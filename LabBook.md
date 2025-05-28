@@ -145,8 +145,8 @@ The kalman filter deals with the linear state model. Where the state $x_{k+1} = 
 - $H$ is the state to measurement matrix ($m \times n$ matrix).
 - $w_k$ is the linear process noise ($n\times1$ column vector)
 - $v_k$ is the linear measurement noise ($m\times1$ column vector)
-- $Q$ is the covariance matrix of $w_k$ ($n\times n$ diagonal matrix)
-- $R$ is the covariance matrix of $v_k$ ($m\times m$ diagonal matrix)
+- $Q$ is the covariance matrix of $w_k$ ($m\times m$ diagonal matrix)
+- $R$ is the covariance matrix of $v_k$ ($n\times n$ diagonal matrix)
 
 **Example 1: using a kalman filter to fit a constant signal e.g. the output from a battery**
 - $n = 1$ since state is a scalar, $m = 1$ since measurement is a scalar
@@ -202,7 +202,7 @@ Q_s & 0 \\
 \end{bmatrix} = \begin{bmatrix}
 1 & 0 \\
 0 & 3
-\end{bmatrix}$ 
-- $R$ obtained by tuning
+\end{bmatrix}$ Where $Q_s$ is the covariance in $s_k$ and $Q_v$ is the covariance in $v_k$.
+- $R$ is one dimensional and is obtained by tuning.
 
 
