@@ -24,20 +24,29 @@ v_k = 0.0
 P_0_s = 5.0 
 P_0_v = 5.0  
 
-def run_kalman(A, H, Q_s, Q_v, R, P_0_s, P_0_v):
+# Run Kalman filter
+def run_kalman(A, H, Q_s, Q_v, R, P_0_s, P_0_v, std, dt, maximum):
     Q = np.array(([[Q_s, 0], [0, Q_v]])) 
     x_e = np.array([0, 2])  # Initial state estimate
     P_0 = np.array([[P_0_s, 0], [0, P_0_v]])  # Initial error covariance
     noisy_signal, signal = GenTestSig.get(maximum, std, rng, dt=dt)
     filtered_signal = AdvKalman.filter(noisy_signal, x_i=x_e, p_i=P_0, A=A, H=H, Q=Q, R=R)
     s_k = filtered_signal[:, 0]
-    s_v = filtered_signal[:, 1]
-    return noisy_signal, signal, s_k, s_v
+    v_k = filtered_signal[:, 1]
+    return noisy_signal, signal, s_k, v_k
 
-noisy_signal, signal, s_k, s_v = run_kalman(A, H, Q_s, Q_v, R, P_0_s, P_0_v)
+noisy_signal, signal, s_k, v_k = run_kalman(A, H, Q_s, Q_v, R, P_0_s, P_0_v, std, dt, maximum)
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+
+# Plot initial data
+fig, axes = plt.subplots(2, 2, figsize=(12, 14), sharex=True)
+ax1 = axes[0, 0]
+ax2 = axes[0, 1]
+ax3 = axes[1, 0]
+ax4 = axes[1, 1]
 plt.subplots_adjust(left=0.1, bottom=0.35)
+
+# Position Plot
 l1 = ax1.scatter(np.arange(len(noisy_signal)), noisy_signal, label='Noisy Signal', color='blue', alpha=0.1)
 l2, = ax1.plot(signal, label='True Signal', color='green')
 l3, = ax1.plot(s_k, label='Kalman Filtered Position', color='orange', alpha=0.7)
@@ -46,36 +55,73 @@ ax1.set_ylabel('Position')
 ax1.set_title('Kalman Filter Example')
 ax1.legend()
 
-l4, = ax2.plot(s_v, label='Kalman Filtered Velocity', color='orange')
+# Velocity Plot
+l4, = ax2.plot(v_k, label='Kalman Filtered Velocity', color='orange')
 ax2.set_xlabel('Sample Index')
 ax2.set_ylabel('Velocity')
 ax2.set_title('Kalman Filtered Velocity')
 ax2.legend()
 
+# Residual Plot
+l5, = ax3.plot(s_k - signal, label='Velocity - True Signal', color='red', alpha=0.5)
+ax3.axhline(0, color='black', linestyle='--', label='Zero Line')
+ax3.set_xlabel('Sample Index')
+ax3.set_ylabel('Residual')
+ax3.set_title('Residuals of Kalman Filtered Velocity')
+ax3.legend()
 
-axcolor = 'lightgoldenrodyellow'
-ax_Q_s = plt.axes([0.1, 0.25, 0.8, 0.03], facecolor=axcolor)  # x and y position, width, height
-ax_Q_v = plt.axes([0.1, 0.21, 0.8, 0.03], facecolor=axcolor)
-ax_R = plt.axes([0.1, 0.17, 0.8, 0.03], facecolor=axcolor)
-ax_P0_s = plt.axes([0.1, 0.13, 0.8, 0.03], facecolor=axcolor)
-ax_P0_v = plt.axes([0.1, 0.09, 0.8, 0.03], facecolor=axcolor)
+ax4.axis('off')
 
-s_Q_s = Slider(ax_Q_s, 'Q_s', 0, 10, valinit=Q_s)  # Axes for slider, label, min, max, initial value
-s_Q_v = Slider(ax_Q_v, 'Q_v', 0, 10, valinit=Q_v)
-s_R = Slider(ax_R, 'R', 0, 50, valinit=R)
-s_P0_s = Slider(ax_P0_s, 'P_0_s', 0, 10, valinit=P_0_s)
-s_P0_v = Slider(ax_P0_v, 'P_0_v', 0, 10, valinit=P_0_v)
 
+# Filter Faders
+filter_color = 'yellow'
+ax_Q_s = plt.axes([0.1, 0.25, 0.35, 0.03] )  # x and y position, width, height
+ax_Q_v = plt.axes([0.1, 0.21, 0.35, 0.03] )
+ax_R = plt.axes([0.1, 0.17, 0.35, 0.03] )
+ax_P0_s = plt.axes([0.1, 0.13, 0.35, 0.03] )
+ax_P0_v = plt.axes([0.1, 0.09, 0.35, 0.03])
+
+s_Q_s = Slider(ax_Q_s, 'Q_s', 0, 10, valinit=Q_s, color = filter_color)  # Axes for slider, label, min, max, initial value
+s_Q_v = Slider(ax_Q_v, 'Q_v', 0, 10, valinit=Q_v, color = filter_color)
+s_R = Slider(ax_R, 'R', 0, 500, valinit=R, color = filter_color)
+s_P0_s = Slider(ax_P0_s, 'P_0_s', 0, 10, valinit=P_0_s, color = filter_color)
+s_P0_v = Slider(ax_P0_v, 'P_0_v', 0, 10, valinit=P_0_v, color = filter_color)
+
+
+# Graph Faders
+data_colour = 'red'  
+ax_max = plt.axes([0.55, 0.25, 0.35, 0.03])  # x and y position, width, height
+ax_std = plt.axes([0.55, 0.21, 0.35, 0.03]) 
+ax_dt = plt.axes([0.55, 0.17, 0.35, 0.03])
+
+s_max = Slider(ax_max, 'Max Value', 0, 50, valinit=maximum, color = data_colour)
+s_std = Slider(ax_std, 'std', 0, 1, valinit=std, color = data_colour)
+s_dt = Slider(ax_dt, 'dt', 0.01, 0.2, valinit=dt, color = data_colour)
+
+
+# Update function for sliders
 def update(val):
     Q_s = s_Q_s.val
     Q_v = s_Q_v.val
     R = s_R.val
     P_0_s = s_P0_s.val
     P_0_v = s_P0_v.val
-    _, _, s_k, s_v = run_kalman(A, H, Q_s, Q_v, R, P_0_s, P_0_v)
+    std = s_std.val
+    dt = s_dt.val
+    maximum = s_max.val
     
-    l3.set_ydata(s_k)
-    l4.set_ydata(s_v)
+    noisy_signal, signal, s_k, v_k = run_kalman(A, H, Q_s, Q_v, R, P_0_s, P_0_v, std, dt, maximum)
+    x_vals = np.arange(len(noisy_signal))
+    l1.set_offsets(np.column_stack((x_vals, noisy_signal)))
+    l2.set_data(x_vals, signal)
+    l3.set_data(x_vals, s_k)
+    l4.set_data(x_vals, v_k)
+    l5.set_data(x_vals, s_k - signal)
+    
+    for ax in [ax1, ax2, ax3]:
+        ax.relim()
+        ax.autoscale_view()
+        
     
     fig.canvas.draw_idle()
     
@@ -85,4 +131,10 @@ s_Q_v.on_changed(update)
 s_R.on_changed(update)
 s_P0_s.on_changed(update)
 s_P0_v.on_changed(update)
+s_max.on_changed(update)
+s_std.on_changed(update)
+s_dt.on_changed(update)
+
+
+fig.canvas.manager.set_window_title('Kalman Filter Example')
 plt.show()
