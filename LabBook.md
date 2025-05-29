@@ -93,10 +93,18 @@ Here the delay is less significant but the filter doesn't remove as much noise a
 _Figure 3.3 Low pass filter with $\alpha = 0.95$_
 Here the delay is more significant since results are given more similar weightings, hence figure 3.3 looks most similar to the moving average filter but with a smaller delay. The choice of $\alpha$ represents a tradeoff between a noisy signal and a delayed signal, meaning there is an optimal choice of $\alpha$ exists ensuring that the overall effects of both are minimized.
 
+<div style="border:1px solid #ccc; padding:10px; border-radius:6px; background:#f9f9f9;">
+Thought: For purpouses such as numerical integration is it possible to calculate the delay and then change the bounds of the intergral rather than trying to fit the data with a less smooth curve. 
+</div>
+
 
 ### 4 Kalman filters
 
-**Kalman filter is essentially a low pass filter with a dynamically changing $\alpha$**.  States can be different usually measurements. External input $z_k$ (measurement), final output $\hat{x}_k$ (estimate), final output $\hat{x}^-_k$ (prediction), error covariance $P_k$ (estimate), error covariance $P_k^-$ (prediction) system model A, H, Q and R all others are used for internal computation. A prediction is a forecast of the next state based on the previous state and the mathematical model whereas a estimate is an update of the predicted state once new measurements have been taken.
+**Kalman filter is essentially a low pass filter with a dynamically changing $\alpha$**.  States can be different usually measurements. External input $z_k$ (measurement), final output $\hat{x}_k$ (estimate), final output $\hat{x}^-_k$ (prediction), error covariance $P_k$ (estimate), error covariance $P_k^-$ (prediction) system model A, H, Q and R all others are used for internal computation. 
+<div style="border:1px solid #ccc; padding:10px; border-radius:6px; background:#f9f9;">
+A prediction is a forecast of the next state based on the previous state and the mathematical model whereas a estimate is an update of the predicted state once new measurements have been taken.
+</div>
+
 ![there](image.png)
 
 #### Estimation step
@@ -141,14 +149,15 @@ Whereas the low pass filter passes $\hat{x}_{k-1}$ directly between time steps $
 The kalman filter deals with the linear state model. Where the state $x_{k+1} = Ax_k + w_k$ and the measurement $z_{k+1} = Hx_k + v_k$. 
 - $x_k$ is the state variable ($n\times1$ column vector)
 - $z_k$ is the measurement ($m\times1$ column vector). 
-- $A$ is the state transition matrix ($n\times n$ matrix)
+- $A$ is the state transition matrix ($n\times n$ matrix) which represents the model. 
 - $H$ is the state to measurement matrix ($m \times n$ matrix).
 - $w_k$ is the linear process noise ($n\times1$ column vector)
 - $v_k$ is the linear measurement noise ($m\times1$ column vector)
-- $Q$ is the covariance matrix of $w_k$ ($m\times m$ diagonal matrix)
-- $R$ is the covariance matrix of $v_k$ ($n\times n$ diagonal matrix)
-
-**Example 1: using a kalman filter to fit a constant signal e.g. the output from a battery**
+- $Q$ is the covariance matrix of $w_k$ ($n\times n$ diagonal matrix)  i.e. how much the true state is expected to deviate from the predictions made by the state transition model. Large Q the filter assumes the model is less reliable and vice versa.
+- $R$ is the covariance matrix of $v_k$ ($m\times m$ diagonal matrix). $R$ tells the kalman filter how much to "trust" the measurments compared to model predictions. Large R means the measurments are trusted less so the filter relies more on its predictions.
+- $x_0$ is the initial state estimate. provided at the start of the estimation process ($n \times 1$ column vector)
+- $P_0$ is the initial error estimate
+#### Example 1: using a kalman filter to fit a constant signal e.g. the output from a battery
 - $n = 1$ since state is a scalar, $m = 1$ since measurement is a scalar
 - Assume no linear process noise ($w_k$ = 0) hence $Q = 0$ and $x_{k+1} = Ax_k$ since the voltage stays the same $x_k = x_{k+1}$ therefore $A=1$
 - There measurement sensor directly observes the voltage therefore $H = 1$
@@ -176,13 +185,12 @@ This causes the kalman filter to diverge since only $A=1$ describes a straight l
 _Figure 4.6 Figure 4.1 except with $Q = 0.817$ rather than 1_
 Setting Q to anything other than $0$ in this example makes the filtered signal noisy since the filter is expecting linear process noise which doesn't exist in this model because of the way it was defined..
 
-
-**Example 2: estimating velocity from position**
-- $m = 2$ since $x_k = \begin{bmatrix}
+#### Example 2: estimating velocity from position
+- $n = 2$ since $x_k = \begin{bmatrix}
 s \\
 v
 \end{bmatrix}_k$ where $s$ is the position and $v$ is the velocity.
-- $n = 1$ since $z_k = s_k$
+- $m = 1$ since $z_k = s_k$
 
 - $A = 
 \begin{bmatrix}
@@ -204,5 +212,57 @@ Q_s & 0 \\
 0 & 3
 \end{bmatrix}$ Where $Q_s$ is the covariance in $s_k$ and $Q_v$ is the covariance in $v_k$.
 - $R$ is one dimensional and is obtained by tuning.
+- For implementation details, see [4bIntermKalman](4bIntermKalman/Test.py).
+
+![alt text](image-16.png)
+_Figure 4.7: Kaman filter setup using parameters above to fit a noisy signal made up from sin waves with varing amplitudes and periods. [4bIntermKalman](4bIntermKalman/GenTestSig.py)._
+
+<div style="border:1px solid #ccc; padding:10px; border-radius:6px; background:#f9f9;">
+Although the usmmary statitsics can suggest that something is a good fit they don't tell the whole story. In this case the real data is smooth but some of the filters fit a line which clearly isn't. For a filter to be working it should also fit the shape of the graph. This is important when dealing with derivatives.
+</div>
+
+Figure 4.7 shows the kalman filter is a good fit for the noisy signal. $R^2$ is large $\mu^2$ represents the root mean squared error and $\mu$ represents the mean absolute error are both small. However the filtered signal is not noise free, see residuals graph. This suggests that the filter is trusting its noisy measurment over its prediction for the next measurment. The residuals graph seems reasonably random so it makes sense to observe the effects incraseing $R$.
+![alt text](image-17.png)
+_Figure 4.8: Parameters remain the same from figure 4.7 except for increased $R$._
+
+The summary statistics in figure 4.8 suggest that the fit is worse than in figure 4.7. There is a clear delay, this is clear from the residules graph which has peaks after the peaks in the real signal indicating a delay. The data in the residules graph is no longer random indicating the value of $R$ is too high. Despite this the velocity and position fits are significnatly smoother than in figure 4.7. It turns out the optimum $R$ value (with highest $R^2$) for the parameters expressed earlier is used in figure 4.7. However there is a clear tradeoff between having a a smooth fit and having an accurate fit. Smoother fits more accurately represent the true shape of the data. There is less noise in the resduals graph of figure 4.8 (since there is a trend due to the delay in the signal). This makes sense as larger $R$ means predictions are trusted over measurements so the filter is less sensative to noise.
+
+<div style="border:1px solid #ccc; padding:10px; border-radius:6px; background:#f9f9f9;">
+Thought: How is it possible to ensure both a smooth fit whilst minimising lag and ensuring a good fit? Prehaps a machine learning algorithm?
+</div>
+
+![](image-18.png)
+_Figure 4.9: Figure 4.7 with modified Q_c._
+Increasing Q_c has had a small incrase on the $R^2$ value but makes the fit less smooth clear from a comparison of the residules. 
+![alt text](image-19.png)
+_Figure 4.10: Parameters from figure 4.7 with Q_s set to 0_
+Figure 4.10 Gives a smoother fit but the fit is worse. All other parameters make little difference in this case
+
+**To do**
+- Compare velocity with the expected value by differentiating true singal.
+
+
+
+#### Example 3: Dynamic altitude determination
+
+Using gyroscope (angular velocity) and accelarometer (accelarations) it is possible to determine the altitude of a craft. The relationship between the body angular rates $(\omega_1, \omega_2, \omega_3)$ and the time derivatives of the Euler angles $(\psi, \theta, \phi)$ in the 3-2-1 (yaw-pitch-roll) sequence is. 
+
+\[
+\begin{bmatrix}
+\dot{\psi} \\
+\dot{\theta} \\
+\dot{\phi}
+\end{bmatrix} =
+\frac{1}{\cos{\theta}}\begin{bmatrix}
+0 & \sin\phi  & \cos\phi  \\
+0 & \cos\phi\cos\theta & -\sin\phi\cos\theta \\
+\cos\theta & \sin\phi\sin\theta & \cos\phi  \sin\theta
+\end{bmatrix}
+\begin{bmatrix}
+\omega_1 \\
+\omega_2 \\
+\omega_3
+\end{bmatrix}
+\]
 
 
