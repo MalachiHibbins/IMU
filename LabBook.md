@@ -105,15 +105,50 @@ Thought: For purpouses such as numerical integration is it possible to calculate
 A prediction is a forecast of the next state based on the previous state and the mathematical model whereas a estimate is an update of the predicted state once new measurements have been taken.
 </div>
 
+#### Linear model
+
+The kalman filter deals with the linear state model. Where the state $x_{k+1} = Ax_k + w_k$ and the measurement $z_{k+1} = Hx_k + v_k$, when no forceing function is present. 
+- $x_k$ is the process state vector at time $t_k$ ($n\times1$ column vector)
+- $z_k$ is the vector measurment at time $t_k$ ($m\times1$ column vector). 
+- $A$ is the state transition matrix which maps $x_k$ to $x_{k+1}$ in the absence of a forcing function ($n\times n$ matrix). When a forcing function is present the systems evolutions is effected by an additional term e.g. $x_{k+1} = Ax_k+Bu_k$. Where $B_ku_k$ models the forcing function. Here it is assumed that no forceing function is present. An example of a forcing function is intentionally changing the output from a battery by adding another cell. Note this is not the same as linear process noise.
+- $H$ is the state to measurement matrix giving the ideal noiseless connection between the measurement and the state vector at state vector ($m \times n$ matrix).
+- $w_k$ is the linear process noise vector ($n\times1$ column vector) which is noise uncorrelated over time (white sequence). Its values at different time steps are independent. E.g. the temperature of a fridge randomly fluctuates due to compressor inefficiencies and unpredictable random temperature shifts.
+- $v_k$ is the linear measurement noise vector and is assumed to be a white sequence having zero cross corelation with $w_k$($m\times1$ column vector)
+- $Q$ is the covariance matrix of $w_k$ ($n\times n$ diagonal matrix) i.e. how much the true state is expected to deviate from the predictions made by the state transition model. Large Q the filter assumes the model is less reliable and vice versa.
+\[
+    E[w_kw_i^T] = \begin{cases}
+    Q_k, \quad i=k \\
+    0 , \quad i \neq k
+    \end{cases} \tag{4.7}
+\]
+- $R$ is the covariance matrix of $v_k$ ($m\times m$ diagonal matrix). $R$ tells the kalman filter how much to "trust" the measurments compared to model predictions. Large R means the measurments are trusted less so the filter relies more on its predictions.
+
+
+\[
+    E[v_kv_i^T] = \begin{cases}
+    R_k, \quad i=k \\
+    0 , \quad i \neq k
+    \end{cases} \tag{4.8}
+\]
+- $e^-_k$ is the estimation error defined as: $e^-_k = x_k-\hat{x}^-_k$
+- $P^-_k$ is then the associated error covariance matrix defined as: $P^-_k =E[e^-_k(e^-_k)^T]$
+- $x_0$ is the initial state estimate. provided at the start of the estimation process ($n \times 1$ column vector)
+- $P_0$ is the initial error estimate
+<div style="border:1px solid #ccc; padding:10px; border-radius:6px; background:#f9f9f9;">
+Thought: For clarity it might be easier to write everything in dirac notation this would make it easier to distinguish what was a vector row  orcolumn and what is a matrix.
+</div>
+
 ![there](image.png)
 
 #### Estimation step
-Computation of an estimate (where $x_k$ is a $n\times1$ column vector) can be written as:
+The prediction $\hat{x}^-_k$ and measuremnt are combined using the blending factor $K_k$ below to determine the updated estimate $\hat{x}_k$.
 \[
 \hat{x}_k = \hat{x}^-_k + K_k(z_k-H\hat{x}^-_k) \tag{4.1}
 \]
+<div style="border:1px solid #ccc; padding:10px; border-radius:6px; background:#f9f9;">
 
-rewritten as
+**Asside: Connection between kalman filter and low pass filter**
+
 \[
 \hat{x}_k = (\mathbb{I} + K_kH)\hat{x}_k + K_kz_k \tag{4.2}
 \]
@@ -124,7 +159,16 @@ Letting $H = \mathbb{I}$ and $\alpha= 1-K_k$ a first order low pass filter is re
 \hat{x}_k = \alpha \hat{x}^-_{k-1} + (1 - \alpha) z_k \tag{4.3} 
 \] 
 
-**Kalman filter estimation process is like a low pass filter with dynamically changing $\alpha$ (or equivalently gain $K_k$)** The gain gets updated in time according to $K_k$:
+Kalman filter estimation process is like a low pass filter with dynamically changing $\alpha$ that also considers the physics of the system.
+</div>
+
+The minimum mean square error is the performance criterion for the kalman filter. It is possible to form an expression for the error covariance matrix associated with the updated estimate:
+
+\[
+    P_k=E[e_ke_k^T] = E[(x_k-\hat{x}_k)(x_k-\hat{x}_k)^T]
+\]
+
+The gain gets updated in time according to $K_k$:
 
 \[
 K_k = P^-_kH^T(HP^-_kH^T+R)^{-1} \tag{4.4}
@@ -143,20 +187,11 @@ Using the model $\hat{x}_{k+1}$ can be predicted from the state at time $t_k$, $
 \hat{x}_k = A \hat{x}_{k-1} + K_k(z_k-HA \hat{x}_{k-1}) \tag{4.6}
 \]
 *A and Q are only in the prediction step*
-#### Linear model
+
 Whereas the low pass filter passes $\hat{x}_{k-1}$ directly between time steps $t_{k-1}$ and $t_{k}$ the kalman filter predicts the next step before a measurement is carried out to produce a new estimate.
 
-The kalman filter deals with the linear state model. Where the state $x_{k+1} = Ax_k + w_k$ and the measurement $z_{k+1} = Hx_k + v_k$. 
-- $x_k$ is the state variable ($n\times1$ column vector)
-- $z_k$ is the measurement ($m\times1$ column vector). 
-- $A$ is the state transition matrix ($n\times n$ matrix) which represents the model. 
-- $H$ is the state to measurement matrix ($m \times n$ matrix).
-- $w_k$ is the linear process noise ($n\times1$ column vector)
-- $v_k$ is the linear measurement noise ($m\times1$ column vector)
-- $Q$ is the covariance matrix of $w_k$ ($n\times n$ diagonal matrix)  i.e. how much the true state is expected to deviate from the predictions made by the state transition model. Large Q the filter assumes the model is less reliable and vice versa.
-- $R$ is the covariance matrix of $v_k$ ($m\times m$ diagonal matrix). $R$ tells the kalman filter how much to "trust" the measurments compared to model predictions. Large R means the measurments are trusted less so the filter relies more on its predictions.
-- $x_0$ is the initial state estimate. provided at the start of the estimation process ($n \times 1$ column vector)
-- $P_0$ is the initial error estimate
+
+
 #### Example 1: using a kalman filter to fit a constant signal e.g. the output from a battery
 - $n = 1$ since state is a scalar, $m = 1$ since measurement is a scalar
 - Assume no linear process noise ($w_k$ = 0) hence $Q = 0$ and $x_{k+1} = Ax_k$ since the voltage stays the same $x_k = x_{k+1}$ therefore $A=1$
@@ -238,8 +273,17 @@ Increasing Q_c has had a small incrase on the $R^2$ value but makes the fit less
 _Figure 4.10: Parameters from figure 4.7 with Q_s set to 0_
 Figure 4.10 Gives a smoother fit but the fit is worse. All other parameters make little difference in this case
 
-**To do**
-- Compare velocity with the expected value by differentiating true singal.
+![alt text](image-20.png)
+_Figure 4.11 Kalman filters setup to filter noisy signal and output both position and velocity. Note some sliders have been changed to logarithmic scales._
+The velocity fit is poor and the filtered signal lags behind the true signal. Since only the velocity signal is lagging Q_v was increased.
+
+![alt text](image-21.png)
+_Figure 4.12: Figure 4.11 with increased Q_v_
+The filtered signal now lags behind but it is very noisy, this can be fixed by increasing R.
+
+![alt text](image-22.png)
+_Figure 4.13: Figure 4.12 with increased R_
+By increasing R we have a reasonable fit, although not as good as the position fit, it is expected that some accuracy will be lost when translating from velocty to position. There error when using numerical differentiation to calcualte the filtered velocity is substantially larger than using the kalman filter. 
 
 
 
