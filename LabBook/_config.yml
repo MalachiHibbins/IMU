@@ -14,6 +14,13 @@ execute:
 latex:
   latex_documents:
     targetname: book.tex
+  mathjax_config:
+    TeX:
+      equationNumbers:
+        autoNumber: "AMS"
+        useLabelIds: true
+        formatNumber:
+          format: "section"
 
 # Add a bibtex file so that we can create citations
 bibtex_bibfiles:
@@ -21,7 +28,7 @@ bibtex_bibfiles:
 
 # Information about where the book exists on the web
 repository:
-  url: https://github.com/executablebooks/jupyter-book  # Online location of your book
+  url: https://github.com/MalachiHibbins/IMU  # Online location of your book
   path_to_book: docs  # Optional path to your book, relative to the repository root
   branch: master  # Which branch of the repository should be used when creating links (optional)
 
@@ -30,3 +37,8 @@ repository:
 html:
   use_issues_button: true
   use_repository_button: true
+
+math:
+  eq_number: true
+
+numbered: true

@@ -1,0 +1,747 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Kalman filters &#8212; Kalman Filters and IMU</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '4KalmanFilters';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Low Pass filters" href="3LowPassFilters.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="0Intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Kalman Filters and IMU - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Kalman Filters and IMU - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="0Intro.html">
+                    Kalman Filters and IMU
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="1AverageFilters.html">Average filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2MovingAverageFilters.html">Moving Average filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Kalman filters</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/MalachiHibbins/IMU" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/MalachiHibbins/IMU/issues/new?title=Issue%20on%20page%20%2F4KalmanFilters.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/4KalmanFilters.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Kalman filters</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model">Linear model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimation-step">Estimation step</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-step">Prediction step</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-using-a-kalman-filter-to-fit-a-constant-signal-e-g-the-output-from-a-battery">Example 1: using a kalman filter to fit a constant signal e.g. the output from a battery</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-estimating-velocity-from-position">Example 2: estimating velocity from position</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-dynamic-altitude-determination">Example 3: Dynamic altitude determination</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="kalman-filters">
+<h1>Kalman filters<a class="headerlink" href="#kalman-filters" title="Link to this heading">#</a></h1>
+<p><strong>Kalman filter is essentially a low pass filter with a dynamically changing <span class="math notranslate nohighlight">\(\alpha\)</span></strong>.  States can be different usually measurements. External input <span class="math notranslate nohighlight">\(z_k\)</span> (measurement), final output <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> (estimate), final output <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> (prediction), error covariance <span class="math notranslate nohighlight">\(P_k\)</span> (estimate), error covariance <span class="math notranslate nohighlight">\(P_k^-\)</span> (prediction) system model A, H, Q and R all others are used for internal computation.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>A prediction is a forecast of the next state based on the previous state and the mathematical model whereas a estimate is an update of the predicted state once new measurements have been taken.</p>
+</div>
+<section id="linear-model">
+<h2>Linear model<a class="headerlink" href="#linear-model" title="Link to this heading">#</a></h2>
+<p>The kalman filter deals with the linear state model. Where the state:</p>
+<div class="math notranslate nohighlight" id="equation-state">
+<span class="eqno">(9)<a class="headerlink" href="#equation-state" title="Link to this equation">#</a></span>\[x_{k+1} = Ax_k + w_k\]</div>
+<p>and the measurement</p>
+<div class="math notranslate nohighlight" id="equation-measurment">
+<span class="eqno">(10)<a class="headerlink" href="#equation-measurment" title="Link to this equation">#</a></span>\[z_{k+1} = Hx_k + v_k \]</div>
+<p>when no forceing function is present.</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(x_k\)</span> is the process state vector at time <span class="math notranslate nohighlight">\(t_k\)</span> (<span class="math notranslate nohighlight">\(n\times1\)</span> column vector)</p></li>
+<li><p><span class="math notranslate nohighlight">\(z_k\)</span> is the vector measurment at time <span class="math notranslate nohighlight">\(t_k\)</span> (<span class="math notranslate nohighlight">\(m\times1\)</span> column vector).</p></li>
+<li><p><span class="math notranslate nohighlight">\(A\)</span> is the state transition matrix which maps <span class="math notranslate nohighlight">\(x_k\)</span> to <span class="math notranslate nohighlight">\(x_{k+1}\)</span> in the absence of a forcing function (<span class="math notranslate nohighlight">\(n\times n\)</span> matrix). When a forcing function is present the systems evolutions is effected by an additional term e.g. <span class="math notranslate nohighlight">\(x_{k+1} = Ax_k+Bu_k\)</span>. Where <span class="math notranslate nohighlight">\(B_ku_k\)</span> models the forcing function. Here it is assumed that no forceing function is present. An example of a forcing function is intentionally changing the output from a battery by adding another cell. Note this is not the same as linear process noise.</p></li>
+<li><p><span class="math notranslate nohighlight">\(H\)</span> is the state to measurement matrix giving the ideal noiseless connection between the measurement and the state vector at state vector (<span class="math notranslate nohighlight">\(m \times n\)</span> matrix).</p></li>
+<li><p><span class="math notranslate nohighlight">\(w_k\)</span> is the linear process noise vector  which is noise uncorrelated over time (white sequence). Its values at different time steps are independent. E.g. the temperature of a fridge randomly fluctuates due to compressor inefficiencies and unpredictable random temperature shifts. (<span class="math notranslate nohighlight">\(n\times1\)</span> column vector).</p></li>
+<li><p><span class="math notranslate nohighlight">\(v_k\)</span> is the linear measurement noise vector and is assumed to be a white sequence having zero cross corelation with <span class="math notranslate nohighlight">\(w_k\)</span>. E.g. temperature measurments using a digital thermometer will be effected by random noise(<span class="math notranslate nohighlight">\(m\times1\)</span> column vector).</p></li>
+<li><p><span class="math notranslate nohighlight">\(Q\)</span> is the covariance matrix of <span class="math notranslate nohighlight">\(w_k\)</span> (<span class="math notranslate nohighlight">\(n\times n\)</span> diagonal matrix) i.e. how much the true state is expected to deviate from the predictions made by the state transition model. Large Q the filter assumes the model is less reliable and vice versa.</p></li>
+</ul>
+<div class="math notranslate nohighlight" id="equation-eq-process-noise-cov">
+<span class="eqno">(11)<a class="headerlink" href="#equation-eq-process-noise-cov" title="Link to this equation">#</a></span>\[\begin{split}E[w_k w_i^T] = 
+\begin{cases}
+    Q_k, &amp; i = k \\
+    0,   &amp; i \neq k
+\end{cases}\end{split}\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(R\)</span> is the covariance matrix of <span class="math notranslate nohighlight">\(v_k\)</span> (<span class="math notranslate nohighlight">\(m\times m\)</span> diagonal matrix). <span class="math notranslate nohighlight">\(R\)</span> tells the kalman filter how much to “trust” the measurments compared to model predictions. Large R means the measurments are trusted less so the filter relies more on its predictions.</p></li>
+</ul>
+<div class="math notranslate nohighlight" id="equation-eq-measurement-noise-cov">
+<span class="eqno">(12)<a class="headerlink" href="#equation-eq-measurement-noise-cov" title="Link to this equation">#</a></span>\[\begin{split}E[v_k v_i^T] = 
+\begin{cases}
+    R_k, &amp; i = k \\
+    0,   &amp; i \neq k
+\end{cases}\end{split}\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(e^-_k\)</span> is the estimation error defined as: <span class="math notranslate nohighlight">\(e^-_k = x_k-\hat{x}^-_k\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(P^-_k\)</span> is then the associated error covariance matrix defined as: <span class="math notranslate nohighlight">\(P^-_k =E[e^-_k(e^-_k)^T]\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(x_0\)</span> is the initial state estimate. provided at the start of the estimation process (<span class="math notranslate nohighlight">\(n \times 1\)</span> column vector)</p></li>
+<li><p><span class="math notranslate nohighlight">\(P_0\)</span> is the initial error estimate</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For clarity it might be easier to write everything in dirac notation this would make it easier to distinguish what was a row/column vector and what is a matrix. It would also help to distinguish states from measurments.</p>
+</div>
+<figure class="align-default" id="fig-kalman-block-diagram">
+<img alt="_images/image.png" src="_images/image.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Block diagram of the Kalman filter process.</span><a class="headerlink" href="#fig-kalman-block-diagram" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="estimation-step">
+<h2>Estimation step<a class="headerlink" href="#estimation-step" title="Link to this heading">#</a></h2>
+<p>The prediction <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> and measuremnt are combined using the blending factor <span class="math notranslate nohighlight">\(K_k\)</span> (yet to be determined) below to determine the updated estimate <span class="math notranslate nohighlight">\(\hat{x}_k\)</span>.</p>
+<div class="math notranslate nohighlight" id="equation-eq-kalman-update">
+<span class="eqno">(13)<a class="headerlink" href="#equation-eq-kalman-update" title="Link to this equation">#</a></span>\[\hat{x}_k = \hat{x}^-_k + K_k(z_k - H\hat{x}^-_k)\]</div>
+<div class="admonition-asside-connection-between-kalman-filter-and-low-pass-filter admonition">
+<p class="admonition-title">Asside: Connection between kalman filter and low pass filter</p>
+<p>Equation <a class="reference internal" href="#equation-eq-kalman-update">(13)</a> can be rewritten as:</p>
+<div class="math notranslate nohighlight" id="equation-eq-kalman-lowpass">
+<span class="eqno">(14)<a class="headerlink" href="#equation-eq-kalman-lowpass" title="Link to this equation">#</a></span>\[\hat{x}_k = (\mathbb{I} + K_k H)\hat{x}_k + K_k z_k\]</div>
+<p>Letting <span class="math notranslate nohighlight">\(H = \mathbb{I}\)</span> and <span class="math notranslate nohighlight">\(\alpha= 1-K_k\)</span> a first order low pass filter is recovered similar to <a class="reference internal" href="3LowPassFilters.html#equation-eq-lowpass-2">(7)</a>.</p>
+<div class="math notranslate nohighlight" id="equation-eq-kalman-alpha">
+<span class="eqno">(15)<a class="headerlink" href="#equation-eq-kalman-alpha" title="Link to this equation">#</a></span>\[\hat{x}_k = \alpha \hat{x}^-_{k-1} + (1 - \alpha) z_k\]</div>
+<p>Kalman filter estimation process is like a low pass filter with dynamically changing <span class="math notranslate nohighlight">\(\alpha\)</span> that also considers the physics of the system.</p>
+</div>
+<p>The minimum mean square error (MSE) is the performance criterion for the kalman filter. It is possible to form an expression for the error covariance matrix associated with the updated estimate:</p>
+<div class="math notranslate nohighlight" id="equation-eq-error-covariance">
+<span class="eqno">(16)<a class="headerlink" href="#equation-eq-error-covariance" title="Link to this equation">#</a></span>\[P_k = E[e_k e_k^T] = E\left[(x_k - \hat{x}_k)(x_k - \hat{x}_k)^T\right]\]</div>
+<p>Substituting <a class="reference internal" href="#equation-measurment">(10)</a> into <a class="reference internal" href="#equation-eq-kalman-update">(13)</a> and then substituting the resulting expression into <a class="reference internal" href="#equation-eq-error-covariance">(16)</a> the expression below can be obtained by performing the indicated expectation:</p>
+<div class="math notranslate nohighlight" id="equation-p-k-minimise">
+<span class="eqno">(17)<a class="headerlink" href="#equation-p-k-minimise" title="Link to this equation">#</a></span>\[P_k = (I-K_kH_k)P^-_k(I-K_kH_k)^T+K_kR_kK^T_k\]</div>
+<p>Which is a general expression for the updated error covariance matrix. Minimising the MSE corresponds to finding the value of <span class="math notranslate nohighlight">\(K_k\)</span> that minises the individual terms along the leading diagonal of <span class="math notranslate nohighlight">\(P_k\)</span> as these terms represent the estimation error variances for the elements of the state vector elements being selected. This leaves:</p>
+<div class="math notranslate nohighlight" id="equation-eq-kalman-gain">
+<span class="eqno">(18)<a class="headerlink" href="#equation-eq-kalman-gain" title="Link to this equation">#</a></span>\[K_k = P^-_k H^T (H P^-_k H^T + R)^{-1}\]</div>
+<p>In this case <span class="math notranslate nohighlight">\(K_k\)</span> is the kalman gain, which minimises the mean-square estimation error. The error covariance (a measure of the inaccuracy of the estimate) is updated as:</p>
+<div class="math notranslate nohighlight" id="equation-eq-error-covariance-update">
+<span class="eqno">(19)<a class="headerlink" href="#equation-eq-error-covariance-update" title="Link to this equation">#</a></span>\[P_k = P^-_k - K_k H P^-_k\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(H\)</span> and <span class="math notranslate nohighlight">\(R\)</span> are only used in the prediction step.</p>
+</div>
+</section>
+<section id="prediction-step">
+<h2>Prediction step<a class="headerlink" href="#prediction-step" title="Link to this heading">#</a></h2>
+<p><span class="math notranslate nohighlight">\(\hat{x}_k\)</span> is prediced from:</p>
+<div class="math notranslate nohighlight" id="equation-projection">
+<span class="eqno">(20)<a class="headerlink" href="#equation-projection" title="Link to this equation">#</a></span>\[\hat{x}^-_{k+1} = A_k \hat{x}_k\]</div>
+<p>The error covariance matrix associated with <span class="math notranslate nohighlight">\(\hat{x}^-_{k+1}\)</span> is obtained from</p>
+<div class="math notranslate nohighlight" id="equation-projection-covariance">
+<span class="eqno">(21)<a class="headerlink" href="#equation-projection-covariance" title="Link to this equation">#</a></span>\[P_k = A_kP_kA_k^T+Q_k\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Whereas the low pass filter passes <span class="math notranslate nohighlight">\(\hat{x}_{k-1}\)</span> directly between time steps <span class="math notranslate nohighlight">\(t_{k-1}\)</span> and <span class="math notranslate nohighlight">\(t_{k}\)</span> the kalman filter predicts the next step before a measurement is carried out to produce and compares this with the measurement to give new estimate.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(Q\)</span> are only used in the prediction step.</p>
+</div>
+</section>
+<section id="example-1-using-a-kalman-filter-to-fit-a-constant-signal-e-g-the-output-from-a-battery">
+<h2>Example 1: using a kalman filter to fit a constant signal e.g. the output from a battery<a class="headerlink" href="#example-1-using-a-kalman-filter-to-fit-a-constant-signal-e-g-the-output-from-a-battery" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(n = 1\)</span> since <span class="math notranslate nohighlight">\(\hat{x}\)</span> is a scalar, <span class="math notranslate nohighlight">\(m = 1\)</span> since measurement <span class="math notranslate nohighlight">\(z\)</span> is a scalar</p></li>
+<li><p>Assume no linear process noise (<span class="math notranslate nohighlight">\(w_k\)</span> = 0) hence <span class="math notranslate nohighlight">\(Q = 0\)</span> and <span class="math notranslate nohighlight">\(x_{k+1} = Ax_k\)</span> since the voltage stays the same <span class="math notranslate nohighlight">\(x_k = x_{k+1}\)</span> therefore <span class="math notranslate nohighlight">\(A=1\)</span></p></li>
+<li><p>There measurement sensor directly observes the voltage therefore <span class="math notranslate nohighlight">\(H = 1\)</span></p></li>
+<li><p>Tried different values of <span class="math notranslate nohighlight">\(R\)</span> since there is still linear measurement noise.</p></li>
+</ul>
+<figure class="align-default" id="fig-kalman-constant-signal">
+<img alt="_images/image-2.png" src="_images/image-2.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Kalman filter used to successfully fit a non-varying signal with a large amount of noise.</span><a class="headerlink" href="#fig-kalman-constant-signal" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p> shows the rate of convergence is exponentially fast and much more smoother than the average filter making it easy to extrapolate to infinity.</p>
+<figure class="align-default" id="fig-kalman-smaller-r">
+<img alt="_images/image-3.png" src="_images/image-3.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text"> but with smaller <span class="math notranslate nohighlight">\(R\)</span>.</span><a class="headerlink" href="#fig-kalman-smaller-r" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p> shows smaller R appears to make the rate of convergence faster but after 500 samples it is further from the mean than when <span class="math notranslate nohighlight">\(R=4\)</span>.</p>
+<figure class="align-default" id="fig-kalman-larger-r">
+<img alt="_images/image-4.png" src="_images/image-4.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text"> but with larger <span class="math notranslate nohighlight">\(R\)</span>.</span><a class="headerlink" href="#fig-kalman-larger-r" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p> shows slower convergence than figures 4.1 and 4.2 but has the smoothest convergence of the three.  seems to be best as it has a good tradeoff between a noise free filtered signal and fast convergence.</p>
+<figure class="align-default" id="figu-kalman-wrong-h">
+<img alt="_images/image-5.png" src="_images/image-5.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text"> with H set to <span class="math notranslate nohighlight">\(1.115\)</span> rather than <span class="math notranslate nohighlight">\(1\)</span></span><a class="headerlink" href="#figu-kalman-wrong-h" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Varying H will lead to the kalman filter converging to the wrong value since the measurement directly measures the state only satisfied by <span class="math notranslate nohighlight">\(H = 1\)</span>.</p>
+<figure class="align-default" id="fig-kalman-a-1004">
+<img alt="_images/image-6.png" src="_images/image-6.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 12 </span><span class="caption-text"> with <span class="math notranslate nohighlight">\(A\)</span> set to 1.004 rather than 1.</span><a class="headerlink" href="#fig-kalman-a-1004" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>This causes the kalman filter to diverge since only <span class="math notranslate nohighlight">\(A=1\)</span> describes a straight line.</p>
+<figure class="align-default" id="fig-kalman-q-0817">
+<img alt="_images/image-7.png" src="_images/image-7.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 13 </span><span class="caption-text"> except with <span class="math notranslate nohighlight">\(Q = 0.817\)</span> rather than 1.</span><a class="headerlink" href="#fig-kalman-q-0817" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Setting Q to anything other than <span class="math notranslate nohighlight">\(0\)</span> in this example makes the filtered signal noisy since the filter is expecting linear process noise which doesn’t exist in this model because of the way it was defined..</p>
+</section>
+<section id="example-2-estimating-velocity-from-position">
+<h2>Example 2: estimating velocity from position<a class="headerlink" href="#example-2-estimating-velocity-from-position" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(n = 2\)</span> since <span class="math notranslate nohighlight">\(x_k = \begin{bmatrix}
+s \\
+v
+\end{bmatrix}_k\)</span> where <span class="math notranslate nohighlight">\(s\)</span> is the position and <span class="math notranslate nohighlight">\(v\)</span> is the velocity.</p></li>
+<li><p><span class="math notranslate nohighlight">\(m = 1\)</span> since <span class="math notranslate nohighlight">\(z_k = s_k\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(A = 
+\begin{bmatrix}
+1 &amp; \Delta t \\
+0 &amp; 1
+\end{bmatrix}\)</span> where (<span class="math notranslate nohighlight">\(\Delta t\)</span> is the time step between measurements) since <span class="math notranslate nohighlight">\(x_{k+1} = \begin{bmatrix}
+s_k + v_k\Delta t \\ v_k 
+\end{bmatrix} = Ax_k\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(H = \begin{bmatrix}
+1 &amp;
+0
+\end{bmatrix}\)</span> since <span class="math notranslate nohighlight">\(z_{k+1} = Hx_k + v_k\)</span></p></li>
+<li><p>Q is given <span class="math notranslate nohighlight">\(Q = \begin{bmatrix}
+Q_s &amp; 0 \\
+0 &amp; Q_v
+\end{bmatrix} = \begin{bmatrix}
+1 &amp; 0 \\
+0 &amp; 3
+\end{bmatrix}\)</span> Where <span class="math notranslate nohighlight">\(Q_s\)</span> is the covariance in <span class="math notranslate nohighlight">\(s_k\)</span> and <span class="math notranslate nohighlight">\(Q_v\)</span> is the covariance in <span class="math notranslate nohighlight">\(v_k\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(R\)</span> is one dimensional and is obtained by tuning.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The true signal in the graphs below is generated using a combination of <span class="math notranslate nohighlight">\(\sin\)</span> waves of varing amplitudes and speeds, the velocity version is the analytical deriative of this. The noisy signal is generated by adding randomly generated values to this using the guassian distribution. The kalman filter is applied to the noisy position data and outputs the filtred postion data and filtered velocity data. Which are graphed below</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The summary statistics are generated between the true signal and the kalman filtered signal. <span class="math notranslate nohighlight">\(\mu^2\)</span> refers to the random mean squared error and <span class="math notranslate nohighlight">\(\mu\)</span> refers to the mean absolute error.</p>
+</div>
+<p>The fit for the position is very good with high R<span class="math notranslate nohighlight">\(^2\)</span> value. However it could be smoother and the residules graph is not completely random suggesting there could be some delay, prehaps increasing <span class="math notranslate nohighlight">\(R\)</span> would improve the fit. The velocity fit is poor and the filtered signal lags behind the true signal. Since only the velocity signal is lagging Q_v was increased.</p>
+<figure class="align-default" id="increased-r-and-increased-q">
+<img alt="_images/image-24.png" src="_images/image-24.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">original</span></code> with increased R and increased Q</span><a class="headerlink" href="#increased-r-and-increased-q" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Figure <a class="reference internal" href="#increased-r-and-increased-q"><span class="std std-numref">Fig. 14</span></a> shows a slightly improved fit with position and a significantly improved fit with velocity. However the velocity fit is now significantly less smooth, there is a clear tradeoff between having a a smooth fit and having an accurate fit. Smoother fits more accurately represent the true shape of the data, but will often cause there to be a delay. The residuals graph for position now seems to be very random implying close to optimal fit, the residuals graph for velocity is close to being random.</p>
+<div class="admonition-question admonition">
+<p class="admonition-title">Question</p>
+<p>How is it possible to ensure both a smooth fit whilst minimising lag and ensuring a good fit? Prehaps a machine learning algorithm?</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Using a kalmamn filter for differentiation is significantly more accurate than performing numerical integration on the noisy signal.</p>
+</div>
+</section>
+<section id="example-3-dynamic-altitude-determination">
+<h2>Example 3: Dynamic altitude determination<a class="headerlink" href="#example-3-dynamic-altitude-determination" title="Link to this heading">#</a></h2>
+<p>Using gyroscope (angular velocity) and accelarometer (accelarations) it is possible to determine the altitude of a craft. The relationship between the body angular rates <span class="math notranslate nohighlight">\((\omega_1, \omega_2, \omega_3)\)</span> and the time derivatives of the Euler angles <span class="math notranslate nohighlight">\((\psi, \theta, \phi)\)</span> in the 3-2-1 (yaw-pitch-roll) sequence is.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+\dot{\psi} \\
+\dot{\theta} \\
+\dot{\phi}
+\end{bmatrix} =
+\frac{1}{\cos{\theta}}\begin{bmatrix}
+0 &amp; \sin\phi  &amp; \cos\phi  \\
+0 &amp; \cos\phi\cos\theta &amp; -\sin\phi\cos\theta \\
+\cos\theta &amp; \sin\phi\sin\theta &amp; \cos\phi  \sin\theta
+\end{bmatrix}
+\begin{bmatrix}
+\omega_1 \\
+\omega_2 \\
+\omega_3
+\end{bmatrix}\end{split}\]</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="3LowPassFilters.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Low Pass filters</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model">Linear model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimation-step">Estimation step</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-step">Prediction step</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-using-a-kalman-filter-to-fit-a-constant-signal-e-g-the-output-from-a-battery">Example 1: using a kalman filter to fit a constant signal e.g. the output from a battery</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-estimating-velocity-from-position">Example 2: estimating velocity from position</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-dynamic-altitude-determination">Example 3: Dynamic altitude determination</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Malachi Hibbins
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

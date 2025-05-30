@@ -2,8 +2,9 @@
 # Learn more at https://jupyterbook.org/customize/toc.html
 
 format: jb-book
-root: intro
+root: 0Intro
 chapters:
-- file: markdown
-- file: notebooks
-- file: markdown-notebooks
+- file: 1AverageFilters
+- file: 2MovingAverageFilters
+- file: 3LowPassFilters
+- file: 4KalmanFilters

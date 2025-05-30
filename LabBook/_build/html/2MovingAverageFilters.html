@@ -6,8 +6,9 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; Kalman Filters and IMU</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Moving Average filters &#8212; Kalman Filters and IMU</title>
   
   
   
@@ -56,9 +57,13 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
-    <link rel="index" title="Index" href="#" />
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '2MovingAverageFilters';</script>
+    <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Low Pass filters" href="3LowPassFilters.html" />
+    <link rel="prev" title="Average filters" href="1AverageFilters.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -121,8 +126,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -178,9 +181,9 @@
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="1AverageFilters.html">Average filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2MovingAverageFilters.html">Moving Average filters</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Moving Average filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
 </ul>
@@ -254,7 +257,7 @@
       
       
       
-      <li><a href="https://github.com/MalachiHibbins/IMU/issues/new?title=Issue%20on%20page%20%2Fgenindex.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/MalachiHibbins/IMU/issues/new?title=Issue%20on%20page%20%2F2MovingAverageFilters.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -266,6 +269,54 @@
   </span>
 <span class="btn__text-container">Open issue</span>
 </a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/2MovingAverageFilters.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
 </li>
       
   </ul>
@@ -318,7 +369,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1></h1>
+    <h1>Moving Average filters</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -332,13 +383,50 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
+  <section class="tex2jax_ignore mathjax_ignore" id="moving-average-filters">
+<h1>Moving Average filters<a class="headerlink" href="#moving-average-filters" title="Link to this heading">#</a></h1>
+<p>The moving average <span class="math notranslate nohighlight">\(\hat{x}_n\)</span> is used to remove noise over a constantly varying signal. Here <span class="math notranslate nohighlight">\(n\)</span> represents the index of the moving average and <span class="math notranslate nohighlight">\(k\)</span> represents the window size.</p>
+<div class="math notranslate nohighlight" id="equation-eq-moving-average">
+<span class="eqno">(4)<a class="headerlink" href="#equation-eq-moving-average" title="Link to this equation">#</a></span>\[\hat{x}_n = \frac{z_{n-k+1} + z_{n-k+2}+...+z_n}{k}\]</div>
+<p><span class="math notranslate nohighlight">\(\hat{x}_n\)</span> can be written recursively as:</p>
+<div class="math notranslate nohighlight" id="equation-eq-moving-average-rec">
+<span class="eqno">(5)<a class="headerlink" href="#equation-eq-moving-average-rec" title="Link to this equation">#</a></span>\[\hat{x}_n = \hat{x}_{n-1} + \frac{z_n - z_{m-k}}{k} \]</div>
+<figure class="align-default" id="fig-moving-average-k25">
+<img alt="_images/image-9.png" src="_images/image-9.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Moving average filter applied to a noisy signal with <span class="math notranslate nohighlight">\(k = 25\)</span>.</span><a class="headerlink" href="#fig-moving-average-k25" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The moving average lags behind the true signal but has roughly the right shape.</p>
+<figure class="align-default" id="fig-moving-average-k5">
+<img alt="_images/image-15.png" src="_images/image-15.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Moving average filter applied to a noisy signal with <span class="math notranslate nohighlight">\(k=5\)</span>.</span><a class="headerlink" href="#fig-moving-average-k5" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>In this example the delay is smaller but less noise is removed. There is a tradeoff between noise reduction and minimizing delay limiting the reliability of the moving average filter.
+All terms in <a class="reference internal" href="#equation-eq-moving-average">(4)</a> have equal weighting (<span class="math notranslate nohighlight">\(1/n\)</span>). However it makes more sense to give more recent terms a larger weighting.</p>
+</section>
 
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
-</div>
-
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
@@ -350,6 +438,24 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="1AverageFilters.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Average filters</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="3LowPassFilters.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Low Pass filters</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
