@@ -1,5 +1,5 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+# Simple workflow for deploying Jupyter Book to GitHub Pages
+name: Deploy Jupyter Book to Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -15,48 +15,50 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Jupyter Book
+        run: |
+          pip install -U jupyter-book
+
+      - name: Build Jupyter Book
+        run: |
+          jupyter-book build .
+
+      - name: Upload built book as artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: '.'
+          path: ./_build/html
+
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4            
-      - name: Remote Jupyter Book Publish
-  # You may pin to the exact commit or the version.
-  # uses: dzsquared/jupyter-publish-action@17fafad07a497121e014093629aa3a62a020cffa
-  uses: dzsquared/jupyter-publish-action@v0.1.0
-  with:
-    # Jupyter Book to Release (defaults to whole repository)
-    directory: # default is .
-    # Release name
-    releasename: 1
-    # Book name
-    bookname: Kalman Filtering
-    # Version number
-    versionnumber: 1
-    # Language id
-    languageid: # default is EN
-    # GitHub token for action context
-    githubtoken: 3
-          
-        
+        uses: actions/deploy-pages@v4
+
+      # Optional: Publish book metadata to remote index (if needed)
+      # Uncomment and configure this step if you need to use dzsquared/jupyter-publish-action
+      # - name: Remote Jupyter Book Publish
+      #   uses: dzsquared/jupyter-publish-action@v0.1.0
+      #   with:
+      #     directory: ./_build/html
+      #     releasename: 1
+      #     bookname: Kalman Filtering
+      #     versionnumber: 1
+      #     languageid: EN
+      #     githubtoken: ${{ secrets.GITHUB_TOKEN }}
