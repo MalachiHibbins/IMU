@@ -49,14 +49,14 @@ jobs:
     # Jupyter Book to Release (defaults to whole repository)
     directory: # default is .
     # Release name
-    releasename: 
+    releasename: 1
     # Book name
-    bookname: 
+    bookname: Kalman Filtering
     # Version number
-    versionnumber: 
+    versionnumber: 1
     # Language id
     languageid: # default is EN
     # GitHub token for action context
-    githubtoken: 
+    githubtoken: 3
           
         
