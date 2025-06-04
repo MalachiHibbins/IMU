@@ -28,35 +28,33 @@ def euler2EP(euler_angles):
     return np.array([q0, q1, q2, q3])
 
 def a2euler(as_):
-    thetas = []
-    phis = []
-    psis = []
-    for a in as_:
-        a1, a2, a3 = a
-        theta = np.arcsin(a1/sc.g)
-        phi = -np.arcsin(a2/(sc.g*np.cos(theta)))
-        psi = 0
-        thetas.append(theta)
-        phis.append(phi)
-        psis.append(psi)
-    return np.array([psis, thetas, phis])
+    a1 = as_[:, 0]
+    a2 = as_[:, 1]
+    # a3 = as_[:, 2]  # Not used for theta/phi here
+
+    theta = np.arcsin(a1 / sc.g)
+    phi = -np.arcsin(a2 / (sc.g * np.cos(theta)))
+    psi = np.zeros_like(theta)
+    return np.array([psi, theta, phi])
         
 def filter(as_, ws, x_i, p_i, dt, **kwargs):
-    x = x_i
-    p = p_i
-    zs = euler2EP(a2euler(as_)).T
-    filtered_signal = []
-    
-    for w, z in zip(ws, zs):
-        w_1, w_2, w_3 = w
-        B = 0.5 * np.array([[0, -w_1, -w_2, -w_3], 
-                      [w_1, 0, w_3, -w_2], 
-                      [w_2, -w_3, 0, w_1], 
-                      [w_3, w_2, -w_1, 0]])
-        A = np.eye(4)+dt*B
-        x, p = calcualte(x, p, z, A, **kwargs)
-        filtered_signal.append(EP2euler(x))
-    
-    return np.array(filtered_signal)
+    n = len(ws)
+    filtered_signal = np.zeros((n, 3))
+    x = x_i.copy()
+    p = p_i.copy()
+    eulers = a2euler(as_).T  # shape (n, 3)
+    zs = np.apply_along_axis(euler2EP, 1, eulers)  # shape (n, 4)
+    for i in range(n):
+        w_1, w_2, w_3 = ws[i]
+        B = 0.5 * np.array([
+            [0, -w_1, -w_2, -w_3], 
+            [w_1, 0, w_3, -w_2], 
+            [w_2, -w_3, 0, w_1], 
+            [w_3, w_2, -w_1, 0]
+        ])
+        A = np.eye(4) + dt * B
+        x, p = calcualte(x, p, zs[i], A, **kwargs)
+        filtered_signal[i] = EP2euler(x)
+    return filtered_signal
     
     
