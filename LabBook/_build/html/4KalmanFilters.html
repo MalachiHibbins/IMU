@@ -725,7 +725,7 @@ The Euler angle rates <span class="math notranslate nohighlight">\(\dot{\phi}\)<
 <div class="math notranslate nohighlight" id="equation-accelarometer2">
 <span class="eqno">(29)<a class="headerlink" href="#equation-accelarometer2" title="Link to this equation">#</a></span>\[\begin{split}\vec{a}_B = - g \hat{n}_z = \begin{bmatrix} \sin{\theta} \\ -\cos{\theta}\sin{\phi} \\ -\cos{\theta}\cos{\phi} \end{bmatrix}\end{split}\]</div>
 <div class="math notranslate nohighlight" id="equation-accelarometer3">
-<span class="eqno">(30)<a class="headerlink" href="#equation-accelarometer3" title="Link to this equation">#</a></span>\[\implies \theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g})\]</div>
+<span class="eqno">(30)<a class="headerlink" href="#equation-accelarometer3" title="Link to this equation">#</a></span>\[\implies \theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})\]</div>
 <figure class="align-default" id="id1">
 <img alt="_images/image-27.png" src="_images/image-27.png" />
 <figcaption>
@@ -736,13 +736,11 @@ The Euler angle rates <span class="math notranslate nohighlight">\(\dot{\phi}\)<
 <img alt="_images/image-28.png" src="_images/image-28.png" />
 <figcaption>
 <p><span class="caption-number">Fig. 19 </span><span class="caption-text">Diagram of the inputs of the kalman filter with sensor fustion.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
-<div class="legend">
+</figcaption>
+</figure>
 <p><code class="xref std std-numref docutils literal notranslate"><span class="pre">Sensor-Fusion-Kalman</span></code> shows <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> and <span class="math notranslate nohighlight">\(\hat{\omega}_k\)</span> being used to form the prediction as seen below:</p>
 <div class="math notranslate nohighlight">
 \[x^-_{k+1} = Ax_k =  (I + \Delta t B(\omega_k))x_k\]</div>
-</div>
-</figcaption>
-</figure>
 <p>The measurment comes from accelarometer readings. The prediction is ‘corrected’ using the data from the accelarometer.</p>
 </section>
 </section>

@@ -395,7 +395,7 @@ Where $N\dot{v}$ is the inertial accelatration and $\vec{g}$ is the accelaration
 ```
 ```{math}
 :label: accelarometer3
-\implies \theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g})
+\implies \theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})
 ```
 
 ```{figure} image-27.png

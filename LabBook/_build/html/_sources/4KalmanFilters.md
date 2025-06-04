@@ -395,7 +395,7 @@ Where $N\dot{v}$ is the inertial accelatration and $\vec{g}$ is the accelaration
 ```
 ```{math}
 :label: accelarometer3
-\implies \theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g})
+\implies \theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})
 ```
 
 ```{figure} image-27.png
@@ -406,6 +406,7 @@ Diagram of the inputs of the kalman filter without sensor fusion e.g. example tw
 ```{figure} image-28.png
 :label: Sensor-Fusion-Kalman
 Diagram of the inputs of the kalman filter with sensor fustion.
+```
 
 {numref}`Sensor-Fusion-Kalman` shows $\hat{x}_k$ and $\hat{\omega}_k$ being used to form the prediction as seen below:
 
