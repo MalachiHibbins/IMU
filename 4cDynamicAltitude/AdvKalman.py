@@ -14,17 +14,17 @@ def calcualte(x, p, z, A, H, Q, R):
 
 def EP2euler(beta):
     q0, q1, q2, q3 = beta
-    psi = np.arctan2(2*(q1*q2+q0*q3),q0*q0+q1*q1-q2*q2-q3*q3)
+    phi = np.arctan2(2*(q1*q2+q0*q3),q0*q0+q1*q1-q2*q2-q3*q3)
     theta = np.arcsin(-2*(q1*q3-q0*q2))
-    phi = np.arctan2(2*(q2*q3+q0*q1),q0*q0-q1*q1-q2*q2+q3*q3)
+    psi = np.arctan2(2*(q2*q3+q0*q1),q0*q0-q1*q1-q2*q2+q3*q3)
     return np.array([psi, theta, phi])
 
 def euler2EP(euler_angles):
     psi, theta, phi = euler_angles
-    q0 = np.cos(psi/2) * np.cos(theta/2) * np.cos(phi/2) + np.sin(psi/2) * np.sin(theta/2) * np.sin(phi/2)
-    q1 = np.sin(psi/2) * np.cos(theta/2) * np.cos(phi/2) - np.cos(psi/2) * np.sin(theta/2) * np.sin(phi/2)
-    q2 = np.cos(psi/2) * np.sin(theta/2) * np.cos(phi/2) + np.sin(psi/2) * np.cos(theta/2) * np.sin(phi/2)
-    q3 = np.cos(psi/2) * np.cos(theta/2) * np.sin(phi/2) - np.sin(psi/2) * np.sin(theta/2) * np.cos(phi/2)
+    q0 = np.cos(phi/2) * np.cos(theta/2) * np.cos(psi/2) + np.sin(phi/2) * np.sin(theta/2) * np.sin(psi/2)
+    q1 = np.sin(phi/2) * np.cos(theta/2) * np.cos(psi/2) - np.cos(phi/2) * np.sin(theta/2) * np.sin(psi/2)
+    q2 = np.cos(phi/2) * np.sin(theta/2) * np.cos(psi/2) + np.sin(phi/2) * np.cos(theta/2) * np.sin(psi/2)
+    q3 = np.cos(phi/2) * np.cos(theta/2) * np.sin(psi/2) - np.sin(phi/2) * np.sin(theta/2) * np.cos(psi/2)
     return np.array([q0, q1, q2, q3])
 
 def a2euler(as_):
@@ -36,13 +36,14 @@ def a2euler(as_):
     phi = -np.arcsin(a2 / (sc.g * np.cos(theta)))
     psi = np.zeros_like(theta)
     return np.array([psi, theta, phi])
-        
+
 def filter(as_, ws, x_i, p_i, dt, **kwargs):
     n = len(ws)
     filtered_signal = np.zeros((n, 3))
     x = x_i.copy()
     p = p_i.copy()
     eulers = a2euler(as_).T  # shape (n, 3)
+    
     zs = np.apply_along_axis(euler2EP, 1, eulers)  # shape (n, 4)
     for i in range(n):
         w_1, w_2, w_3 = ws[i]
