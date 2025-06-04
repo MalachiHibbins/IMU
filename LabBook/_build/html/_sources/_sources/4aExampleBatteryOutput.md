@@ -46,7 +46,3 @@ This causes the kalman filter to diverge since only $A=1$ describes a straight l
 {numref}`fig-kalman-constant-signal` except with $Q = 0.817$ rather than 1.
 ```
 Setting Q to anything other than $0$ in this example makes the filtered signal noisy since the filter is expecting linear process noise which doesn't exist in this model because of the way it was defined.
-
-```{important}
-$A$ and $H$ are defined by 'the physics of the system' and changing these values will mean the filter won't converge. $Q$ and $R$ are more difficult to determine in this case they are obtained by tuning. 
-```

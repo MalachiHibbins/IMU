@@ -389,7 +389,7 @@ document.write(`
 <h1>IMU<a class="headerlink" href="#imu" title="Link to this heading">#</a></h1>
 <p>Using gyroscope (measures angular velocity, <span class="math notranslate nohighlight">\(\hat{z}\)</span>) and knowing the initial orientation at <span class="math notranslate nohighlight">\(t_0\)</span> it is possible to determine the altitude of a craft at <span class="math notranslate nohighlight">\(t_k\)</span>. The relationship between the body angular velocity <span class="math notranslate nohighlight">\(\hat{z} = (\omega_1, \omega_2, \omega_3)\)</span> and the time derivatives of the Euler angles <span class="math notranslate nohighlight">\(\hat{x} = (\psi, \theta, \phi)\)</span> in the 3-2-1 (yaw-pitch-roll) sequence is given by the kinematic differential equation (KDE) below:</p>
 <div class="math notranslate nohighlight" id="equation-h">
-<span class="eqno">(22)<a class="headerlink" href="#equation-h" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix}
+<span class="eqno">(31)<a class="headerlink" href="#equation-h" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix}
 \dot{\psi} \\
 \dot{\theta} \\
 \dot{\phi}
@@ -406,7 +406,7 @@ document.write(`
 \end{bmatrix}\end{split}\]</div>
 <p>Or more simply:</p>
 <div class="math notranslate nohighlight" id="equation-h-simple">
-<span class="eqno">(23)<a class="headerlink" href="#equation-h-simple" title="Link to this equation">#</a></span>\[\hat{\dot{x}} = \Phi(\hat{x}) {\hat{z}}\]</div>
+<span class="eqno">(32)<a class="headerlink" href="#equation-h-simple" title="Link to this equation">#</a></span>\[\hat{\dot{x}} = \Phi(\hat{x}) {\hat{z}}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\Phi(\hat{x}) = \frac{1}{\cos{\theta}}\begin{bmatrix}
 0 &amp; \sin\phi  &amp; \cos\phi  \\
 0 &amp; \cos\phi\cos\theta &amp; -\sin\phi\cos\theta \\
@@ -423,12 +423,12 @@ The Euler angle rates <span class="math notranslate nohighlight">\(\dot{\phi}\)<
 <figure class="align-default" id="calibration">
 <img alt="_images/image-25.png" src="_images/image-25.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Calibration signal recreated from video. Note: there seems to be accidental movement in the <span class="math notranslate nohighlight">\(\omega_3\)</span> direction.</span><a class="headerlink" href="#calibration" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 28 </span><span class="caption-text">Calibration signal recreated from video. Note: there seems to be accidental movement in the <span class="math notranslate nohighlight">\(\omega_3\)</span> direction.</span><a class="headerlink" href="#calibration" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p><span class="math notranslate nohighlight">\(\hat{x}_0 = \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}\)</span>. By using the calibration signal seen in <a class="reference internal" href="#calibration"><span class="std std-numref">Fig. 16</span></a> <span class="math notranslate nohighlight">\(\hat{\dot{x}}\)</span> was calculated using  which was then integrated using the euler method:</p>
+<p><span class="math notranslate nohighlight">\(\hat{x}_0 = \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}\)</span>. By using the calibration signal seen in <code class="xref std std-numref docutils literal notranslate"><span class="pre">Calibration</span></code> <span class="math notranslate nohighlight">\(\hat{\dot{x}}\)</span> was calculated using  which was then integrated using the euler method:</p>
 <div class="math notranslate nohighlight" id="equation-euler-method">
-<span class="eqno">(24)<a class="headerlink" href="#equation-euler-method" title="Link to this equation">#</a></span>\[x_k = x_{k-1} + \dot{x}_k \Delta t\]</div>
+<span class="eqno">(33)<a class="headerlink" href="#equation-euler-method" title="Link to this equation">#</a></span>\[x_k = x_{k-1} + \dot{x}_k \Delta t\]</div>
 <p><span class="math notranslate nohighlight">\(\Delta t = t_k - t_{k-1}\)</span>.</p>
 <div class="highlight-python notranslate" id="euler-method"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="n">omegas</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">eulers_initial</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -449,13 +449,13 @@ The Euler angle rates <span class="math notranslate nohighlight">\(\dot{\phi}\)<
 <figure class="align-default" id="roll-pitch-yaw-drift">
 <img alt="_images/image-26.png" src="_images/image-26.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 17 </span><span class="caption-text">The roll pitch and yaw calculated from the calibration in <a class="reference internal" href="#calibration"><span class="std std-numref">Fig. 16</span></a> then using eulers integration method.</span><a class="headerlink" href="#roll-pitch-yaw-drift" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 29 </span><span class="caption-text">The roll pitch and yaw calculated from the calibration in <code class="xref std std-numref docutils literal notranslate"><span class="pre">Calibration</span></code> then using eulers integration method.</span><a class="headerlink" href="#roll-pitch-yaw-drift" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>The value for roll pitch and yaw should return to zero since a full number of oscillations are completed, however in <a class="reference internal" href="#roll-pitch-yaw-drift"><span class="std std-numref">Fig. 17</span></a> this doesn’t happen. The numerical integration introduces an error causing <span class="math notranslate nohighlight">\({x}\)</span> to “drift” away from <span class="math notranslate nohighlight">\(\hat{x}\)</span>. The drift in <a class="reference internal" href="#roll-pitch-yaw-drift"><span class="std std-numref">Fig. 17</span></a> is significant since it is larger in magnitude than the oscilation. This makes the data look like “random walks”, which move further and further away from the true value as time goes on.</p>
-<p>A better way of modelling the system would be to use a kalman filter. First determine <span class="math notranslate nohighlight">\(A\)</span>. Subbing <a class="reference internal" href="#equation-h-simple">(23)</a> into <a class="reference internal" href="#equation-euler-method">(24)</a> gets:</p>
+<p>The value for roll pitch and yaw should return to zero since a full number of oscillations are completed, however in <code class="xref std std-numref docutils literal notranslate"><span class="pre">roll-pitch-yaw-drift</span></code> this doesn’t happen. The numerical integration introduces an error causing <span class="math notranslate nohighlight">\({x}\)</span> to “drift” away from <span class="math notranslate nohighlight">\(\hat{x}\)</span>. The drift in <code class="xref std std-numref docutils literal notranslate"><span class="pre">roll-pitch-yaw-drift</span></code> is significant since it is larger in magnitude than the oscilation. This makes the data look like “random walks”, which move further and further away from the true value as time goes on.</p>
+<p>A better way of modelling the system would be to use a kalman filter. First determine <span class="math notranslate nohighlight">\(A\)</span>. Subbing <a class="reference internal" href="_sources/5IMU.html#equation-h-simple">()</a> into <a class="reference internal" href="_sources/5IMU.html#equation-euler-method">()</a> gets:</p>
 <div class="math notranslate nohighlight" id="equation-no-a">
-<span class="eqno">(25)<a class="headerlink" href="#equation-no-a" title="Link to this equation">#</a></span>\[x_{k+1} = \vec{x}_{k} + \Delta t \Phi(x_k) \hat{z_{k}} \]</div>
+<span class="eqno">(34)<a class="headerlink" href="#equation-no-a" title="Link to this equation">#</a></span>\[x_{k+1} = \vec{x}_{k} + \Delta t \Phi(x_k) \hat{z_{k}} \]</div>
 <p>However this won’t work since it can’t be put into the form in <a class="reference internal" href="4KalmanFilters.html#equation-state">(9)</a>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
@@ -470,16 +470,16 @@ The Euler angle rates <span class="math notranslate nohighlight">\(\dot{\phi}\)<
 \[\beta_3 = \cos\frac{\phi}{2}\cos\frac{\theta}{2}\sin\frac{\psi}{2} + \sin\frac{\phi}{2}\sin\frac{\theta}{2}\cos\frac{\psi}{2}\]</div>
 <p>Below is the Euler parameters KDE:</p>
 <div class="math notranslate nohighlight" id="equation-ep-kde">
-<span class="eqno">(26)<a class="headerlink" href="#equation-ep-kde" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} \dot{\beta_0} \\ \dot{\beta_1} \\ \dot{\beta_2} \\ \dot{\beta_3} \end{bmatrix} = \frac{1}{2} \begin{bmatrix} 0 &amp; -\omega_1 &amp; -\omega_2 &amp; -\omega_3 \\ \omega_1 &amp; 0 &amp; \omega_3 &amp; -\omega_2 \\ \omega_2 &amp; -\omega_3 &amp; 0 &amp; \omega_1 \\ \omega_3 &amp; \omega_2 &amp; -\omega_1 &amp; 0\end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix}\end{split}\]</div>
+<span class="eqno">(35)<a class="headerlink" href="#equation-ep-kde" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} \dot{\beta_0} \\ \dot{\beta_1} \\ \dot{\beta_2} \\ \dot{\beta_3} \end{bmatrix} = \frac{1}{2} \begin{bmatrix} 0 &amp; -\omega_1 &amp; -\omega_2 &amp; -\omega_3 \\ \omega_1 &amp; 0 &amp; \omega_3 &amp; -\omega_2 \\ \omega_2 &amp; -\omega_3 &amp; 0 &amp; \omega_1 \\ \omega_3 &amp; \omega_2 &amp; -\omega_1 &amp; 0\end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix}\end{split}\]</div>
 <p>or more simply:</p>
 <div class="math notranslate nohighlight" id="equation-ep-kde-simple">
-<span class="eqno">(27)<a class="headerlink" href="#equation-ep-kde-simple" title="Link to this equation">#</a></span>\[\vec{\dot{\beta}} = B(\vec{\omega}) \vec{\beta}\]</div>
+<span class="eqno">(36)<a class="headerlink" href="#equation-ep-kde-simple" title="Link to this equation">#</a></span>\[\vec{\dot{\beta}} = B(\vec{\omega}) \vec{\beta}\]</div>
 <p>It descrubes how the Euler parameters change over time in response to the angular velocity vector <span class="math notranslate nohighlight">\(\hat{z}\)</span>.</p>
 </div>
 <p>This time the model will be defined using the Euler parameters</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(x_k = \vec{\beta}\)</span> so <span class="math notranslate nohighlight">\(n=4\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(x_{k+1} = x_k + \Delta t \vec{\dot{\beta}} = x_k + \Delta t B x_k\)</span> which is the equivalent of <a class="reference internal" href="#equation-no-a">(25)</a>. <span class="math notranslate nohighlight">\(x_{k+1} = (I + \Delta t B)x_k\)</span> which is written in the same form as <a class="reference internal" href="4KalmanFilters.html#equation-state">(9)</a></p></li>
+<li><p><span class="math notranslate nohighlight">\(x_{k+1} = x_k + \Delta t \vec{\dot{\beta}} = x_k + \Delta t B x_k\)</span> which is the equivalent of <a class="reference internal" href="_sources/5IMU.html#equation-no-a">()</a>. <span class="math notranslate nohighlight">\(x_{k+1} = (I + \Delta t B)x_k\)</span> which is written in the same form as <a class="reference internal" href="4KalmanFilters.html#equation-state">(9)</a></p></li>
 <li><p>hence <span class="math notranslate nohighlight">\(A = (I + \Delta t B)\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(H = I\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(Q\)</span>, <span class="math notranslate nohighlight">\(R\)</span> and <span class="math notranslate nohighlight">\(P^-_0\)</span> can be determined by trial and error</p></li>
@@ -492,22 +492,22 @@ The Euler angle rates <span class="math notranslate nohighlight">\(\dot{\phi}\)<
 <p>In this exampe the measurment from the gyroscope (<span class="math notranslate nohighlight">\(\hat\omega\)</span>) is being used to form the prediction. Furthermore knowing <span class="math notranslate nohighlight">\(\hat\omega\)</span> isn’t enough on its own to calculate yaw-pitch-roll so can’t be used to calculate <span class="math notranslate nohighlight">\(\hat x\)</span>.  One solution to this would be to form a ‘pseudo measurement’ letting <span class="math notranslate nohighlight">\(z_k = \hat{x}^-_{k+1}\)</span>, however this doesn’t contain corrective information so won’t correct for drift. A better method would be sensor fusion, this involves combining different sensors to get a better estimate.</p>
 <p>IMU uses an accelarometer and a gyroscope which measures <span class="math notranslate nohighlight">\(\hat{a}\)</span> in the body fixed frame given by:</p>
 <div class="math notranslate nohighlight" id="equation-accelarometer2">
-<span class="eqno">(29)<a class="headerlink" href="#equation-accelarometer2" title="Link to this equation">#</a></span>\[[\vec{a}]_B = [N\vec{\dot{v}}]_B - [\vec{g}]_B\]</div>
+<span class="eqno">(38)<a class="headerlink" href="#equation-accelarometer2" title="Link to this equation">#</a></span>\[[\vec{a}]_B = [N\vec{\dot{v}}]_B - [\vec{g}]_B\]</div>
 <p>Where <span class="math notranslate nohighlight">\(N\dot{v}\)</span> is the inertial accelatration and <span class="math notranslate nohighlight">\(\vec{g}\)</span> is the accelaration due to gravity. Assume the inertial accelaration of the body is zero and the accelarometer is located at the center of mass. This can also be written in the frame of the earth using <span class="math notranslate nohighlight">\(B = \begin{bmatrix} \hat{n}_x &amp; \hat{n}_y &amp; \hat{n}_z \end{bmatrix}\)</span>, where <span class="math notranslate nohighlight">\(n_x\)</span>, <span class="math notranslate nohighlight">\(n_y\)</span> and <span class="math notranslate nohighlight">\(n_z\)</span> are 3 dimensional unit vectors in there respective directions. Since gravity only acts in the <span class="math notranslate nohighlight">\(z\)</span> direction:</p>
 <div class="math notranslate nohighlight" id="equation-accelarometer2">
-<span class="eqno">(29)<a class="headerlink" href="#equation-accelarometer2" title="Link to this equation">#</a></span>\[\begin{split}\vec{a}_B = - g \hat{n}_z = \begin{bmatrix} \sin{\theta} \\ -\cos{\theta}\sin{\phi} \\ -\cos{\theta}\cos{\phi} \end{bmatrix}\end{split}\]</div>
+<span class="eqno">(38)<a class="headerlink" href="#equation-accelarometer2" title="Link to this equation">#</a></span>\[\begin{split}\vec{a}_B = - g \hat{n}_z = \begin{bmatrix} \sin{\theta} \\ -\cos{\theta}\sin{\phi} \\ -\cos{\theta}\cos{\phi} \end{bmatrix}\end{split}\]</div>
 <div class="math notranslate nohighlight" id="equation-accelarometer3">
-<span class="eqno">(30)<a class="headerlink" href="#equation-accelarometer3" title="Link to this equation">#</a></span>\[\implies \theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})\]</div>
+<span class="eqno">(39)<a class="headerlink" href="#equation-accelarometer3" title="Link to this equation">#</a></span>\[\implies \theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})\]</div>
 <figure class="align-default" id="id1">
 <img alt="_images/image-27.png" src="_images/image-27.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Diagram of the inputs of the kalman filter without sensor fusion e.g. example two using velocity to calculate acceleration.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 30 </span><span class="caption-text">Diagram of the inputs of the kalman filter without sensor fusion e.g. example two using velocity to calculate acceleration.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-default" id="id2">
 <img alt="_images/image-28.png" src="_images/image-28.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 19 </span><span class="caption-text">Diagram of the inputs of the kalman filter with sensor fustion.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 31 </span><span class="caption-text">Diagram of the inputs of the kalman filter with sensor fustion.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p><code class="xref std std-numref docutils literal notranslate"><span class="pre">Sensor-Fusion-Kalman</span></code> shows <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> and <span class="math notranslate nohighlight">\(\hat{\omega}_k\)</span> being used to form the prediction as seen below:</p>

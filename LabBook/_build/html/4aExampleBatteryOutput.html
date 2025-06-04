@@ -400,45 +400,49 @@ document.write(`
 <figure class="align-default" id="fig-kalman-constant-signal">
 <img alt="_images/image-2.png" src="_images/image-2.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Kalman filter used to successfully fit a non-varying signal with a large amount of noise.</span><a class="headerlink" href="#fig-kalman-constant-signal" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 20 </span><span class="caption-text">Kalman filter used to successfully fit a non-varying signal with a large amount of noise.</span><a class="headerlink" href="#fig-kalman-constant-signal" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#fig-kalman-constant-signal"><span class="std std-numref">Fig. 8</span></a> shows the rate of convergence is exponentially fast and much more smoother than the average filter making it easy to extrapolate to infinity.</p>
+<p><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> shows the rate of convergence is exponentially fast and much more smoother than the average filter making it easy to extrapolate to infinity.</p>
 <figure class="align-default" id="fig-kalman-smaller-r">
 <img alt="_images/image-3.png" src="_images/image-3.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 9 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant-signal"><span class="std std-numref">Fig. 8</span></a> but with smaller <span class="math notranslate nohighlight">\(R\)</span>.</span><a class="headerlink" href="#fig-kalman-smaller-r" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 21 </span><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> but with smaller <span class="math notranslate nohighlight">\(R\)</span>.</span><a class="headerlink" href="#fig-kalman-smaller-r" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#fig-kalman-smaller-r"><span class="std std-numref">Fig. 9</span></a> shows smaller R appears to make the rate of convergence faster but after 500 samples it is further from the mean than when <span class="math notranslate nohighlight">\(R=4\)</span>.</p>
+<p><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-smaller-r</span></code> shows smaller R appears to make the rate of convergence faster but after 500 samples it is further from the mean than when <span class="math notranslate nohighlight">\(R=4\)</span>.</p>
 <figure class="align-default" id="fig-kalman-larger-r">
 <img alt="_images/image-4.png" src="_images/image-4.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 10 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant-signal"><span class="std std-numref">Fig. 8</span></a> but with larger <span class="math notranslate nohighlight">\(R\)</span>.</span><a class="headerlink" href="#fig-kalman-larger-r" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 22 </span><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> but with larger <span class="math notranslate nohighlight">\(R\)</span>.</span><a class="headerlink" href="#fig-kalman-larger-r" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#fig-kalman-larger-r"><span class="std std-numref">Fig. 10</span></a> shows slower convergence than figures 4.1 and 4.2 but has the smoothest convergence of the three. <a class="reference internal" href="#fig-kalman-constant-signal"><span class="std std-numref">Fig. 8</span></a> seems to be best as it has a good tradeoff between a noise free filtered signal and fast convergence.</p>
+<p><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-larger-r</span></code> shows slower convergence than figures 4.1 and 4.2 but has the smoothest convergence of the three. <code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> seems to be best as it has a good tradeoff between a noise free filtered signal and fast convergence.</p>
 <figure class="align-default" id="figu-kalman-wrong-h">
 <img alt="_images/image-5.png" src="_images/image-5.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 11 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant-signal"><span class="std std-numref">Fig. 8</span></a> with H set to <span class="math notranslate nohighlight">\(1.115\)</span> rather than <span class="math notranslate nohighlight">\(1\)</span></span><a class="headerlink" href="#figu-kalman-wrong-h" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 23 </span><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> with H set to <span class="math notranslate nohighlight">\(1.115\)</span> rather than <span class="math notranslate nohighlight">\(1\)</span></span><a class="headerlink" href="#figu-kalman-wrong-h" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Varying H will lead to the kalman filter converging to the wrong value since the measurement directly measures the state only satisfied by <span class="math notranslate nohighlight">\(H = 1\)</span>.</p>
 <figure class="align-default" id="fig-kalman-a-1004">
 <img alt="_images/image-6.png" src="_images/image-6.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 12 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant-signal"><span class="std std-numref">Fig. 8</span></a> with <span class="math notranslate nohighlight">\(A\)</span> set to 1.004 rather than 1.</span><a class="headerlink" href="#fig-kalman-a-1004" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 24 </span><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> with <span class="math notranslate nohighlight">\(A\)</span> set to 1.004 rather than 1.</span><a class="headerlink" href="#fig-kalman-a-1004" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>This causes the kalman filter to diverge since only <span class="math notranslate nohighlight">\(A=1\)</span> describes a straight line.</p>
 <figure class="align-default" id="fig-kalman-q-0817">
 <img alt="_images/image-7.png" src="_images/image-7.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 13 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant-signal"><span class="std std-numref">Fig. 8</span></a> except with <span class="math notranslate nohighlight">\(Q = 0.817\)</span> rather than 1.</span><a class="headerlink" href="#fig-kalman-q-0817" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 25 </span><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> except with <span class="math notranslate nohighlight">\(Q = 0.817\)</span> rather than 1.</span><a class="headerlink" href="#fig-kalman-q-0817" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Setting Q to anything other than <span class="math notranslate nohighlight">\(0\)</span> in this example makes the filtered signal noisy since the filter is expecting linear process noise which doesn’t exist in this model because of the way it was defined.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(H\)</span> are defined by ‘the physics of the system’ and changing these values will mean the filter won’t converge. <span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span> are more difficult to determine in this case they are obtained by tuning.</p>
+</div>
 </section>
 
     <script type="text/x-thebe-config">

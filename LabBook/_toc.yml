@@ -8,3 +8,6 @@ chapters:
 - file: 2MovingAverageFilters
 - file: 3LowPassFilters
 - file: 4KalmanFilters
+- file: 4aExampleBatteryOutput
+- file: 4bExampleVelocityFromPosition
+- file: 5IMU
