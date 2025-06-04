@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="./" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Example: Velocity from position &#8212; Kalman Filters and IMU</title>
+    <title>Example: Battery output &#8212; Kalman Filters and IMU</title>
   
   
   
@@ -18,52 +18,50 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
-    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '4bExampleVelocityFromPosition';</script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="IMU" href="5IMU.html" />
-    <link rel="prev" title="Example: Battery output" href="4aExampleBatteryOutput.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = '_sources/4aExampleBatteryOutput';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -95,7 +93,7 @@
     <div class="search-button__overlay"></div>
     <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
-      action="search.html"
+      action="../search.html"
       method="get">
   <i class="fa-solid fa-magnifying-glass"></i>
   <input type="search"
@@ -126,6 +124,8 @@
       
       
       
+        
+      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -144,7 +144,7 @@
     
   
 
-<a class="navbar-brand logo" href="0Intro.html">
+<a class="navbar-brand logo" href="../0Intro.html">
   
   
   
@@ -155,8 +155,8 @@
       
     
     
-    <img src="_static/logo.png" class="logo__image only-light" alt="Kalman Filters and IMU - Home"/>
-    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Kalman Filters and IMU - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Kalman Filters and IMU - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Kalman Filters and IMU - Home"/>`);</script>
   
   
 </a></div>
@@ -176,19 +176,19 @@
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
-                <a class="reference internal" href="0Intro.html">
+                <a class="reference internal" href="../0Intro.html">
                     Kalman Filters and IMU
                 </a>
             </li>
         </ul>
-        <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="1AverageFilters.html">Average filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2MovingAverageFilters.html">Moving Average filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Example: Battery output</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Example: Velocity from position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU</a></li>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../1AverageFilters.html">Average filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../2MovingAverageFilters.html">Moving Average filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3LowPassFilters.html">Low Pass filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4KalmanFilters.html">Kalman filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4aExampleBatteryOutput.html">Example: Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4bExampleVelocityFromPosition.html">Example: Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../5IMU.html">IMU</a></li>
 </ul>
 
     </div>
@@ -260,7 +260,7 @@
       
       
       
-      <li><a href="https://github.com/MalachiHibbins/IMU/issues/new?title=Issue%20on%20page%20%2F4bExampleVelocityFromPosition.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/MalachiHibbins/IMU/issues/new?title=Issue%20on%20page%20%2F_sources/4aExampleBatteryOutput.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -290,7 +290,7 @@
       
       
       
-      <li><a href="_sources/4bExampleVelocityFromPosition.md" target="_blank"
+      <li><a href="../_sources/_sources/4aExampleBatteryOutput.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -372,7 +372,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Example: Velocity from position</h1>
+    <h1>Example: Battery output</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -386,64 +386,59 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="example-velocity-from-position">
-<h1>Example: Velocity from position<a class="headerlink" href="#example-velocity-from-position" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="example-battery-output">
+<h1>Example: Battery output<a class="headerlink" href="#example-battery-output" title="Link to this heading">#</a></h1>
+<p>This example looks at how a kalman filter can be used to fit a constant signal in this case the output from a battery.</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(n = 2\)</span> since <span class="math notranslate nohighlight">\(x_k = \begin{bmatrix}
-s \\
-v
-\end{bmatrix}_k\)</span> where <span class="math notranslate nohighlight">\(s\)</span> is the position and <span class="math notranslate nohighlight">\(v\)</span> is the velocity.</p></li>
-<li><p><span class="math notranslate nohighlight">\(m = 1\)</span> since <span class="math notranslate nohighlight">\(z_k = s_k\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(A = 
-\begin{bmatrix}
-1 &amp; \Delta t \\
-0 &amp; 1
-\end{bmatrix}\)</span> where (<span class="math notranslate nohighlight">\(\Delta t\)</span> is the time step between measurements) since <span class="math notranslate nohighlight">\(x_{k+1} = \begin{bmatrix}
-s_k + v_k\Delta t \\ v_k 
-\end{bmatrix} = Ax_k\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(H = \begin{bmatrix}
-1 &amp;
-0
-\end{bmatrix}\)</span> since <span class="math notranslate nohighlight">\(z_{k+1} = Hx_k + v_k\)</span></p></li>
-<li><p>Q is given <span class="math notranslate nohighlight">\(Q = \begin{bmatrix}
-Q_s &amp; 0 \\
-0 &amp; Q_v
-\end{bmatrix} = \begin{bmatrix}
-1 &amp; 0 \\
-0 &amp; 3
-\end{bmatrix}\)</span> Where <span class="math notranslate nohighlight">\(Q_s\)</span> is the covariance in <span class="math notranslate nohighlight">\(s_k\)</span> and <span class="math notranslate nohighlight">\(Q_v\)</span> is the covariance in <span class="math notranslate nohighlight">\(v_k\)</span>.</p></li>
-<li><p><span class="math notranslate nohighlight">\(R\)</span> is one dimensional and is obtained by tuning.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{x}\)</span> is the voltage which is scalar hence <span class="math notranslate nohighlight">\(n = 1\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{z}\)</span> is also the voltage <span class="math notranslate nohighlight">\(m=1\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(Q = 0\)</span> Assuming no linear process noise (<span class="math notranslate nohighlight">\(w_k\)</span> = 0)</p></li>
+<li><p><span class="math notranslate nohighlight">\(A=1\)</span> the battery output is constant so <span class="math notranslate nohighlight">\(x_{k+1}\)</span> = <span class="math notranslate nohighlight">\(x_k\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(H = 1\)</span> The measurement sensor directly observes the voltage</p></li>
+<li><p><span class="math notranslate nohighlight">\(R\)</span> is adjusted for tuning</p></li>
 </ul>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>The true signal in the graphs below is generated using a combination of <span class="math notranslate nohighlight">\(\sin\)</span> waves of varing amplitudes and speeds, the velocity version is the analytical deriative of this. The noisy signal is generated by adding randomly generated values to this using the guassian distribution. The kalman filter is applied to the noisy position data and outputs the filtred postion data and filtered velocity data. Which are graphed below</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The summary statistics are generated between the true signal and the kalman filtered signal. <span class="math notranslate nohighlight">\(\mu^2\)</span> refers to the random mean squared error and <span class="math notranslate nohighlight">\(\mu\)</span> refers to the mean absolute error.</p>
-</div>
-<figure class="align-default" id="original">
-<img alt="_images/image-23.png" src="_images/image-23.png" />
+<figure class="align-default" id="fig-kalman-constant-signal">
+<img alt="_sources/image-2.png" src="_sources/image-2.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 26 </span><span class="caption-text">Kaman filter setup using parameters above to fit a noisy signal made up from sin waves with varing amplitudes and periods.</span><a class="headerlink" href="#original" title="Link to this image">#</a></p>
+<p><span class="caption-text">Kalman filter used to successfully fit a non-varying signal with a large amount of noise.</span><a class="headerlink" href="#fig-kalman-constant-signal" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>The fit for the position is very good with high R<span class="math notranslate nohighlight">\(^2\)</span> value. However it could be smoother and the residules graph is not completely random suggesting there could be some delay, prehaps increasing <span class="math notranslate nohighlight">\(R\)</span> would improve the fit. The velocity fit is poor and the filtered signal lags behind the true signal. Since only the velocity signal is lagging Q_v was increased.</p>
-<figure class="align-default" id="increased-r-and-increased-q">
-<img alt="_images/image-24.png" src="_images/image-24.png" />
+<p><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> shows the rate of convergence is exponentially fast and much more smoother than the average filter making it easy to extrapolate to infinity.</p>
+<figure class="align-default" id="fig-kalman-smaller-r">
+<img alt="_sources/image-3.png" src="_sources/image-3.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 27 </span><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">original</span></code> with increased R and increased Q</span><a class="headerlink" href="#increased-r-and-increased-q" title="Link to this image">#</a></p>
+<p><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> but with smaller <span class="math notranslate nohighlight">\(R\)</span>.</span><a class="headerlink" href="#fig-kalman-smaller-r" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">increased-R-and-increased-Q</span></code> shows a slightly improved fit with position and a significantly improved fit with velocity. However the velocity fit is now significantly less smooth, there is a clear tradeoff between having a a smooth fit and having an accurate fit. Smoother fits more accurately represent the true shape of the data, but will often cause there to be a delay. The residuals graph for position now seems to be very random implying close to optimal fit, the residuals graph for velocity is close to being random.</p>
-<div class="admonition-question admonition">
-<p class="admonition-title">Question</p>
-<p>How is it possible to ensure both a smooth fit whilst minimising lag and ensuring a good fit? Prehaps a machine learning algorithm?</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Using a kalmamn filter for differentiation is significantly more accurate than performing numerical integration on the noisy signal.</p>
-</div>
+<p><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-smaller-r</span></code> shows smaller R appears to make the rate of convergence faster but after 500 samples it is further from the mean than when <span class="math notranslate nohighlight">\(R=4\)</span>.</p>
+<figure class="align-default" id="fig-kalman-larger-r">
+<img alt="_sources/image-4.png" src="_sources/image-4.png" />
+<figcaption>
+<p><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> but with larger <span class="math notranslate nohighlight">\(R\)</span>.</span><a class="headerlink" href="#fig-kalman-larger-r" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-larger-r</span></code> shows slower convergence than figures 4.1 and 4.2 but has the smoothest convergence of the three. <code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> seems to be best as it has a good tradeoff between a noise free filtered signal and fast convergence.</p>
+<figure class="align-default" id="figu-kalman-wrong-h">
+<img alt="_sources/image-5.png" src="_sources/image-5.png" />
+<figcaption>
+<p><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> with H set to <span class="math notranslate nohighlight">\(1.115\)</span> rather than <span class="math notranslate nohighlight">\(1\)</span></span><a class="headerlink" href="#figu-kalman-wrong-h" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Varying H will lead to the kalman filter converging to the wrong value since the measurement directly measures the state only satisfied by <span class="math notranslate nohighlight">\(H = 1\)</span>.</p>
+<figure class="align-default" id="fig-kalman-a-1004">
+<img alt="_sources/image-6.png" src="_sources/image-6.png" />
+<figcaption>
+<p><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> with <span class="math notranslate nohighlight">\(A\)</span> set to 1.004 rather than 1.</span><a class="headerlink" href="#fig-kalman-a-1004" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>This causes the kalman filter to diverge since only <span class="math notranslate nohighlight">\(A=1\)</span> describes a straight line.</p>
+<figure class="align-default" id="fig-kalman-q-0817">
+<img alt="_sources/image-7.png" src="_sources/image-7.png" />
+<figcaption>
+<p><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-kalman-constant-signal</span></code> except with <span class="math notranslate nohighlight">\(Q = 0.817\)</span> rather than 1.</span><a class="headerlink" href="#fig-kalman-q-0817" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Setting Q to anything other than <span class="math notranslate nohighlight">\(0\)</span> in this example makes the filtered signal noisy since the filter is expecting linear process noise which doesn’t exist in this model because of the way it was defined.</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -459,7 +454,7 @@ Q_s &amp; 0 \\
         },
         kernelOptions: {
             name: "python3",
-            path: "./."
+            path: "./_sources"
         },
         predefinedOutput: true
     }
@@ -476,24 +471,6 @@ Q_s &amp; 0 \\
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="4aExampleBatteryOutput.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Example: Battery output</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="5IMU.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">IMU</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -544,8 +521,8 @@ By Malachi Hibbins
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
