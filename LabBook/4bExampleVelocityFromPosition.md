@@ -1,15 +1,8 @@
-# Example: Velocity from position
-- $n = 2$ since $x_k = \begin{bmatrix}
-s \\
-v
-\end{bmatrix}_k$ where $s$ is the position and $v$ is the velocity.
+# Velocity from position
+- $n = 2$ since $x_k = \begin{bmatrix} s \\ v \end{bmatrix}_k$ where $s$ is the position and $v$ is the velocity.
 - $m = 1$ since $z_k = s_k$
 
-- $A = 
-\begin{bmatrix}
-1 & \Delta t \\
-0 & 1
-\end{bmatrix}$ where ($\Delta t$ is the time step between measurements) since $x_{k+1} = \begin{bmatrix}
+- $A = \begin{bmatrix} 1 & \Delta t \\ 0 & 1 \end{bmatrix}$ where ($\Delta t$ is the time step between measurements) since $x_{k+1} = \begin{bmatrix}
 s_k + v_k\Delta t \\ v_k 
 \end{bmatrix} = Ax_k$
 - $H = \begin{bmatrix}
@@ -49,4 +42,9 @@ How is it possible to ensure both a smooth fit whilst minimising lag and ensurin
 
 ```{note}
 Using a kalmamn filter for differentiation is significantly more accurate than performing numerical integration on the noisy signal. 
+```
+
+```{figure} image-27.png
+:label: Classic-Kalman
+Diagram of the inputs of the kalman filter without sensor fusion e.g. example two using velocity to calculate acceleration.
 ```

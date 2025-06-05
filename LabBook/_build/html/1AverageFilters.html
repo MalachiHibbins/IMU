@@ -186,6 +186,9 @@
 <li class="toctree-l1"><a class="reference internal" href="2MovingAverageFilters.html">Moving Average filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Example: Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Example: Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU</a></li>
 </ul>
 
     </div>
@@ -385,7 +388,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="average-filters">
 <h1>Average filters<a class="headerlink" href="#average-filters" title="Link to this heading">#</a></h1>
-<p>The estimated state (in this case the mean state) is evaluated as:</p>
+<p>The estimated state (the mean om this example) is evaluated as:</p>
 <div class="math notranslate nohighlight" id="equation-eq-average">
 <span class="eqno">(1)<a class="headerlink" href="#equation-eq-average" title="Link to this equation">#</a></span>\[\hat{x}_k = \frac{z_1+z_2+z_3+...+z_k}{k}\]</div>
 <p>Which can be written recursively as:</p>

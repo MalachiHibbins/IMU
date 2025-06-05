@@ -186,6 +186,9 @@
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Moving Average filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Example: Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Example: Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU</a></li>
 </ul>
 
     </div>
@@ -385,7 +388,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="moving-average-filters">
 <h1>Moving Average filters<a class="headerlink" href="#moving-average-filters" title="Link to this heading">#</a></h1>
-<p>The moving average <span class="math notranslate nohighlight">\(\hat{x}_n\)</span> is used to remove noise over a constantly varying signal. Here <span class="math notranslate nohighlight">\(n\)</span> represents the index of the moving average and <span class="math notranslate nohighlight">\(k\)</span> represents the window size.</p>
+<p>The moving average <span class="math notranslate nohighlight">\(\hat{x}_n\)</span> is used to remove noise over a constantly varying signal. Here <span class="math notranslate nohighlight">\(n\)</span> represents the index of the moving average and <span class="math notranslate nohighlight">\(k\)</span> represents the window size which is a free parameter.</p>
 <div class="math notranslate nohighlight" id="equation-eq-moving-average">
 <span class="eqno">(4)<a class="headerlink" href="#equation-eq-moving-average" title="Link to this equation">#</a></span>\[\hat{x}_n = \frac{z_{n-k+1} + z_{n-k+2}+...+z_n}{k}\]</div>
 <p><span class="math notranslate nohighlight">\(\hat{x}_n\)</span> can be written recursively as:</p>

@@ -1,6 +1,6 @@
 # Low Pass filters
 
-A low pass filter is an improvement on the moving average filter it allows low frequencies to pass through but filters out high frequencies. Noise is usually high frequency. Below is an example of a first order low pass filter.
+A low pass filter is an improvement on the moving average filter it allows low frequencies to pass through but filters out high frequencies. Noise is usually high frequency. Below is an example of a first order low pass filter:
 
 ```{math}
 :label: eq-lowpass-1

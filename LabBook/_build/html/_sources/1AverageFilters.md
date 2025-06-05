@@ -1,6 +1,6 @@
 # Average filters
 
-The estimated state (in this case the mean state) is evaluated as:
+The estimated state (the mean om this example) is evaluated as:
 
 ```{math}
 :label: eq-average

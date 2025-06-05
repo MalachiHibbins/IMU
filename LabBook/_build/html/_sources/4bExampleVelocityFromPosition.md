@@ -50,3 +50,8 @@ How is it possible to ensure both a smooth fit whilst minimising lag and ensurin
 ```{note}
 Using a kalmamn filter for differentiation is significantly more accurate than performing numerical integration on the noisy signal. 
 ```
+
+```{figure} image-27.png
+:label: Classic-Kalman
+Diagram of the inputs of the kalman filter without sensor fusion e.g. example two using velocity to calculate acceleration.
+```

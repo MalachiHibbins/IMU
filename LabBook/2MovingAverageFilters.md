@@ -1,6 +1,6 @@
 # Moving Average filters
 
-The moving average $\hat{x}_n$ is used to remove noise over a constantly varying signal. Here $n$ represents the index of the moving average and $k$ represents the window size.
+The moving average $\hat{x}_n$ is used to remove noise over a constantly varying signal. Here $n$ represents the index of the moving average and $k$ represents the window size which is a free parameter.
 
 ```{math}
 :label: eq-moving-average

@@ -115,23 +115,41 @@ ax9.plot(t_a, a_3, label='Signal', color='green')
 ax9.set_ylabel('$a_3$')
 ax9.set_xlabel('$t$')
 
+# Plot accelarometer data as euler angles
+
+fig5, (ax10, ax11, ax12) = plt.subplots(3, 1, figsize=(10, 6), sharex=True)
+
+ax10.plot(t_a, phi_a, label='$\phi$', color='green')
+ax10.set_ylabel('$\phi$')
+
+ax11.plot(t_a, theta_a, label='$\\theta$', color='orange')
+ax11.set_ylabel('$\\theta$')
+
+ax12.plot(t_a, psi_a, label='$\psi$', color='blue')
+ax12.set_ylabel('$\psi$')
+ax12.set_xlabel('$t$')
+
+
 # Plot yaw pitch roll using euler integration
 fig3, (ax7, ax8, ax9) = plt.subplots(3, 1, figsize=(10, 6), sharex=True)
-
-ax7.plot(t_w, phi_g, label='$\phi_g$', color='green')
-ax7.set_ylabel('$\phi_g$')
-ax7.hlines(0, t_w.min(), t_w.max(), color='black', linestyle='--')
+alpha = 0.8
+ax7.plot(t_w, phi_g, label='$\phi^-$', color='green', alpha=alpha)
+ax7.plot(t_a, phi_a, label='$\phi$', color='lightgreen', linestyle='--', alpha=alpha)
+ax7.set_ylabel('$\phi$')
+#ax7.hlines(0, t_w.min(), t_w.max(), color='black', linestyle='--')
 ax7.legend()
 
-ax8.plot(t_w, theta_g, label='$\\theta_g$', color='orange')
-ax8.set_ylabel('$\\theta_g$')
-ax8.hlines(0, t_w.min(), t_w.max(), color='black', linestyle='--')
+ax8.plot(t_w, theta_g, label='$\\theta^-$', color='orange', alpha=alpha)
+ax8.plot(t_a, theta_a, label='$\\theta$', color='yellow', linestyle='--', alpha=alpha)
+ax8.set_ylabel('$\\theta$')
+#ax8.hlines(0, t_w.min(), t_w.max(), color='black', linestyle='--')
 ax8.legend()
 
-ax9.plot(t_w, psi_g, label='$\psi_g$', color='blue')
-ax9.set_ylabel('$\psi_g$')
+ax9.plot(t_w, psi_g, label='$\psi^-$', color='blue', alpha=alpha)
+ax9.plot(t_a, psi_a, label='$\psi$', color='lightblue', linestyle='--', alpha=alpha)
+ax9.set_ylabel('$\psi$')
 ax9.set_xlabel('$t$')
-ax9.hlines(0, t_w.min(), t_w.max(), color='black', linestyle='--')
+#ax9.hlines(0, t_w.min(), t_w.max(), color='black', linestyle='--')
 ax9.legend()
 
 # plot euler angles

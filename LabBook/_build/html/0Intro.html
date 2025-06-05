@@ -189,7 +189,7 @@
 <li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Example: Battery output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Example: Velocity from position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU and Sensor fusion</a></li>
 </ul>
 
     </div>
@@ -362,9 +362,7 @@ document.write(`
   </button>
 `);
 </script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</button>
+
 </div></div>
       
     </div>
@@ -380,15 +378,6 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sensors">Sensors</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kalman-filters">Kalman Filters</a></li>
-</ul>
-            </nav>
         </div>
     </div>
 </div>
@@ -400,13 +389,6 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="kalman-filters-and-imu">
 <h1>Kalman Filters and IMU<a class="headerlink" href="#kalman-filters-and-imu" title="Link to this heading">#</a></h1>
-<section id="sensors">
-<h2>Sensors<a class="headerlink" href="#sensors" title="Link to this heading">#</a></h2>
-<p>IMU measures: angular rotation, force and magnetic field, measured using a: gyroscope, accelerometer and a magnetometer respectively. Each of these measurements has serious issues: the accelerometer is easy to confuse with shaky motion but is accurate with slow steady motion, the magnetometer will lose its pointing accuracy over time but is accurate in shaky motion. These problems are rectified using sensor fusion.</p>
-</section>
-<section id="kalman-filters">
-<h2>Kalman Filters<a class="headerlink" href="#kalman-filters" title="Link to this heading">#</a></h2>
-<p>Kalman filters are a form of optimal estimation algorithm. The measurements from gyroscope, accelerometer and magnetometer are each prone to drift over time. However by combining these sensors it is possible for our estimates to converge towards the real value. The state observer <span class="math notranslate nohighlight">\(\hat{x}\)</span> represents the estimated state vector from a set of measurements (<span class="math notranslate nohighlight">\(z\)</span>) which include noise.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="1AverageFilters.html">Average filters</a></li>
@@ -415,10 +397,9 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Example: Battery output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Example: Velocity from position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU and Sensor fusion</a></li>
 </ul>
 </div>
-</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -466,22 +447,6 @@ document.write(`
             </div>
             
             
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sensors">Sensors</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kalman-filters">Kalman Filters</a></li>
-</ul>
-  </nav></div>
-
-</div></div>
               
             
           </div>
