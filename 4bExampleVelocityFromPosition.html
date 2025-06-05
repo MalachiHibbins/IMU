@@ -62,7 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '4bExampleVelocityFromPosition';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="IMU" href="5IMU.html" />
+    <link rel="next" title="IMU and Sensor fusion" href="5IMU.html" />
     <link rel="prev" title="Example: Battery output" href="4aExampleBatteryOutput.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -188,7 +188,7 @@
 <li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Example: Battery output</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Example: Velocity from position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU and Sensor fusion</a></li>
 </ul>
 
     </div>
@@ -425,14 +425,14 @@ Q_s &amp; 0 \\
 <figure class="align-default" id="original">
 <img alt="_images/image-23.png" src="_images/image-23.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 26 </span><span class="caption-text">Kaman filter setup using parameters above to fit a noisy signal made up from sin waves with varing amplitudes and periods.</span><a class="headerlink" href="#original" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Kaman filter setup using parameters above to fit a noisy signal made up from sin waves with varing amplitudes and periods.</span><a class="headerlink" href="#original" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The fit for the position is very good with high R<span class="math notranslate nohighlight">\(^2\)</span> value. However it could be smoother and the residules graph is not completely random suggesting there could be some delay, prehaps increasing <span class="math notranslate nohighlight">\(R\)</span> would improve the fit. The velocity fit is poor and the filtered signal lags behind the true signal. Since only the velocity signal is lagging Q_v was increased.</p>
 <figure class="align-default" id="increased-r-and-increased-q">
 <img alt="_images/image-24.png" src="_images/image-24.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 27 </span><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">original</span></code> with increased R and increased Q</span><a class="headerlink" href="#increased-r-and-increased-q" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 15 </span><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">original</span></code> with increased R and increased Q</span><a class="headerlink" href="#increased-r-and-increased-q" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">increased-R-and-increased-Q</span></code> shows a slightly improved fit with position and a significantly improved fit with velocity. However the velocity fit is now significantly less smooth, there is a clear tradeoff between having a a smooth fit and having an accurate fit. Smoother fits more accurately represent the true shape of the data, but will often cause there to be a delay. The residuals graph for position now seems to be very random implying close to optimal fit, the residuals graph for velocity is close to being random.</p>
@@ -444,6 +444,12 @@ Q_s &amp; 0 \\
 <p class="admonition-title">Note</p>
 <p>Using a kalmamn filter for differentiation is significantly more accurate than performing numerical integration on the noisy signal.</p>
 </div>
+<figure class="align-default" id="id1">
+<img alt="_images/image-27.png" src="_images/image-27.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Diagram of the inputs of the kalman filter without sensor fusion e.g. example two using velocity to calculate acceleration.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
 </section>
 
     <script type="text/x-thebe-config">
@@ -490,7 +496,7 @@ Q_s &amp; 0 \\
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">IMU</p>
+        <p class="prev-next-title">IMU and Sensor fusion</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
