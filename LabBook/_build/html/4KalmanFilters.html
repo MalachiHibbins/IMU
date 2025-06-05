@@ -187,8 +187,8 @@
 <li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Kalman filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Example: Battery output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Example: Velocity from position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU and Sensor fusion</a></li>
 </ul>
 
     </div>
@@ -400,10 +400,11 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="kalman-filters">
 <h1>Kalman filters<a class="headerlink" href="#kalman-filters" title="Link to this heading">#</a></h1>
-<p><strong>Kalman filter is essentially a low pass filter with a dynamically changing <span class="math notranslate nohighlight">\(\alpha\)</span></strong>. External input <span class="math notranslate nohighlight">\(z_k\)</span> (measurement), final output <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> (estimate), final output <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> (prediction), error covariance <span class="math notranslate nohighlight">\(P_k\)</span> (estimate), error covariance <span class="math notranslate nohighlight">\(P_k^-\)</span> (prediction) system model A, H, Q and R all others are used for internal computation.</p>
+<p><strong>A kalman filter compares predicted values (<span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span>) with measurments (<span class="math notranslate nohighlight">\(\hat{z}\)</span>), which are weighted in a similar fasion to a low pass filter that has dynmaically changing <span class="math notranslate nohighlight">\(\alpha\)</span>, to create an estimate of true state measurments <span class="math notranslate nohighlight">\(\hat{x}_k\)</span></strong>.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>A prediction is a forecast of the next state based on the previous state and the mathematical model whereas a estimate is an update of the predicted state once new measurements have been taken.</p>
+<p>Terminology
+A prediction is a forecast of the next state based on the previous state and the mathematical model whereas a estimate is an update of the predicted state once new measurements have been taken.</p>
 </div>
 <section id="linear-model">
 <h2>Linear model<a class="headerlink" href="#linear-model" title="Link to this heading">#</a></h2>
@@ -413,11 +414,10 @@ document.write(`
 <p>and the measurement</p>
 <div class="math notranslate nohighlight" id="equation-measurment">
 <span class="eqno">(10)<a class="headerlink" href="#equation-measurment" title="Link to this equation">#</a></span>\[z_{k+1} = Hx_k + v_k \]</div>
-<p>when no forceing function is present.</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(x_k\)</span> is the process state vector at time <span class="math notranslate nohighlight">\(t_k\)</span> (<span class="math notranslate nohighlight">\(n\times1\)</span> column vector)</p></li>
 <li><p><span class="math notranslate nohighlight">\(z_k\)</span> is the vector measurment at time <span class="math notranslate nohighlight">\(t_k\)</span> (<span class="math notranslate nohighlight">\(m\times1\)</span> column vector).</p></li>
-<li><p><span class="math notranslate nohighlight">\(A\)</span> is the state transition matrix which maps <span class="math notranslate nohighlight">\(x_k\)</span> to <span class="math notranslate nohighlight">\(x_{k+1}\)</span> in the absence of a forcing function (<span class="math notranslate nohighlight">\(n\times n\)</span> matrix). When a forcing function is present the systems evolutions is effected by an additional term e.g. <span class="math notranslate nohighlight">\(x_{k+1} = Ax_k+Bu_k\)</span>. Where <span class="math notranslate nohighlight">\(B_ku_k\)</span> models the forcing function. Here it is assumed that no forceing function is present. An example of a forcing function is intentionally changing the output from a battery by adding another cell. Note this is not the same as linear process noise.</p></li>
+<li><p><span class="math notranslate nohighlight">\(A\)</span> is the state transition matrix which maps <span class="math notranslate nohighlight">\(x_k\)</span> to <span class="math notranslate nohighlight">\(x_{k+1}\)</span> in the absence of a forcing function. (<span class="math notranslate nohighlight">\(n\times n\)</span> matrix).</p></li>
 <li><p><span class="math notranslate nohighlight">\(H\)</span> is the state to measurement matrix giving the ideal noiseless connection between the measurement and the state vector at state vector (<span class="math notranslate nohighlight">\(m \times n\)</span> matrix).</p></li>
 <li><p><span class="math notranslate nohighlight">\(w_k\)</span> is the linear process noise vector  which is noise uncorrelated over time (white sequence). Its values at different time steps are independent. E.g. the temperature of a fridge randomly fluctuates due to compressor inefficiencies and unpredictable random temperature shifts. (<span class="math notranslate nohighlight">\(n\times1\)</span> column vector).</p></li>
 <li><p><span class="math notranslate nohighlight">\(v_k\)</span> is the linear measurement noise vector and is assumed to be a white sequence having zero cross corelation with <span class="math notranslate nohighlight">\(w_k\)</span>. E.g. temperature measurments using a digital thermometer will be effected by random noise(<span class="math notranslate nohighlight">\(m\times1\)</span> column vector).</p></li>
@@ -446,14 +446,8 @@ document.write(`
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For clarity it might be easier to write everything in dirac notation this would make it easier to distinguish what was a row/column vector and what is a matrix. It would also help to distinguish states from measurments.</p>
+<p>When a forcing function is present the systems evolutions is effected by an additional term e.g. <span class="math notranslate nohighlight">\(x_{k+1} = Ax_k+Bu_k\)</span>. Where <span class="math notranslate nohighlight">\(B_ku_k\)</span> models the forcing function. Here it is assumed that no forceing function is present. An example of a forcing function is intentionally changing the output from a battery by adding another cell. Note this is not the same as linear process noise.</p>
 </div>
-<figure class="align-default" id="fig-kalman-block-diagram">
-<img alt="_images/image.png" src="_images/image.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Block diagram of the Kalman filter process.</span><a class="headerlink" href="#fig-kalman-block-diagram" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
 </section>
 <section id="estimation-step">
 <h2>Estimation step<a class="headerlink" href="#estimation-step" title="Link to this heading">#</a></h2>
@@ -495,6 +489,12 @@ document.write(`
 <p>The error covariance matrix associated with <span class="math notranslate nohighlight">\(\hat{x}^-_{k+1}\)</span> is obtained from</p>
 <div class="math notranslate nohighlight" id="equation-projection-covariance">
 <span class="eqno">(21)<a class="headerlink" href="#equation-projection-covariance" title="Link to this equation">#</a></span>\[P_k = A_kP_kA_k^T+Q_k\]</div>
+<figure class="align-default" id="fig-kalman-block-diagram">
+<img alt="_images/image.png" src="_images/image.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Block diagram of the Kalman filter process.</span><a class="headerlink" href="#fig-kalman-block-diagram" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Whereas the low pass filter passes <span class="math notranslate nohighlight">\(\hat{x}_{k-1}\)</span> directly between time steps <span class="math notranslate nohighlight">\(t_{k-1}\)</span> and <span class="math notranslate nohighlight">\(t_{k}\)</span> the kalman filter predicts the next step before a measurement is carried out to produce and compares this with the measurement to give new estimate.</p>

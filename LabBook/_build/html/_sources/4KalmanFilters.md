@@ -1,7 +1,8 @@
 # Kalman filters
 
-**Kalman filter is essentially a low pass filter with a dynamically changing $\alpha$**. External input $z_k$ (measurement), final output $\hat{x}_k$ (estimate), final output $\hat{x}^-_k$ (prediction), error covariance $P_k$ (estimate), error covariance $P_k^-$ (prediction) system model A, H, Q and R all others are used for internal computation. 
-```{important}
+**A kalman filter compares predicted values ($\hat{x}^-_k$) with measurments ($\hat{z}$), which are weighted in a similar fasion to a low pass filter that has dynmaically changing $\alpha$, to create an estimate of true state measurments $\hat{x}_k$**.
+
+```{important} Terminology
 A prediction is a forecast of the next state based on the previous state and the mathematical model whereas a estimate is an update of the predicted state once new measurements have been taken.
 ```
 
@@ -17,10 +18,9 @@ and the measurement
 :label: measurment
 z_{k+1} = Hx_k + v_k 
 ```
-when no forceing function is present. 
 - $x_k$ is the process state vector at time $t_k$ ($n\times1$ column vector)
 - $z_k$ is the vector measurment at time $t_k$ ($m\times1$ column vector). 
-- $A$ is the state transition matrix which maps $x_k$ to $x_{k+1}$ in the absence of a forcing function ($n\times n$ matrix). When a forcing function is present the systems evolutions is effected by an additional term e.g. $x_{k+1} = Ax_k+Bu_k$. Where $B_ku_k$ models the forcing function. Here it is assumed that no forceing function is present. An example of a forcing function is intentionally changing the output from a battery by adding another cell. Note this is not the same as linear process noise.
+- $A$ is the state transition matrix which maps $x_k$ to $x_{k+1}$ in the absence of a forcing function. ($n\times n$ matrix). 
 - $H$ is the state to measurement matrix giving the ideal noiseless connection between the measurement and the state vector at state vector ($m \times n$ matrix).
 - $w_k$ is the linear process noise vector  which is noise uncorrelated over time (white sequence). Its values at different time steps are independent. E.g. the temperature of a fridge randomly fluctuates due to compressor inefficiencies and unpredictable random temperature shifts. ($n\times1$ column vector).
 - $v_k$ is the linear measurement noise vector and is assumed to be a white sequence having zero cross corelation with $w_k$. E.g. temperature measurments using a digital thermometer will be effected by random noise($m\times1$ column vector).
@@ -33,9 +33,8 @@ E[w_k w_i^T] =
     0,   & i \neq k
 \end{cases}
 ```
+
 - $R$ is the covariance matrix of $v_k$ ($m\times m$ diagonal matrix). $R$ tells the kalman filter how much to "trust" the measurments compared to model predictions. Large R means the measurments are trusted less so the filter relies more on its predictions.
-
-
 ```{math}
 :label: eq-measurement-noise-cov
 E[v_k v_i^T] = 
@@ -44,19 +43,14 @@ E[v_k v_i^T] =
     0,   & i \neq k
 \end{cases}
 ```
-
 - $e^-_k$ is the estimation error defined as: $e^-_k = x_k-\hat{x}^-_k$
 - $P^-_k$ is then the associated error covariance matrix defined as: $P^-_k =E[e^-_k(e^-_k)^T]$
 - $x_0$ is the initial state estimate. provided at the start of the estimation process ($n \times 1$ column vector)
 - $P_0$ is the initial error estimate
+
   
 ```{note}
-For clarity it might be easier to write everything in dirac notation this would make it easier to distinguish what was a row/column vector and what is a matrix. It would also help to distinguish states from measurments.
-```
-
-```{figure} image.png
-:name: fig-kalman-block-diagram
-Block diagram of the Kalman filter process.
+When a forcing function is present the systems evolutions is effected by an additional term e.g. $x_{k+1} = Ax_k+Bu_k$. Where $B_ku_k$ models the forcing function. Here it is assumed that no forceing function is present. An example of a forcing function is intentionally changing the output from a battery by adding another cell. Note this is not the same as linear process noise.
 ```
 
 ## Estimation step
@@ -129,7 +123,10 @@ P_k = A_kP_kA_k^T+Q_k
 ```
 
 
-
+```{figure} image.png
+:name: fig-kalman-block-diagram
+Block diagram of the Kalman filter process.
+```
 
 ```{note} 
 Whereas the low pass filter passes $\hat{x}_{k-1}$ directly between time steps $t_{k-1}$ and $t_{k}$ the kalman filter predicts the next step before a measurement is carried out to produce and compares this with the measurement to give new estimate.

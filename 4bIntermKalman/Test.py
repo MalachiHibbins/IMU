@@ -63,9 +63,12 @@ def run_kalman(A, H, Q_s, Q_v, R, P_0_s, P_0_v, std, dt, maximum, s_e, v_e):
     # Calculate Mean Absolute Error on velocity
     mea_v = np.mean(np.abs(v_k - signal_v))
     
-    return noisy_signal, signal, noisy_signal_v, signal_v, s_k, v_k, r_2, rmse, mea, r_2_v, rmse_v, mea_v
+    # differentiate s_k to get velocity
+    ds_k = np.diff(s_k) / dt
+    
+    return noisy_signal, signal, noisy_signal_v, signal_v, s_k, v_k, r_2, rmse, mea, r_2_v, rmse_v, mea_v, ds_k
 
-noisy_signal, signal, noisy_signal_v, signal_v, s_k, v_k, r_2, rmse, mea, r_2_v, rmse_v, mea_v = run_kalman(A, H, Q_s, Q_v, R, P_0_s, P_0_v, std, dt, maximum, s_e, v_e)
+noisy_signal, signal, noisy_signal_v, signal_v, s_k, v_k, r_2, rmse, mea, r_2_v, rmse_v, mea_v, ds_k = run_kalman(A, H, Q_s, Q_v, R, P_0_s, P_0_v, std, dt, maximum, s_e, v_e)
 
 
 # Plot initial data
@@ -85,10 +88,13 @@ ax1.set_ylabel('Position')
 ax1.set_title('Kalman Filtered Position')
 ax1.legend(loc="upper right")
 
+
+
 # Velocity Plot
 l4, = ax2.plot(v_k, label='Kalman Filtered Velocity', color='orange')
 #l41 = ax2.scatter(np.arange(len(noisy_signal)), noisy_signal_v, label='Noisy Velocity', color='blue', alpha=0.1)
 l42, = ax2.plot(signal_v, label='True Velocity', color='green')
+l43, = ax2.plot(ds_k, label='Differentiated Kalman Position', color='yellow', alpha=0.5)
 ax2.set_xlabel('Sample Index')
 ax2.set_ylabel('Velocity')
 ax2.set_title('Kalman Filtered Velocity')
@@ -160,7 +166,7 @@ def update(val):
     v_e = s_v_e.val
     
     
-    noisy_signal, signal, noisy_signal_v, signal_v, s_k, v_k, r_2, rmse, mea, r_2_v, rmse_v, mea_v = run_kalman(A, H, Q_s, Q_v, R, P_0_s, P_0_v, std, dt, maximum, s_e, v_e)
+    noisy_signal, signal, noisy_signal_v, signal_v, s_k, v_k, r_2, rmse, mea, r_2_v, rmse_v, mea_v, ds_k = run_kalman(A, H, Q_s, Q_v, R, P_0_s, P_0_v, std, dt, maximum, s_e, v_e)
     x_vals = np.arange(len(noisy_signal))
     l1.set_offsets(np.column_stack((x_vals, noisy_signal)))
     l2.set_data(x_vals, signal)
@@ -168,6 +174,7 @@ def update(val):
     l4.set_data(x_vals, v_k)
     #l41.set_offsets(np.column_stack((x_vals, noisy_signal_v)))
     l42.set_data(x_vals, signal_v)
+    l43.set_data(x_vals[:-1], ds_k)  
     l5.set_data(x_vals, s_k - signal)
     l6.set_text(f'$R^2$: {r_2:.4f} \n $\mu^2$: {rmse:.4f} \n $\mu$: {mea:.4f}')
     l61.set_text(f'$R^2$: {r_2_v:.4f} \n $\mu^2$: {rmse_v:.4f} \n $\mu$: {mea_v:.4f}')
