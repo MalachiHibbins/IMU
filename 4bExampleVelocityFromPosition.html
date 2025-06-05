@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Example: Velocity from position &#8212; Kalman Filters and IMU</title>
+    <title>Velocity from position &#8212; Kalman Filters and IMU</title>
   
   
   
@@ -187,7 +187,7 @@
 <li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Example: Battery output</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Example: Velocity from position</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Velocity from position</a></li>
 <li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU and Sensor fusion</a></li>
 </ul>
 
@@ -372,7 +372,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Example: Velocity from position</h1>
+    <h1>Velocity from position</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -386,53 +386,53 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="example-velocity-from-position">
-<h1>Example: Velocity from position<a class="headerlink" href="#example-velocity-from-position" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="velocity-from-position">
+<h1>Velocity from position<a class="headerlink" href="#velocity-from-position" title="Link to this heading">#</a></h1>
+<p>This example looks at applying a kalman filter to fit noisy postion data as well as outputting a prediction of the velocity. It turns out the output from the kalman filter is much more accurate than using numerical differentiation on the noisy signal.</p>
+<figure class="align-default" id="id1">
+<img alt="_images/image-27.png" src="_images/image-27.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Diagram of a kalman filter.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>In this case <span class="math notranslate nohighlight">\(\hat{x}\)</span> is a vector containing position <span class="math notranslate nohighlight">\(s\)</span> and velocity <span class="math notranslate nohighlight">\(v\)</span> and <span class="math notranslate nohighlight">\(\hat{z}\)</span> is the scalar <span class="math notranslate nohighlight">\(s\)</span>. The measurment and the state are related by <span class="math notranslate nohighlight">\(\hat{z}_{k+1} = H\hat{x}_k\)</span> it follows:</p>
+<div class="math notranslate nohighlight" id="equation-h">
+<span class="eqno">(22)<a class="headerlink" href="#equation-h" title="Link to this equation">#</a></span>\[\begin{split}z = \begin{bmatrix} 1 &amp; 0 \end{bmatrix} \begin{bmatrix} s_k \\ v_k \end{bmatrix}\end{split}\]</div>
+<p>For the prediction assume no accelation the equation of motion is:</p>
+<div class="math notranslate nohighlight" id="equation-velocity">
+<span class="eqno">(23)<a class="headerlink" href="#equation-velocity" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} s_{k+1} \\ v_{k+1} \end{bmatrix} = \begin{bmatrix} s_k + v_k \Delta t \\ v_k \end{bmatrix} = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix} \begin{bmatrix} s_k \\ v_k \end{bmatrix}\end{split}\]</div>
+<p>which is in the form <span class="math notranslate nohighlight">\(\hat{x}_{k+1} = A\hat{x}_k\)</span>.</p>
+<p>So:</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(n = 2\)</span> since <span class="math notranslate nohighlight">\(x_k = \begin{bmatrix}
-s \\
-v
-\end{bmatrix}_k\)</span> where <span class="math notranslate nohighlight">\(s\)</span> is the position and <span class="math notranslate nohighlight">\(v\)</span> is the velocity.</p></li>
-<li><p><span class="math notranslate nohighlight">\(m = 1\)</span> since <span class="math notranslate nohighlight">\(z_k = s_k\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(A = 
-\begin{bmatrix}
-1 &amp; \Delta t \\
-0 &amp; 1
-\end{bmatrix}\)</span> where (<span class="math notranslate nohighlight">\(\Delta t\)</span> is the time step between measurements) since <span class="math notranslate nohighlight">\(x_{k+1} = \begin{bmatrix}
-s_k + v_k\Delta t \\ v_k 
-\end{bmatrix} = Ax_k\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(H = \begin{bmatrix}
-1 &amp;
-0
-\end{bmatrix}\)</span> since <span class="math notranslate nohighlight">\(z_{k+1} = Hx_k + v_k\)</span></p></li>
-<li><p>Q is given <span class="math notranslate nohighlight">\(Q = \begin{bmatrix}
-Q_s &amp; 0 \\
-0 &amp; Q_v
-\end{bmatrix} = \begin{bmatrix}
-1 &amp; 0 \\
-0 &amp; 3
-\end{bmatrix}\)</span> Where <span class="math notranslate nohighlight">\(Q_s\)</span> is the covariance in <span class="math notranslate nohighlight">\(s_k\)</span> and <span class="math notranslate nohighlight">\(Q_v\)</span> is the covariance in <span class="math notranslate nohighlight">\(v_k\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(x_k = \begin{bmatrix} s \\ v \end{bmatrix}_k\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(z_k = s_k\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(A = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(Q = \begin{bmatrix} Q_s &amp; 0 \\ 0 &amp; Q_v\end{bmatrix}\)</span></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>While Q isn’t necessarily a diagonal matrix its easier to visualise the ajustments of the two parameters in the diagonal compared to adjusting all the parameters.</p>
+</div>
+<ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(R\)</span> is one dimensional and is obtained by tuning.</p></li>
+<li><p><span class="math notranslate nohighlight">\(x_0 = 0\)</span> and <span class="math notranslate nohighlight">\(P_0 = \begin{bmatrix} P_s &amp; 0 \\ 0 &amp; P_v\end{bmatrix}\)</span></p></li>
 </ul>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>The true signal in the graphs below is generated using a combination of <span class="math notranslate nohighlight">\(\sin\)</span> waves of varing amplitudes and speeds, the velocity version is the analytical deriative of this. The noisy signal is generated by adding randomly generated values to this using the guassian distribution. The kalman filter is applied to the noisy position data and outputs the filtred postion data and filtered velocity data. Which are graphed below</p>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
 <p>The summary statistics are generated between the true signal and the kalman filtered signal. <span class="math notranslate nohighlight">\(\mu^2\)</span> refers to the random mean squared error and <span class="math notranslate nohighlight">\(\mu\)</span> refers to the mean absolute error.</p>
-</div>
 <figure class="align-default" id="original">
 <img alt="_images/image-23.png" src="_images/image-23.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Kaman filter setup using parameters above to fit a noisy signal made up from sin waves with varing amplitudes and periods.</span><a class="headerlink" href="#original" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Kaman filter setup using parameters above to fit a noisy signal made up from sin waves with varing amplitudes and periods.</span><a class="headerlink" href="#original" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The fit for the position is very good with high R<span class="math notranslate nohighlight">\(^2\)</span> value. However it could be smoother and the residules graph is not completely random suggesting there could be some delay, prehaps increasing <span class="math notranslate nohighlight">\(R\)</span> would improve the fit. The velocity fit is poor and the filtered signal lags behind the true signal. Since only the velocity signal is lagging Q_v was increased.</p>
 <figure class="align-default" id="increased-r-and-increased-q">
 <img alt="_images/image-24.png" src="_images/image-24.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 15 </span><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">original</span></code> with increased R and increased Q</span><a class="headerlink" href="#increased-r-and-increased-q" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 16 </span><span class="caption-text"><code class="xref std std-numref docutils literal notranslate"><span class="pre">original</span></code> with increased R and increased Q</span><a class="headerlink" href="#increased-r-and-increased-q" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Figure <code class="xref std std-numref docutils literal notranslate"><span class="pre">increased-R-and-increased-Q</span></code> shows a slightly improved fit with position and a significantly improved fit with velocity. However the velocity fit is now significantly less smooth, there is a clear tradeoff between having a a smooth fit and having an accurate fit. Smoother fits more accurately represent the true shape of the data, but will often cause there to be a delay. The residuals graph for position now seems to be very random implying close to optimal fit, the residuals graph for velocity is close to being random.</p>
@@ -444,12 +444,6 @@ Q_s &amp; 0 \\
 <p class="admonition-title">Note</p>
 <p>Using a kalmamn filter for differentiation is significantly more accurate than performing numerical integration on the noisy signal.</p>
 </div>
-<figure class="align-default" id="id1">
-<img alt="_images/image-27.png" src="_images/image-27.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Diagram of the inputs of the kalman filter without sensor fusion e.g. example two using velocity to calculate acceleration.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
 </section>
 
     <script type="text/x-thebe-config">
