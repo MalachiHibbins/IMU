@@ -404,7 +404,7 @@ document.write(`
 <figure class="align-default" id="id1">
 <img alt="_images/image-28.png" src="_images/image-28.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 17 </span><span class="caption-text">Kalman filter with sensor fusion</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Kalman filter with sensor fusion</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <section id="eulers-method">
@@ -452,14 +452,14 @@ document.write(`
 <figure class="align-default" id="cal1">
 <img alt="_images/image-25.png" src="_images/image-25.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Calibration signal involved shaking the device in just the <span class="math notranslate nohighlight">\(\omega_1\)</span> direction then pausing and shaking the device in the <span class="math notranslate nohighlight">\(\omega_1\)</span> and <span class="math notranslate nohighlight">\(\omega_2\)</span> directions before pausing again and shaking the deivce in the <span class="math notranslate nohighlight">\(\omega_3\)</span>. The observed motion in the <span class="math notranslate nohighlight">\(\omega_3\)</span> was accidental.</span><a class="headerlink" href="#cal1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 19 </span><span class="caption-text">Calibration signal involved shaking the device in just the <span class="math notranslate nohighlight">\(\omega_1\)</span> direction then pausing and shaking the device in the <span class="math notranslate nohighlight">\(\omega_1\)</span> and <span class="math notranslate nohighlight">\(\omega_2\)</span> directions before pausing again and shaking the deivce in the <span class="math notranslate nohighlight">\(\omega_3\)</span>. The observed motion in the <span class="math notranslate nohighlight">\(\omega_3\)</span> was accidental.</span><a class="headerlink" href="#cal1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Using the calibration data in <a class="reference internal" href="#cal1"><span class="std std-numref">Fig. 18</span></a> and assuming <span class="math notranslate nohighlight">\(x_0 = \vec{0}\)</span>, x_k can be calculated.</p>
+<p>Using the calibration data in <a class="reference internal" href="#cal1"><span class="std std-numref">Fig. 19</span></a> and assuming <span class="math notranslate nohighlight">\(x_0 = \vec{0}\)</span>, x_k can be calculated.</p>
 <figure class="align-default" id="roll-pitch-yaw-drift-real">
 <img alt="_images/image-29.png" src="_images/image-29.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 19 </span><span class="caption-text"><span class="math notranslate nohighlight">\(x_k\)</span> and <span class="math notranslate nohighlight">\(x^-_k\)</span> plotted against time.</span><a class="headerlink" href="#roll-pitch-yaw-drift-real" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 20 </span><span class="caption-text"><span class="math notranslate nohighlight">\(x_k\)</span> and <span class="math notranslate nohighlight">\(x^-_k\)</span> plotted against time.</span><a class="headerlink" href="#roll-pitch-yaw-drift-real" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Overall <span class="math notranslate nohighlight">\(x^-_k\)</span> resembles the shape of <span class="math notranslate nohighlight">\(x_k\)</span> quite well. However as <span class="math notranslate nohighlight">\(k\)</span> increases <span class="math notranslate nohighlight">\(x^-_k\)</span> ‘drift’ away from <span class="math notranslate nohighlight">\(x_k\)</span> in all 3 directions. The drift is least significant in the <span class="math notranslate nohighlight">\(\phi\)</span> direction but was predicting oscillations in the third part of the calibration even though there were no oscillations in the <span class="math notranslate nohighlight">\(\omega_3\)</span> direction, the drift also changed direction multiple times. The most significant drift was in the <span class="math notranslate nohighlight">\(\theta\)</span> direction. Interestingly there weren’t any oscillations in the first part of the calibration in the <span class="math notranslate nohighlight">\(\theta\)</span> direction, likely because the estimation gets less accurate over time. There was also substantial drift in the <span class="math notranslate nohighlight">\(\psi\)</span> directions as well as picking up oscilations in the x and y directions.</p>
@@ -518,10 +518,10 @@ Let:</p>
 <figure class="align-default" id="acc">
 <img alt="_images/Acc.png" src="_images/Acc.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 20 </span><span class="caption-text">yaw-pitch-roll against time from data direct measurment using the accelarometer.</span><a class="headerlink" href="#acc" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 21 </span><span class="caption-text">yaw-pitch-roll against time from data direct measurment using the accelarometer.</span><a class="headerlink" href="#acc" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#acc"><span class="std std-numref">Fig. 20</span></a> is much noiser than the predicted data from the gyroscope, see <a class="reference internal" href="#roll-pitch-yaw-drift-real"><span class="std std-numref">Fig. 19</span></a>. However overall this data isn’t suceptible to drift so on the whole is more accurate.</p>
+<p><a class="reference internal" href="#acc"><span class="std std-numref">Fig. 21</span></a> is much noiser than the predicted data from the gyroscope, see <a class="reference internal" href="#roll-pitch-yaw-drift-real"><span class="std std-numref">Fig. 20</span></a>. However overall this data isn’t suceptible to drift so on the whole is more accurate.</p>
 </section>
 <section id="implemementation">
 <h2>Implemementation<a class="headerlink" href="#implemementation" title="Link to this heading">#</a></h2>
@@ -538,30 +538,30 @@ Let:</p>
 <figure class="align-default" id="test1">
 <img alt="_images/Kalman_Filter_Tuning_test.png" src="_images/Kalman_Filter_Tuning_test.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 21 </span><span class="caption-text">Testing the kalman filter with small <span class="math notranslate nohighlight">\(q\)</span> and large <span class="math notranslate nohighlight">\(r\)</span>.</span><a class="headerlink" href="#test1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 22 </span><span class="caption-text">Testing the kalman filter with small <span class="math notranslate nohighlight">\(q\)</span> and large <span class="math notranslate nohighlight">\(r\)</span>.</span><a class="headerlink" href="#test1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#test1"><span class="std std-numref">Fig. 21</span></a> is similar to the predicted data in <a class="reference internal" href="#roll-pitch-yaw-drift-real"><span class="std std-numref">Fig. 19</span></a> which would suggest the filter is working correctly as small <span class="math notranslate nohighlight">\(q\)</span> and large <span class="math notranslate nohighlight">\(r\)</span> mean the filter gives more weighting to predicted (gyroscope) data compared to measured (accelarometer) data.</p>
+<p><a class="reference internal" href="#test1"><span class="std std-numref">Fig. 22</span></a> is similar to the predicted data in <a class="reference internal" href="#roll-pitch-yaw-drift-real"><span class="std std-numref">Fig. 20</span></a> which would suggest the filter is working correctly as small <span class="math notranslate nohighlight">\(q\)</span> and large <span class="math notranslate nohighlight">\(r\)</span> mean the filter gives more weighting to predicted (gyroscope) data compared to measured (accelarometer) data.</p>
 <figure class="align-default" id="test2">
 <img alt="_images/Kalman_Filter_Tuning_test2.png" src="_images/Kalman_Filter_Tuning_test2.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 22 </span><span class="caption-text">Testing the kalman filter with large <span class="math notranslate nohighlight">\(q\)</span> and small <span class="math notranslate nohighlight">\(r\)</span>.</span><a class="headerlink" href="#test2" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 23 </span><span class="caption-text">Testing the kalman filter with large <span class="math notranslate nohighlight">\(q\)</span> and small <span class="math notranslate nohighlight">\(r\)</span>.</span><a class="headerlink" href="#test2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#test2"><span class="std std-numref">Fig. 22</span></a> is very noisy and is similar to the predicted data in <a class="reference internal" href="#acc"><span class="std std-numref">Fig. 20</span></a>, similarly this would suggest the filter is working correctly since large <span class="math notranslate nohighlight">\(q\)</span> and small <span class="math notranslate nohighlight">\(r\)</span> mean the filter gives more weighting to measured data compared to predicted data.</p>
+<p><a class="reference internal" href="#test2"><span class="std std-numref">Fig. 23</span></a> is very noisy and is similar to the predicted data in <a class="reference internal" href="#acc"><span class="std std-numref">Fig. 21</span></a>, similarly this would suggest the filter is working correctly since large <span class="math notranslate nohighlight">\(q\)</span> and small <span class="math notranslate nohighlight">\(r\)</span> mean the filter gives more weighting to measured data compared to predicted data.</p>
 <figure class="align-default" id="tuning">
 <img alt="_images/Kalman_Filter_Tuning1.png" src="_images/Kalman_Filter_Tuning1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 23 </span><span class="caption-text">Kalman filter tuned optimally by eye</span><a class="headerlink" href="#tuning" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 24 </span><span class="caption-text">Kalman filter tuned optimally by eye</span><a class="headerlink" href="#tuning" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-default" id="tuningzoomed">
 <img alt="_images/Kalman_Filter_Tuning_zoomed.png" src="_images/Kalman_Filter_Tuning_zoomed.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 24 </span><span class="caption-text">Zoomed in <a class="reference internal" href="#tuning"><span class="std std-numref">Fig. 23</span></a>.</span><a class="headerlink" href="#tuningzoomed" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 25 </span><span class="caption-text">Zoomed in <a class="reference internal" href="#tuning"><span class="std std-numref">Fig. 24</span></a>.</span><a class="headerlink" href="#tuningzoomed" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#tuning"><span class="std std-numref">Fig. 23</span></a> and <a class="reference internal" href="#tuningzoomed"><span class="std std-numref">Fig. 24</span></a> show the kalman filter has produced a very good fit. The filtered signal appears both noise, drift and delay free.</p>
+<p><a class="reference internal" href="#tuning"><span class="std std-numref">Fig. 24</span></a> and <a class="reference internal" href="#tuningzoomed"><span class="std std-numref">Fig. 25</span></a> show the kalman filter has produced a very good fit. The filtered signal appears both noise, drift and delay free.</p>
 </section>
 <section id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>

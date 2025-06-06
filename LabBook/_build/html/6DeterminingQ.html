@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Velocity from position &#8212; Kalman Filters and IMU</title>
+    <title>Determining Q &#8212; Kalman Filters and IMU</title>
   
   
   
@@ -59,11 +59,9 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '4bExampleVelocityFromPosition';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '6DeterminingQ';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="IMU and Sensor fusion" href="5IMU.html" />
-    <link rel="prev" title="Example: Battery output" href="4aExampleBatteryOutput.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -126,6 +124,8 @@
       
       
       
+        
+      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -181,13 +181,13 @@
                 </a>
             </li>
         </ul>
-        <ul class="current nav bd-sidenav">
+        <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="1AverageFilters.html">Average filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="2MovingAverageFilters.html">Moving Average filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Example: Battery output</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
 <li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU and Sensor fusion</a></li>
 </ul>
 
@@ -260,7 +260,7 @@
       
       
       
-      <li><a href="https://github.com/MalachiHibbins/IMU/issues/new?title=Issue%20on%20page%20%2F4bExampleVelocityFromPosition.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/MalachiHibbins/IMU/issues/new?title=Issue%20on%20page%20%2F6DeterminingQ.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -290,7 +290,7 @@
       
       
       
-      <li><a href="_sources/4bExampleVelocityFromPosition.md" target="_blank"
+      <li><a href="_sources/6DeterminingQ.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -372,7 +372,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Velocity from position</h1>
+    <h1>Determining Q</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -386,68 +386,16 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="velocity-from-position">
-<h1>Velocity from position<a class="headerlink" href="#velocity-from-position" title="Link to this heading">#</a></h1>
-<p>This example looks at applying a kalman filter to fit noisy postion data as well as outputting a prediction of the velocity. It turns out the output from the kalman filter is much more accurate than using numerical differentiation on the noisy signal.</p>
-<figure class="align-default" id="id1">
-<img alt="_images/image-27.png" src="_images/image-27.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Diagram of a kalman filter.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>In this case <span class="math notranslate nohighlight">\(\hat{x}\)</span> is a vector containing position <span class="math notranslate nohighlight">\(s\)</span> and velocity <span class="math notranslate nohighlight">\(v\)</span> and <span class="math notranslate nohighlight">\(\hat{z}\)</span> is the scalar <span class="math notranslate nohighlight">\(s\)</span>. The measurment and the state are related by <span class="math notranslate nohighlight">\(\hat{z}_{k+1} = H\hat{x}_k\)</span> it follows:</p>
-<div class="math notranslate nohighlight" id="equation-h">
-<span class="eqno">(22)<a class="headerlink" href="#equation-h" title="Link to this equation">#</a></span>\[\begin{split}z_k = s_k = \begin{bmatrix} 1 &amp; 0 \end{bmatrix} \begin{bmatrix} s_k \\ v_k \end{bmatrix}\end{split}\]</div>
-<p>For the prediction assume no accelation the equation of motion is:</p>
-<div class="math notranslate nohighlight" id="equation-velocity">
-<span class="eqno">(23)<a class="headerlink" href="#equation-velocity" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} s_{k+1} \\ v_{k+1} \end{bmatrix} = \begin{bmatrix} s_k + v_k \Delta t \\ v_k \end{bmatrix} = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix} \begin{bmatrix} s_k \\ v_k \end{bmatrix}\end{split}\]</div>
-<p>which is in the form <span class="math notranslate nohighlight">\(\hat{x}_{k+1} = A\hat{x}_k\)</span>.</p>
-<p>So:</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(x_k = \begin{bmatrix} s \\ v \end{bmatrix}_k\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(z_k = s_k\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(A = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix}\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(Q = \begin{bmatrix} Q_s &amp; 0 \\ 0 &amp; Q_v \end{bmatrix}\)</span></p></li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>While Q isn’t necessarily a diagonal matrix its easier to visualise the ajustments of the two parameters in the diagonal compared to adjusting all the parameters.</p>
-</div>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(R\)</span> is one dimensional and is obtained by tuning.</p></li>
-<li><p><span class="math notranslate nohighlight">\(x_0 = 0\)</span> and <span class="math notranslate nohighlight">\(P_0 = \begin{bmatrix} P_s &amp; 0 \\ 0 &amp; P_v\end{bmatrix}\)</span></p></li>
-</ul>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>The true signal in the graphs below is generated using a combination of <span class="math notranslate nohighlight">\(\sin\)</span> waves of varing amplitudes and speeds, the velocity version is the analytical deriative of this. The noisy signal is generated by adding randomly generated values to this using the guassian distribution. The kalman filter is applied to the noisy position data and outputs the filtred postion data and filtered velocity data. Which are graphed below</p>
-</div>
-<p>The kaman filter setup using parameters above to fit a noisy signal made up from sin waves with varing amplitudes and periods. The summary statistics are generated between the true signal and the kalman filtered signal. <span class="math notranslate nohighlight">\(\mu^2\)</span> refers to the random mean squared error and <span class="math notranslate nohighlight">\(\mu\)</span> refers to the mean absolute error.</p>
-<figure class="align-default" id="fig-original">
-<img alt="_images/image-23.png" src="_images/image-23.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 15 </span><span class="caption-text">The measured noisy <span class="math notranslate nohighlight">\(s_k\)</span>, noise free <span class="math notranslate nohighlight">\(s_k\)</span> and kalman filtered <span class="math notranslate nohighlight">\(s_k\)</span> plotted against index and kalman filtered <span class="math notranslate nohighlight">\(v_k\)</span> noise free <span class="math notranslate nohighlight">\(v_k\)</span> and the differentiated kalman filtered <span class="math notranslate nohighlight">\(s_k\)</span> against index.</span><a class="headerlink" href="#fig-original" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>The fit for the position is very good with high R<span class="math notranslate nohighlight">\(^2\)</span> value. However it could be smoother and the residules graph is not completely random suggesting there could be some delay, prehaps increasing <span class="math notranslate nohighlight">\(R\)</span> would improve the fit. The velocity fit is poor and the filtered signal lags behind the true signal. Since only the velocity signal is lagging <span class="math notranslate nohighlight">\(Q_v\)</span> was increased.</p>
-<figure class="align-default" id="fig-increased-r-and-increased-q">
-<img alt="_images/image-24.png" src="_images/image-24.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 16 </span><span class="caption-text">See <a class="reference internal" href="#fig-original"><span class="std std-numref">Fig. 15</span></a> with increased <span class="math notranslate nohighlight">\(R\)</span> and increased <span class="math notranslate nohighlight">\(Q_v\)</span>.</span><a class="headerlink" href="#fig-increased-r-and-increased-q" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Figure <a class="reference internal" href="#fig-increased-r-and-increased-q"><span class="std std-numref">Fig. 16</span></a> shows a slightly improved fit with position and a significantly improved fit with velocity. This makes sense for the postion data since increasing <span class="math notranslate nohighlight">\(R\)</span> increases the weighting for the prediction compared to the measured data. However the velocity fit is now significantly less smooth since more emphasis is being put on the measured positions, there is a clear tradeoff between having a a smooth fit and having an accurate fit. Smoother fits more accurately represent the true shape of the data, but will often cause there to be a delay. The residuals graph for position now seems to be very random implying close to optimal fit, the residuals graph for velocity is close to being random.</p>
-<div class="admonition-question admonition">
-<p class="admonition-title">Question</p>
-<p>How is it possible to ensure both a smooth fit whilst minimising lag and ensuring a good fit? Prehaps a machine learning algorithm?</p>
-</div>
-<p>The velocity fit is still quite poor. There is no measured velocity data so the velocity is calculated from the previous predictions of the position (<span class="math notranslate nohighlight">\(z^-_k\)</span>). Increasing and decreasing <span class="math notranslate nohighlight">\(Q_v\)</span> adjusts how quickly the weighting of less recent results decays. Essentially the kalman filter is predicting the velocity data and then fitting this with a low pass filter. Which is why its still more accurate to get the velocity using the kalman filter then it is to differentiate the kalman filtered position signal.</p>
-<figure class="align-default" id="kflikelp">
-<img alt="_images/image-30.png" src="_images/image-30.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 17 </span><span class="caption-text">The measured noisy <span class="math notranslate nohighlight">\(s_k\)</span>, noise free <span class="math notranslate nohighlight">\(s_k\)</span> and kalman filtered <span class="math notranslate nohighlight">\(s_k\)</span> plotted against index and kalman filtered <span class="math notranslate nohighlight">\(v_k\)</span> noise free <span class="math notranslate nohighlight">\(v_k\)</span> and the differentiated kalman filtered <span class="math notranslate nohighlight">\(s_k\)</span> against index.</span><a class="headerlink" href="#kflikelp" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Here it’s clear the differentiated kalman position is a poor fit as its too noisy, but the kalman filtered velocity fits like a low pass filter. <strong>A kalman filter compares predicted values with measurments, which are weighted in a similar fasion to the low pass filter, to create an estimate of the true state measurments</strong>. The fit for <span class="math notranslate nohighlight">\(v_k\)</span> would be greatly improved using a second kalman filter which would use the velocity from this kalman filter as a prediction and compare it with real velocity data.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="determining-q">
+<h1>Determining Q<a class="headerlink" href="#determining-q" title="Link to this heading">#</a></h1>
+<p>Q_k is the covariance matrix of <span class="math notranslate nohighlight">\(w_k\)</span> defined as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}E[w_k w_i^T] = 
+\begin{cases}
+    Q_k, &amp; i = k \\
+    0,   &amp; i \neq k
+\end{cases}\end{split}\end{split}\]</div>
+<p>Q is difficult to determine</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -480,24 +428,6 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="4aExampleBatteryOutput.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Example: Battery output</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="5IMU.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">IMU and Sensor fusion</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               

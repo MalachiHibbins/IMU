@@ -35,17 +35,17 @@ The kaman filter setup using parameters above to fit a noisy signal made up from
 
 
 ```{figure} image-23.png
-:name: original
+:name: fig-original
 The measured noisy $s_k$, noise free $s_k$ and kalman filtered $s_k$ plotted against index and kalman filtered $v_k$ noise free $v_k$ and the differentiated kalman filtered $s_k$ against index.
 ```
 The fit for the position is very good with high R$^2$ value. However it could be smoother and the residules graph is not completely random suggesting there could be some delay, prehaps increasing $R$ would improve the fit. The velocity fit is poor and the filtered signal lags behind the true signal. Since only the velocity signal is lagging $Q_v$ was increased.
 
 ```{figure} image-24.png
-:name: increased-R-and-increased-Q
-{numref}`original` with increased $R$ and increased $Q_v$
+:name: fig-increased-R-and-increased-Q
+See {numref}`fig-original` with increased $R$ and increased $Q_v$.
 ```
 
-Figure {numref}`increased-R-and-increased-Q` shows a slightly improved fit with position and a significantly improved fit with velocity. This makes sense for the postion data since increasing $R$ increases the weighting for the prediction compared to the measured data. However the velocity fit is now significantly less smooth since more emphasis is being put on the measured positions, there is a clear tradeoff between having a a smooth fit and having an accurate fit. Smoother fits more accurately represent the true shape of the data, but will often cause there to be a delay. The residuals graph for position now seems to be very random implying close to optimal fit, the residuals graph for velocity is close to being random. 
+Figure {numref}`fig-increased-R-and-increased-Q` shows a slightly improved fit with position and a significantly improved fit with velocity. This makes sense for the postion data since increasing $R$ increases the weighting for the prediction compared to the measured data. However the velocity fit is now significantly less smooth since more emphasis is being put on the measured positions, there is a clear tradeoff between having a a smooth fit and having an accurate fit. Smoother fits more accurately represent the true shape of the data, but will often cause there to be a delay. The residuals graph for position now seems to be very random implying close to optimal fit, the residuals graph for velocity is close to being random. 
 
 
 
@@ -56,9 +56,9 @@ How is it possible to ensure both a smooth fit whilst minimising lag and ensurin
 
 The velocity fit is still quite poor. There is no measured velocity data so the velocity is calculated from the previous predictions of the position ($z^-_k$). Increasing and decreasing $Q_v$ adjusts how quickly the weighting of less recent results decays. Essentially the kalman filter is predicting the velocity data and then fitting this with a low pass filter. Which is why its still more accurate to get the velocity using the kalman filter then it is to differentiate the kalman filtered position signal. 
 
-```{image-30.png}
+```{figure} image-30.png
 :name: KFlikeLP
 The measured noisy $s_k$, noise free $s_k$ and kalman filtered $s_k$ plotted against index and kalman filtered $v_k$ noise free $v_k$ and the differentiated kalman filtered $s_k$ against index.
 ```
 
-Here it's clear the differentiated kalman position is a poor fit as its too noisy, but the kalman filtered velocity fits like a low pass filter. **A kalman filter compares predicted values with measurments, which are weighted in a similar fasion to the low pass filter, to create an estimate of the true state measurments**.
+Here it's clear the differentiated kalman position is a poor fit as its too noisy, but the kalman filtered velocity fits like a low pass filter. **A kalman filter compares predicted values with measurments, which are weighted in a similar fasion to the low pass filter, to create an estimate of the true state measurments**. The fit for $v_k$ would be greatly improved using a second kalman filter which would use the velocity from this kalman filter as a prediction and compare it with real velocity data.
