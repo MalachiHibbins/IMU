@@ -88,8 +88,10 @@ def run(Q, R, p_i, additional_noise_w, additional_noise_a):
 
 t_w, t_a, w_1, w_2, w_3, a_1, a_2, a_3, phi_g, theta_g, psi_g, phi_a, theta_a, psi_a, phi_f, theta_f, psi_f = run(Q, R, p_i, additional_noise_w, additional_noise_a)
 
+figsize = (8, 8)
+
 # plot w
-fig1, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 6), sharex=True, sharey=True)
+fig1, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=figsize, sharex=True, sharey=True)
 
 ax1.plot(t_w, w_1, label='Signal')
 ax1.set_ylabel('$\omega_1$')
@@ -103,7 +105,7 @@ ax3.set_xlabel('$t$')
 
 
 # plot a
-fig2, (ax7, ax8, ax9) = plt.subplots(3, 1, figsize=(10, 6), sharex=True)
+fig2, (ax7, ax8, ax9) = plt.subplots(3, 1, figsize=figsize, sharex=True)
 
 ax7.plot(t_a, a_1, label='Signal')
 ax7.set_ylabel('$a_1$')
@@ -117,7 +119,7 @@ ax9.set_xlabel('$t$')
 
 # Plot accelarometer data as euler angles
 
-fig5, (ax10, ax11, ax12) = plt.subplots(3, 1, figsize=(10, 6), sharex=True)
+fig5, (ax10, ax11, ax12) = plt.subplots(3, 1, figsize=figsize, sharex=True)
 
 ax10.plot(t_a, phi_a, label='$\phi$', color='green')
 ax10.set_ylabel('$\phi$')
@@ -131,7 +133,7 @@ ax12.set_xlabel('$t$')
 
 
 # Plot yaw pitch roll using euler integration
-fig3, (ax7, ax8, ax9) = plt.subplots(3, 1, figsize=(10, 6), sharex=True)
+fig3, (ax7, ax8, ax9) = plt.subplots(3, 1, figsize=figsize, sharex=True)
 alpha = 0.8
 ax7.plot(t_w, phi_g, label='$\phi^-$', color='green', alpha=alpha)
 ax7.plot(t_a, phi_a, label='$\phi$', color='lightgreen', linestyle='--', alpha=alpha)
