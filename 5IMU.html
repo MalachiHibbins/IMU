@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>IMU and Sensor fusion &#8212; Kalman Filters and IMU</title>
+    <title>Attitude using a gyroscope and accelarometer &#8212; Kalman Filters and IMU</title>
   
   
   
@@ -185,9 +185,9 @@
 <li class="toctree-l1"><a class="reference internal" href="2MovingAverageFilters.html">Moving Average filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Example: Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Battery output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">IMU and Sensor fusion</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Attitude using a gyroscope and accelarometer</a></li>
 </ul>
 
     </div>
@@ -373,7 +373,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>IMU and Sensor fusion</h1>
+    <h1>Attitude using a gyroscope and accelarometer</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -386,7 +386,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eulers-method">Eulers method</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sensor-fusion-and-kalman-filters">Sensor Fusion and Kalman filters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implemementation">Implemementation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 </ul>
             </nav>
         </div>
@@ -398,18 +398,26 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="imu-and-sensor-fusion">
-<h1>IMU and Sensor fusion<a class="headerlink" href="#imu-and-sensor-fusion" title="Link to this heading">#</a></h1>
-<p>This section involves calculating yaw-pitch-roll in the 3-2-1 sequence firstly using the gyroscope to measure the angular velocitiy and then using Eulers method for integration to obtain a prediction for yaw-pitch-roll. The second part involves combining this prediction with a measurment form the accelarometer which can be used directly to calculate yaw-pitch-roll. Using sensor fusion these measurments are combined and allow yaw-pitch-roll to be calculated with very high accuracy.</p>
-<figure class="align-default" id="id1">
-<img alt="_images/image-28.png" src="_images/image-28.png" />
+  <section class="tex2jax_ignore mathjax_ignore" id="attitude-using-a-gyroscope-and-accelarometer">
+<h1>Attitude using a gyroscope and accelarometer<a class="headerlink" href="#attitude-using-a-gyroscope-and-accelarometer" title="Link to this heading">#</a></h1>
+<p>This section involves calculating yaw-pitch-roll (attitude) in the 3-2-1 sequence firstly using the gyroscope to measure the angular velocitiy <span class="math notranslate nohighlight">\(\hat{\omega}\)</span> and then using Eulers method for integration to obtain a prediction for the attitude. The second part involves combining this prediction with a measurment form the accelarometer measuring <span class="math notranslate nohighlight">\(\hat{a}\)</span> which can be used directly to calculate yaw-pitch-roll. Using the kalman filter prediction and measurment are combined to give a high accuracy estimate.</p>
+<figure class="align-default" id="id6">
+<img alt="_images/image-28.jpg" src="_images/image-28.jpg" />
 <figcaption>
-<p><span class="caption-number">Fig. 17 </span><span class="caption-text">Kalman filter with sensor fusion</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 17 </span><span class="caption-text">Kalman filter with sensor fusion</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <section id="eulers-method">
 <h2>Eulers method<a class="headerlink" href="#eulers-method" title="Link to this heading">#</a></h2>
-<p>Using gyroscope (measures angular velocity, <span class="math notranslate nohighlight">\(\hat{w}\)</span>) and knowing the initial orientation at <span class="math notranslate nohighlight">\(t_0\)</span> it is possible to determine the orientation of a craft at <span class="math notranslate nohighlight">\(t_k\)</span>. The relationship between the body angular velocity <span class="math notranslate nohighlight">\(\hat{w} = (\omega_1, \omega_2, \omega_3)\)</span> and the time derivatives of the Euler angles <span class="math notranslate nohighlight">\(\hat{x} = (\psi, \theta, \phi)\)</span> in the 3-2-1 (yaw-pitch-roll) sequence is given by the kinematic differential equation (KDE) below:</p>
+<p>Using gyroscope (measures angular velocity, <span class="math notranslate nohighlight">\(\hat{\omega}\)</span>) and knowing the attitude at <span class="math notranslate nohighlight">\(t_0\)</span> it is possible to determine the attitude of a craft at <span class="math notranslate nohighlight">\(t_k\)</span>. The relationship between the body angular velocity <span class="math notranslate nohighlight">\(\hat{\omega} = (\omega_1, \omega_2, \omega_3)\)</span> and the time derivatives of the Euler angles <span class="math notranslate nohighlight">\(\hat{\alpha} = (\psi, \theta, \phi)\)</span> in the 3-2-1 (yaw-pitch-roll) sequence is given by the kinematic differential equation (KDE) below:</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p><span class="math notranslate nohighlight">\(\phi\)</span>, <span class="math notranslate nohighlight">\(\theta\)</span> and <span class="math notranslate nohighlight">\(\psi\)</span> are euler angles that describe the orientation of the object in space. Whereas <span class="math notranslate nohighlight">\(\omega_1\)</span>, <span class="math notranslate nohighlight">\(\omega_2\)</span>, <span class="math notranslate nohighlight">\(\omega_3\)</span>  are rates of rotation i.e. roll rate pitch rate and yaw rate.</p>
+<p><span class="math notranslate nohighlight">\(\psi\)</span>: measures the rotation around the vertical (z) axis e.g. turning your head left and right in a “no” motion</p>
+<p><span class="math notranslate nohighlight">\(\theta\)</span>: measures the rotation around the sided-to-side (y) axis e.g. nodding your head up and down in a “yes” motion.</p>
+<p><span class="math notranslate nohighlight">\(\phi\)</span>: rotation around the front-to-back (x) axis. E.g tilting your head to touch your ear to your shoulder.</p>
+<p>The Euler angle rates <span class="math notranslate nohighlight">\(\dot{\phi}\)</span>, <span class="math notranslate nohighlight">\(\dot{\theta}\)</span>, <span class="math notranslate nohighlight">\(\dot{\psi}\)</span> are not the same as body angular rates because the orientation of the body axes changes as the object rotates.</p>
+</aside>
 <div class="math notranslate nohighlight" id="equation-h">
 <span class="eqno">(24)<a class="headerlink" href="#equation-h" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix}
 \dot{\psi} \\
@@ -426,28 +434,20 @@ document.write(`
 \omega_2 \\
 \omega_3
 \end{bmatrix}\end{split}\]</div>
-<p>Or more simply:</p>
-<div class="math notranslate nohighlight" id="equation-h-simple">
-<span class="eqno">(25)<a class="headerlink" href="#equation-h-simple" title="Link to this equation">#</a></span>\[\hat{\dot{x}} = \Phi(\hat{x}) {\hat{\omega}}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\Phi(\hat{\theta}) = \frac{1}{\cos{\theta}}\begin{bmatrix}
+<p>Or more simply :</p>
+<div class="math notranslate nohighlight" id="equation-eq-simple">
+<span class="eqno">(25)<a class="headerlink" href="#equation-eq-simple" title="Link to this equation">#</a></span>\[\hat{\dot{\alpha}} = \Phi(\hat{\alpha}) {\hat{\omega}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Phi(\hat{\alpha}) = \frac{1}{\cos{\theta}}\begin{bmatrix}
 0 &amp; \sin\phi  &amp; \cos\phi  \\
 0 &amp; \cos\phi\cos\theta &amp; -\sin\phi\cos\theta \\
 \cos\theta &amp; \sin\phi\sin\theta &amp; \cos\phi  \sin\theta
 \end{bmatrix}\)</span></p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(\phi\)</span>, <span class="math notranslate nohighlight">\(\theta\)</span> and <span class="math notranslate nohighlight">\(\psi\)</span> are euler angles that describe the orientation of the object in space. Whereas <span class="math notranslate nohighlight">\(\omega_1\)</span>, <span class="math notranslate nohighlight">\(\omega_2\)</span>, <span class="math notranslate nohighlight">\(\omega_3\)</span>  are rates of rotation i.e. roll rate pitch rate and yaw rate.</p>
-<p><span class="math notranslate nohighlight">\(\psi\)</span>: measures the rotation around the vertical (z) axis e.g. turning your head left and right in a “no” motion</p>
-<p><span class="math notranslate nohighlight">\(\theta\)</span>: measures the rotation around the sided-to-side (y) axis e.g. nodding your head up and down in a “yes” motion.</p>
-<p><span class="math notranslate nohighlight">\(\phi\)</span>: rotation around the front-to-back (x) axis. E.g tilting your head to touch your ear to your shoulder.</p>
-<p>The Euler angle rates <span class="math notranslate nohighlight">\(\dot{\phi}\)</span>, <span class="math notranslate nohighlight">\(\dot{\theta}\)</span>, <span class="math notranslate nohighlight">\(\dot{\psi}\)</span> are not the same as body angular rates because the orientation of the body axes changes as the object rotates.</p>
-</div>
-<p>An estimate of the next yaw-pitch-roll, <span class="math notranslate nohighlight">\(x^-_{k+1}\)</span>, are calculated using eulers method:</p>
-<div class="math notranslate nohighlight" id="equation-euler-method">
-<span class="eqno">(26)<a class="headerlink" href="#equation-euler-method" title="Link to this equation">#</a></span>\[x^-_{k+1} = x_k + \dot{x}_k \Delta t\]</div>
-<p>Subbing <a class="reference internal" href="_sources/5IMU.html#equation-h-simple">()</a> into <a class="reference internal" href="_sources/5IMU.html#equation-euler-method">()</a> gives:</p>
+<p>The predicted attitude at time <span class="math notranslate nohighlight">\(t_{k+1}\)</span> is calculated using eulers method:</p>
+<div class="math notranslate nohighlight" id="equation-eq-euler">
+<span class="eqno">(26)<a class="headerlink" href="#equation-eq-euler" title="Link to this equation">#</a></span>\[\hat{\alpha}^-_{k+1} = \hat{\alpha}_k + \dot{\hat{\alpha}}_k \Delta t\]</div>
+<p>Subbing <a class="reference internal" href="#equation-eq-simple">(25)</a> into <a class="reference internal" href="#equation-eq-euler">(26)</a> gives:</p>
 <div class="math notranslate nohighlight" id="equation-euler-method2">
-<span class="eqno">(27)<a class="headerlink" href="#equation-euler-method2" title="Link to this equation">#</a></span>\[\hat{x}^-_{k+1} = \hat{x}_{k} + \Phi(\hat{x}_k) \hat{\omega}_k \Delta t\]</div>
+<span class="eqno">(27)<a class="headerlink" href="#equation-euler-method2" title="Link to this equation">#</a></span>\[\hat{\alpha}^-_{k+1} = \hat{\alpha}_{k} + \Phi(\hat{\alpha}_k) \hat{\omega}_k \Delta t\]</div>
 <p>where <span class="math notranslate nohighlight">\(\Delta t = t_k - t_{k-1}\)</span>.</p>
 <figure class="align-default" id="cal1">
 <img alt="_images/image-25.png" src="_images/image-25.png" />
@@ -455,7 +455,7 @@ document.write(`
 <p><span class="caption-number">Fig. 18 </span><span class="caption-text">Calibration signal involved shaking the device in just the <span class="math notranslate nohighlight">\(\omega_1\)</span> direction then pausing and shaking the device in the <span class="math notranslate nohighlight">\(\omega_1\)</span> and <span class="math notranslate nohighlight">\(\omega_2\)</span> directions before pausing again and shaking the deivce in the <span class="math notranslate nohighlight">\(\omega_3\)</span>. The observed motion in the <span class="math notranslate nohighlight">\(\omega_3\)</span> was accidental.</span><a class="headerlink" href="#cal1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Using the calibration data in <a class="reference internal" href="#cal1"><span class="std std-numref">Fig. 18</span></a> and assuming <span class="math notranslate nohighlight">\(x_0 = \vec{0}\)</span>, x_k can be calculated.</p>
+<p>Using the calibration data in <a class="reference internal" href="#cal1"><span class="std std-numref">Fig. 18</span></a>, knowing <span class="math notranslate nohighlight">\(x_0 = \vec{0}\)</span> and <a class="reference internal" href="#equation-euler-method2">(27)</a>, attitude can be determined.</p>
 <figure class="align-default" id="roll-pitch-yaw-drift-real">
 <img alt="_images/image-29.png" src="_images/image-29.png" />
 <figcaption>
@@ -471,6 +471,9 @@ document.write(`
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>Use Euler parameters</p>
+</div>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
 <div class="math notranslate nohighlight">
 \[\beta_0 = \sin\frac{\phi}{2}\sin\frac{\theta}{2}\sin\frac{\psi}{2} + \cos\frac{\phi}{2}\cos\frac{\theta}{2}\cos\frac{\psi}{2}\]</div>
 <div class="math notranslate nohighlight">
@@ -479,24 +482,24 @@ document.write(`
 \[\beta_2 = \cos\frac{\phi}{2}\sin\frac{\theta}{2}\cos\frac{\psi}{2} + \sin\frac{\phi}{2}\cos\frac{\theta}{2}\sin\frac{\psi}{2}\]</div>
 <div class="math notranslate nohighlight">
 \[\beta_3 = \cos\frac{\phi}{2}\cos\frac{\theta}{2}\sin\frac{\psi}{2} + \sin\frac{\phi}{2}\sin\frac{\theta}{2}\cos\frac{\psi}{2}\]</div>
-<p>Below is the Euler parameters KDE:</p>
+<p>Where <span class="math notranslate nohighlight">\(\Psi(\hat{\omega}) = \frac{1}{2} \begin{bmatrix} 0 &amp; -\omega_1 &amp; -\omega_2 &amp; -\omega_3 \\ \omega_1 &amp; 0 &amp; \omega_3 &amp; -\omega_2 \\ \omega_2 &amp; -\omega_3 &amp; 0 &amp; \omega_1 \\ \omega_3 &amp; \omega_2 &amp; -\omega_1 &amp; 0\end{bmatrix}\)</span> <span id="id1">[<a class="reference internal" href="#id5" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span>.</p>
+</aside>
+<p>Below is the corresponding Euler parameters KDE:</p>
 <div class="math notranslate nohighlight" id="equation-ep-kde">
 <span class="eqno">(28)<a class="headerlink" href="#equation-ep-kde" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} \dot{\beta_0} \\ \dot{\beta_1} \\ \dot{\beta_2} \\ \dot{\beta_3} \end{bmatrix} = \frac{1}{2} \begin{bmatrix} 0 &amp; -\omega_1 &amp; -\omega_2 &amp; -\omega_3 \\ \omega_1 &amp; 0 &amp; \omega_3 &amp; -\omega_2 \\ \omega_2 &amp; -\omega_3 &amp; 0 &amp; \omega_1 \\ \omega_3 &amp; \omega_2 &amp; -\omega_1 &amp; 0\end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix}\end{split}\]</div>
-<p>or more simply:</p>
+<p><span id="id2">[<a class="reference internal" href="#id5" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> or more simply:</p>
 <div class="math notranslate nohighlight" id="equation-ep-kde-simple">
-<span class="eqno">(29)<a class="headerlink" href="#equation-ep-kde-simple" title="Link to this equation">#</a></span>\[\vec{\dot{\beta}} = B(\vec{\omega}) \vec{\beta}\]</div>
-<p>It descrubes how the Euler parameters change over time in response to the angular velocity vector <span class="math notranslate nohighlight">\(\hat{z}\)</span>.</p>
-</div>
+<span class="eqno">(29)<a class="headerlink" href="#equation-ep-kde-simple" title="Link to this equation">#</a></span>\[\vec{\dot{\beta}} = \Psi(\hat{\omega}) \vec{\beta}\]</div>
 <p>This time the model will be defined using the Euler parameters</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(\hat{x}_k = \vec{\beta}\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(\hat{x}_{k+1} = \hat{x}_k + \Delta t \vec{\dot{\beta}} = \hat{x}_k + \Delta t B \hat{x}_k = \hat{x}_{k+1} = (I + \Delta t B)\hat{x}_k \implies A = (I + \Delta t B)\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(x^-_0 = \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(Q\)</span>, <span class="math notranslate nohighlight">\(R\)</span> and <span class="math notranslate nohighlight">\(P^-_0\)</span> can be determined by trial and error</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{x}_{k+1} = \hat{x}_k + \Delta t \vec{\dot{\beta}} = \hat{x}_k + \Delta t \Psi(\hat{\omega}) \hat{x}_k = \hat{x}_{k+1} = (I + \Delta t \Psi(\hat{\omega}))\hat{x}_k \implies A = (I + \Delta t \Psi(\hat{\omega}))\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{x}^-_0 = \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}\)</span> since <span class="math notranslate nohighlight">\(\hat{\alpha} = \vec{0}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(Q = qI_{4 \times 4}\)</span>, <span class="math notranslate nohighlight">\(R = rI_{4 \times 4}\)</span> and <span class="math notranslate nohighlight">\(P^-_0 = pI_{4 \times 4}\)</span> to allow for simple tuning.</p></li>
 </ul>
-<div class="admonition-research-idea admonition">
-<p class="admonition-title">Research Idea</p>
-<p>Look into a better way to determine <span class="math notranslate nohighlight">\(Q\)</span> <span class="math notranslate nohighlight">\(P^-_0\)</span>. <span class="math notranslate nohighlight">\(R\)</span> will normally be given by a sensor.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is unlikely <span class="math notranslate nohighlight">\(Q\)</span>, <span class="math notranslate nohighlight">\(R\)</span> and <span class="math notranslate nohighlight">\(P^-_0\)</span> take forms like those above but in this case they allow for a sufficently good fit.</p>
 </div>
 <p>In this exampe the measurment from the gyroscope (<span class="math notranslate nohighlight">\(\hat\omega\)</span>) is being used to form the prediction. Furthermore knowing <span class="math notranslate nohighlight">\(\hat\omega\)</span> isn’t enough on its own to calculate yaw-pitch-roll so can’t be used to calculate <span class="math notranslate nohighlight">\(\hat x\)</span>.  One solution to this would be to form a ‘pseudo measurement’ letting <span class="math notranslate nohighlight">\(z_k = \hat{x}^-_{k+1}\)</span>, however this doesn’t contain corrective information so won’t correct for drift. A better method would be sensor fusion, this involves combining different sensors to get a better estimate.</p>
 <p>IMU uses an accelarometer and a gyroscope which measures <span class="math notranslate nohighlight">\(\hat{a}\)</span> and <span class="math notranslate nohighlight">\(\hat{\omega}\)</span> respectivly.
@@ -513,6 +516,7 @@ Let:</p>
 <span class="eqno">(31)<a class="headerlink" href="#equation-accelarometer2" title="Link to this equation">#</a></span>\[\begin{split}[\vec{a}]_B = - g_z \hat{n}_z = \begin{bmatrix} \sin{\theta} \\ -\cos{\theta}\sin{\phi} \\ -\cos{\theta}\cos{\phi} \end{bmatrix}\end{split}\]</div>
 <div class="math notranslate nohighlight" id="equation-accelarometer3">
 <span class="eqno">(32)<a class="headerlink" href="#equation-accelarometer3" title="Link to this equation">#</a></span>\[\implies \theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})\]</div>
+<p>From the calibration:</p>
 <div class="math notranslate nohighlight" id="equation-accelarometer4">
 <span class="eqno">(33)<a class="headerlink" href="#equation-accelarometer4" title="Link to this equation">#</a></span>\[\omega_3 = 0 \implies \psi = \psi_0 = 0\]</div>
 <figure class="align-default" id="acc">
@@ -535,6 +539,14 @@ Let:</p>
 <p>Additional noise has been added to the accelarometer readings to make the effects of the kalman filter more visible. Usually the accelarometer is more sensative to noise than the gyroscope, however this noise is small and hard to visualise in this example.</p>
 </div>
 <p>Below were tests carried out to ensure the kalman filter was correctly working.</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>The output is <span class="math notranslate nohighlight">\(\vec{\beta}\)</span> but can be converted into <span class="math notranslate nohighlight">\(\alpha\)</span> using the following:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\phi &amp;= \arctan2\left(2(\beta_1 \beta_2 + \beta_0 \beta_3),\ \beta_0^2 + \beta_1^2 - \beta_2^2 - \beta_3^2\right) \\
+\theta &amp;= \arcsin\left(-2(\beta_1 \beta_3 - \beta_0 \beta_2)\right) \\
+\psi &amp;= \arctan2\left(2(\beta_2 \beta_3 + \beta_0 \beta_1),\ \beta_0^2 - \beta_1^2 - \beta_2^2 + \beta_3^2\right)\end{split}\]</div>
+</aside>
 <figure class="align-default" id="test1">
 <img alt="_images/Kalman_Filter_Tuning_test.png" src="_images/Kalman_Filter_Tuning_test.png" />
 <figcaption>
@@ -552,7 +564,7 @@ Let:</p>
 <figure class="align-default" id="tuning">
 <img alt="_images/Kalman_Filter_Tuning1.png" src="_images/Kalman_Filter_Tuning1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 23 </span><span class="caption-text">Kalman filter tuned optimally by eye</span><a class="headerlink" href="#tuning" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 23 </span><span class="caption-text">Kalman filter tuned optimally by eye.</span><a class="headerlink" href="#tuning" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-default" id="tuningzoomed">
@@ -563,12 +575,25 @@ Let:</p>
 </figure>
 <p><a class="reference internal" href="#tuning"><span class="std std-numref">Fig. 23</span></a> and <a class="reference internal" href="#tuningzoomed"><span class="std std-numref">Fig. 24</span></a> show the kalman filter has produced a very good fit. The filtered signal appears both noise, drift and delay free.</p>
 </section>
-<section id="conclusion">
-<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <p>The Kalman filter produced an excelent fit in this case as the prediction (from gyroscope) and measurment (from accelarometer) were complimentary to eachother. The gyroscope was less suceptible to noise but was suceptible to drift whereas the accelarometer was more suceptible to noise and less suceptible to drift. Sensor fusion gets the best of both worlds.</p>
 <div class="admonition-idea admonition">
 <p class="admonition-title">Idea</p>
 <p>Rewrite the part of the code that carries out kalman filter calculations and determines A in C++ as the programme runs really slowly.</p>
+</div>
+<div class="docutils container" id="id3">
+<div role="list" class="citation-list">
+<div class="citation" id="id5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>BAOOl21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>)</span>
+<p>Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: <a class="reference external" href="https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305">https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305</a>, <a class="reference external" href="https://doi.org/10.1201/9780429200656">doi:10.1201/9780429200656</a>.</p>
+</div>
+<div class="citation" id="id4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>BH12<span class="fn-bracket">]</span></span>
+<p>Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: <a class="reference external" href="http://proquest.safaribooksonline.com/9780470609699">http://proquest.safaribooksonline.com/9780470609699</a>.</p>
+</div>
+</div>
 </div>
 </section>
 </section>
@@ -631,7 +656,7 @@ Let:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eulers-method">Eulers method</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sensor-fusion-and-kalman-filters">Sensor Fusion and Kalman filters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implemementation">Implemementation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 </ul>
   </nav></div>
 

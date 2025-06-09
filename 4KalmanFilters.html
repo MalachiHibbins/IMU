@@ -62,7 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '4KalmanFilters';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Example: Battery output" href="4aExampleBatteryOutput.html" />
+    <link rel="next" title="Battery output" href="4aExampleBatteryOutput.html" />
     <link rel="prev" title="Low Pass filters" href="3LowPassFilters.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -186,9 +186,9 @@
 <li class="toctree-l1"><a class="reference internal" href="2MovingAverageFilters.html">Moving Average filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Kalman filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Example: Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Battery output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="5IMU.html">IMU and Sensor fusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">Attitude using a gyroscope and accelarometer</a></li>
 </ul>
 
     </div>
@@ -384,9 +384,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model">Linear model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dictionary">Dictionary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimation-step">Estimation step</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-step">Prediction step</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 </ul>
             </nav>
         </div>
@@ -400,54 +401,61 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="kalman-filters">
 <h1>Kalman filters<a class="headerlink" href="#kalman-filters" title="Link to this heading">#</a></h1>
-<p><strong>A kalman filter compares predicted values (<span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span>) with measurments (<span class="math notranslate nohighlight">\(\hat{z}\)</span>), which are weighted in a similar fasion to a low pass filter that has dynmaically changing <span class="math notranslate nohighlight">\(\alpha\)</span>, to create an estimate of true state measurments <span class="math notranslate nohighlight">\(\hat{x}_k\)</span></strong>.</p>
+<p><strong>A kalman filter compares the predicted state, <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span>, with measurments, <span class="math notranslate nohighlight">\(\hat{z}_k\)</span>, to create an estimate of the true state, <span class="math notranslate nohighlight">\(\hat{x}_k\)</span></strong>. This section outlines the algorithm for the kalman filter and introduces the parameters it uses.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>Terminology
-A prediction is a forecast of the next state based on the previous state and the mathematical model whereas a estimate is an update of the predicted state once new measurements have been taken.</p>
+<p>A prediction is a forecast of the next state based on the previous state and the mathematical model. Whereas a estimate is an update of the predicted state once new measurements have been taken.</p>
 </div>
-<section id="linear-model">
-<h2>Linear model<a class="headerlink" href="#linear-model" title="Link to this heading">#</a></h2>
-<p>The kalman filter deals with the linear state model. Where the state:</p>
+<section id="dictionary">
+<h2>Dictionary<a class="headerlink" href="#dictionary" title="Link to this heading">#</a></h2>
+<p>The kalman filter deals with the linear state model. Where the state evolves linearly according to <span class="math notranslate nohighlight">\(A\)</span>:</p>
 <div class="math notranslate nohighlight" id="equation-state">
 <span class="eqno">(9)<a class="headerlink" href="#equation-state" title="Link to this equation">#</a></span>\[x_{k+1} = Ax_k + w_k\]</div>
-<p>and the measurement</p>
+<p>and the measurement can be described as:</p>
 <div class="math notranslate nohighlight" id="equation-measurment">
 <span class="eqno">(10)<a class="headerlink" href="#equation-measurment" title="Link to this equation">#</a></span>\[z_{k+1} = Hx_k + v_k \]</div>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(x_k\)</span> is the process state vector at time <span class="math notranslate nohighlight">\(t_k\)</span> (<span class="math notranslate nohighlight">\(n\times1\)</span> column vector)</p></li>
 <li><p><span class="math notranslate nohighlight">\(z_k\)</span> is the vector measurment at time <span class="math notranslate nohighlight">\(t_k\)</span> (<span class="math notranslate nohighlight">\(m\times1\)</span> column vector).</p></li>
+</ul>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>When a forcing function is present the systems evolutions is effected by an additional term e.g. <span class="math notranslate nohighlight">\(x_{k+1} = Ax_k+Bu_k\)</span>. Where <span class="math notranslate nohighlight">\(B_ku_k\)</span> models the forcing function. In the examples there is no forcing function. A forcing function is used when the output is deliberately changed e.g. changing the output from a battery by adding another cell.</p>
+</aside>
+<ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(A\)</span> is the state transition matrix which maps <span class="math notranslate nohighlight">\(x_k\)</span> to <span class="math notranslate nohighlight">\(x_{k+1}\)</span> in the absence of a forcing function. (<span class="math notranslate nohighlight">\(n\times n\)</span> matrix).</p></li>
-<li><p><span class="math notranslate nohighlight">\(H\)</span> is the state to measurement matrix giving the ideal noiseless connection between the measurement and the state vector at state vector (<span class="math notranslate nohighlight">\(m \times n\)</span> matrix).</p></li>
-<li><p><span class="math notranslate nohighlight">\(w_k\)</span> is the linear process noise vector  which is noise uncorrelated over time (white sequence). Its values at different time steps are independent. E.g. the temperature of a fridge randomly fluctuates due to compressor inefficiencies and unpredictable random temperature shifts. (<span class="math notranslate nohighlight">\(n\times1\)</span> column vector).</p></li>
-<li><p><span class="math notranslate nohighlight">\(v_k\)</span> is the linear measurement noise vector and is assumed to be a white sequence having zero cross corelation with <span class="math notranslate nohighlight">\(w_k\)</span>. E.g. temperature measurments using a digital thermometer will be effected by random noise(<span class="math notranslate nohighlight">\(m\times1\)</span> column vector).</p></li>
-<li><p><span class="math notranslate nohighlight">\(Q\)</span> is the covariance matrix of <span class="math notranslate nohighlight">\(w_k\)</span> (<span class="math notranslate nohighlight">\(n\times n\)</span> diagonal matrix) i.e. how much the true state is expected to deviate from the predictions made by the state transition model. Large Q the filter assumes the model is less reliable and vice versa.</p></li>
+<li><p><span class="math notranslate nohighlight">\(H\)</span> is the state to measurement matrix giving the ideal noiseless connection between the measurement and the state vector (<span class="math notranslate nohighlight">\(m \times n\)</span> matrix).</p></li>
+<li><p><span class="math notranslate nohighlight">\(w_k\)</span> is the linear process noise vector, noise associated with the prediction, which is noise uncorrelated over time (white sequence). E.g. the error associated with the prediction of the temperature tommorow. (<span class="math notranslate nohighlight">\(n\times1\)</span> column vector).</p></li>
+<li><p><span class="math notranslate nohighlight">\(v_k\)</span> is the linear measurement noise vector, noise associated with the measurment. E.g. temperature measurments using a digital thermometer will be effected by random noise. (<span class="math notranslate nohighlight">\(m\times1\)</span> column vector).</p></li>
+<li><p><span class="math notranslate nohighlight">\(Q\)</span> is the covariance matrix of <span class="math notranslate nohighlight">\(w_k\)</span> i.e. how much the true state is expected to deviate from the predictions made by the state transition model. Large Q puts a larger weighting on <span class="math notranslate nohighlight">\(\hat{z}_k\)</span> compared to <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> when predicting <span class="math notranslate nohighlight">\(\hat{x}_{k+1}\)</span>. Smaller Q puts more weighting on <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> compared to <span class="math notranslate nohighlight">\(\hat{z}_k\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight" id="equation-eq-process-noise-cov">
 <span class="eqno">(11)<a class="headerlink" href="#equation-eq-process-noise-cov" title="Link to this equation">#</a></span>\[\begin{split}E[w_k w_i^T] = 
 \begin{cases}
     Q_k, &amp; i = k \\
     0,   &amp; i \neq k
-\end{cases}\end{split}\]</div>
+\end{cases} \end{split}\]</div>
+<p><span id="id1">[<a class="reference internal" href="5IMU.html#id4" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span>
+Larger <span class="math notranslate nohighlight">\(w_k\)</span> means <span class="math notranslate nohighlight">\(Q_k\)</span> needs to be adjusted to be larger.</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(R\)</span> is the covariance matrix of <span class="math notranslate nohighlight">\(v_k\)</span> (<span class="math notranslate nohighlight">\(m\times m\)</span> diagonal matrix). <span class="math notranslate nohighlight">\(R\)</span> tells the kalman filter how much to “trust” the measurments compared to model predictions. Large R means the measurments are trusted less so the filter relies more on its predictions.</p></li>
+<li><p><span class="math notranslate nohighlight">\(R\)</span> is the covariance matrix of <span class="math notranslate nohighlight">\(v_k\)</span>. i.e. how much the measured state is effected by noise in the state transition model. <span class="math notranslate nohighlight">\(R\)</span> tells the kalman filter how much to “trust” the measurments compared to model predictions.  Large <span class="math notranslate nohighlight">\(R\)</span> puts more emphasis on <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> compared to <span class="math notranslate nohighlight">\(\hat{z}_k\)</span> when predicting <span class="math notranslate nohighlight">\(\hat{x}_{k+1}\)</span>, small <span class="math notranslate nohighlight">\(R\)</span> puts more emphasis on <span class="math notranslate nohighlight">\(\hat{z}_k\)</span> compared to <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight" id="equation-eq-measurement-noise-cov">
 <span class="eqno">(12)<a class="headerlink" href="#equation-eq-measurement-noise-cov" title="Link to this equation">#</a></span>\[\begin{split}E[v_k v_i^T] = 
 \begin{cases}
     R_k, &amp; i = k \\
     0,   &amp; i \neq k
-\end{cases}\end{split}\]</div>
+\end{cases} \end{split}\]</div>
+<p><span id="id2">[<a class="reference internal" href="5IMU.html#id4" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span>
+. Larger <span class="math notranslate nohighlight">\(v_k\)</span> means <span class="math notranslate nohighlight">\(R_k\)</span> needs to be increased.</p>
 <ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span> are ‘tuning’ paramers, unlike <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(H\)</span> the filter will converge regardless there value but they will effect how ‘good’ the fit is.</p></li>
 <li><p><span class="math notranslate nohighlight">\(e^-_k\)</span> is the estimation error defined as: <span class="math notranslate nohighlight">\(e^-_k = x_k-\hat{x}^-_k\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(P^-_k\)</span> is then the associated error covariance matrix defined as: <span class="math notranslate nohighlight">\(P^-_k =E[e^-_k(e^-_k)^T]\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(x_0\)</span> is the initial state estimate. provided at the start of the estimation process (<span class="math notranslate nohighlight">\(n \times 1\)</span> column vector)</p></li>
-<li><p><span class="math notranslate nohighlight">\(P_0\)</span> is the initial error estimate</p></li>
+<li><p><span class="math notranslate nohighlight">\(P_k\)</span> is then the associated error covariance matrix defined as: <span class="math notranslate nohighlight">\(P_k =E[e_ke_k^T]\)</span> <span id="id3">[<a class="reference internal" href="5IMU.html#id4" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(K_k\)</span> is the kalman gain which has similar effects to <span class="math notranslate nohighlight">\(\alpha\)</span> in the low pass filter.</p></li>
+<li><p><span class="math notranslate nohighlight">\(x^-_0\)</span> is the initial state estimate. provided at the start of the estimation process.</p></li>
+<li><p><span class="math notranslate nohighlight">\(P^-_0\)</span> is the initial error estimate.</p></li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>When a forcing function is present the systems evolutions is effected by an additional term e.g. <span class="math notranslate nohighlight">\(x_{k+1} = Ax_k+Bu_k\)</span>. Where <span class="math notranslate nohighlight">\(B_ku_k\)</span> models the forcing function. Here it is assumed that no forceing function is present. An example of a forcing function is intentionally changing the output from a battery by adding another cell. Note this is not the same as linear process noise.</p>
-</div>
 </section>
 <section id="estimation-step">
 <h2>Estimation step<a class="headerlink" href="#estimation-step" title="Link to this heading">#</a></h2>
@@ -462,7 +470,7 @@ A prediction is a forecast of the next state based on the previous state and the
 <p>Letting <span class="math notranslate nohighlight">\(H = \mathbb{I}\)</span> and <span class="math notranslate nohighlight">\(\alpha= 1-K_k\)</span> a first order low pass filter is recovered similar to <a class="reference internal" href="3LowPassFilters.html#equation-eq-lowpass-2">(7)</a>.</p>
 <div class="math notranslate nohighlight" id="equation-eq-kalman-alpha">
 <span class="eqno">(15)<a class="headerlink" href="#equation-eq-kalman-alpha" title="Link to this equation">#</a></span>\[\hat{x}_k = \alpha \hat{x}^-_{k} + (1 - \alpha) z_k\]</div>
-<p>Kalman filter estimation process is like a low pass filter with dynamically changing <span class="math notranslate nohighlight">\(\alpha\)</span> that also considers the physics of the system.</p>
+<p>Kalman filter estimation step is like a low pass filter with dynamically changing <span class="math notranslate nohighlight">\(\alpha\)</span>.</p>
 </div>
 <p>The minimum mean square error (MSE) is the performance criterion for the kalman filter. It is possible to form an expression for the error covariance matrix associated with the updated estimate:</p>
 <div class="math notranslate nohighlight" id="equation-eq-error-covariance">
@@ -471,11 +479,20 @@ A prediction is a forecast of the next state based on the previous state and the
 <div class="math notranslate nohighlight" id="equation-p-k-minimise">
 <span class="eqno">(17)<a class="headerlink" href="#equation-p-k-minimise" title="Link to this equation">#</a></span>\[P_k = (I-K_kH_k)P^-_k(I-K_kH_k)^T+K_kR_kK^T_k\]</div>
 <p>Which is a general expression for the updated error covariance matrix. Minimising the MSE corresponds to finding the value of <span class="math notranslate nohighlight">\(K_k\)</span> that minises the individual terms along the leading diagonal of <span class="math notranslate nohighlight">\(P_k\)</span> as these terms represent the estimation error variances for the elements of the state vector elements being selected. This leaves:</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>For a more detailed derivation see <span id="id4">[<a class="reference internal" href="5IMU.html#id4" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span>.</p>
+</aside>
 <div class="math notranslate nohighlight" id="equation-eq-kalman-gain">
 <span class="eqno">(18)<a class="headerlink" href="#equation-eq-kalman-gain" title="Link to this equation">#</a></span>\[K_k = P^-_k H^T (H P^-_k H^T + R)^{-1}\]</div>
-<p>In this case <span class="math notranslate nohighlight">\(K_k\)</span> is the kalman gain, which minimises the mean-square estimation error. The error covariance (a measure of the inaccuracy of the estimate) is updated as:</p>
+<p>In this case <span class="math notranslate nohighlight">\(K_k\)</span> is the kalman gain, which minimises <span class="math notranslate nohighlight">\(P^k\)</span>. <span class="math notranslate nohighlight">\(P^k\)</span> is updated as:</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>For a detailed derivation of see <span id="id5">[<a class="reference internal" href="5IMU.html#id5" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span></p>
+</aside>
 <div class="math notranslate nohighlight" id="equation-eq-error-covariance-update">
 <span class="eqno">(19)<a class="headerlink" href="#equation-eq-error-covariance-update" title="Link to this equation">#</a></span>\[P_k = P^-_k - K_k H P^-_k\]</div>
+<p>Whereas the low pass filter passes <span class="math notranslate nohighlight">\(\hat{x}_{k-1}\)</span> directly between time steps <span class="math notranslate nohighlight">\(t_{k-1}\)</span> and <span class="math notranslate nohighlight">\(t_{k}\)</span> the kalman filter predicts the next step before a measurement is carried out and compares this with the measurement to give new estimate.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><span class="math notranslate nohighlight">\(H\)</span> and <span class="math notranslate nohighlight">\(R\)</span> are only used in the prediction step.</p>
@@ -483,25 +500,51 @@ A prediction is a forecast of the next state based on the previous state and the
 </section>
 <section id="prediction-step">
 <h2>Prediction step<a class="headerlink" href="#prediction-step" title="Link to this heading">#</a></h2>
-<p><span class="math notranslate nohighlight">\(\hat{x}_k\)</span> is prediced from:</p>
+<p>By considering the physics of the system the predictions form a second source of knowledge for state estimation. The system dynamically changes over time and is modelled using <span class="math notranslate nohighlight">\(A\)</span>, which describes how the state is predicted to change between <span class="math notranslate nohighlight">\(t_k\)</span> and <span class="math notranslate nohighlight">\(t_{k+1}\)</span>:</p>
 <div class="math notranslate nohighlight" id="equation-projection">
 <span class="eqno">(20)<a class="headerlink" href="#equation-projection" title="Link to this equation">#</a></span>\[\hat{x}^-_{k+1} = A_k \hat{x}_k\]</div>
-<p>The error covariance matrix associated with <span class="math notranslate nohighlight">\(\hat{x}^-_{k+1}\)</span> is obtained from</p>
+<p>The error covariance matrix associated with this prediction <span class="math notranslate nohighlight">\(\hat{x}^-_{k+1}\)</span> is obtained from</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>If <span class="math notranslate nohighlight">\(\mu_x\)</span> is transformed linearly <span class="math notranslate nohighlight">\(\mu_y = F\mu_x\)</span> its covariance matrix, <span class="math notranslate nohighlight">\(\Sigma_x\)</span>, can be transformed using <span class="math notranslate nohighlight">\(\Sigma_y = F\Sigma_xF^T\)</span>. <span id="id6">[<a class="reference internal" href="5IMU.html#id5" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span></p>
+</aside>
 <div class="math notranslate nohighlight" id="equation-projection-covariance">
-<span class="eqno">(21)<a class="headerlink" href="#equation-projection-covariance" title="Link to this equation">#</a></span>\[P_k = A_kP_kA_k^T+Q_k\]</div>
+<span class="eqno">(21)<a class="headerlink" href="#equation-projection-covariance" title="Link to this equation">#</a></span>\[P_k = A_kP_kA_k^T+Q\]</div>
+<p><span class="math notranslate nohighlight">\(Q\)</span> also appears here as this is how much the true state is expected to vary from the predictions. Together these two equations encode the prediction phase of the filter.  If we only had a model we wouldn’t need the estimation phase i.e. we had no measurments.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(Q\)</span> are only used in the prediction step.</p>
+</div>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <figure class="align-default" id="fig-kalman-block-diagram">
 <img alt="_images/image.png" src="_images/image.png" />
 <figcaption>
 <p><span class="caption-number">Fig. 7 </span><span class="caption-text">Block diagram of the Kalman filter process.</span><a class="headerlink" href="#fig-kalman-block-diagram" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Whereas the low pass filter passes <span class="math notranslate nohighlight">\(\hat{x}_{k-1}\)</span> directly between time steps <span class="math notranslate nohighlight">\(t_{k-1}\)</span> and <span class="math notranslate nohighlight">\(t_{k}\)</span> the kalman filter predicts the next step before a measurement is carried out to produce and compares this with the measurement to give new estimate.</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(H\)</span> are essential for the kalman filter if these are incorrect the filter will not converge.</p></li>
+<li><p><span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span> are used for tuning and ensure an optimum fit.</p></li>
+<li><p><span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(P_0\)</span> are initial estimates the filter will still converge even if these are wrong.</p></li>
+<li><p><span class="math notranslate nohighlight">\(K_k\)</span> and <span class="math notranslate nohighlight">\(P_k\)</span> are internal parameters.</p></li>
+<li><p><span class="math notranslate nohighlight">\(z_k\)</span> are the inputs (measured state)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{x}_k\)</span> are the outputs (estimated state)</p></li>
+</ul>
+<div class="docutils container" id="id7">
+<div role="list" class="citation-list">
+<div class="citation" id="id9" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>BAOOl21<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id6">2</a>)</span>
+<p>Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: <a class="reference external" href="https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305">https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305</a>, <a class="reference external" href="https://doi.org/10.1201/9780429200656">doi:10.1201/9780429200656</a>.</p>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(Q\)</span> are only used in the prediction step.</p>
+<div class="citation" id="id8" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>BH12<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>,<a role="doc-backlink" href="#id3">3</a>,<a role="doc-backlink" href="#id4">4</a>)</span>
+<p>Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: <a class="reference external" href="http://proquest.safaribooksonline.com/9780470609699">http://proquest.safaribooksonline.com/9780470609699</a>.</p>
+</div>
+</div>
 </div>
 </section>
 </section>
@@ -550,7 +593,7 @@ A prediction is a forecast of the next state based on the previous state and the
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Example: Battery output</p>
+        <p class="prev-next-title">Battery output</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -570,9 +613,10 @@ A prediction is a forecast of the next state based on the previous state and the
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-model">Linear model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dictionary">Dictionary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimation-step">Estimation step</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediction-step">Prediction step</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 </ul>
   </nav></div>
 

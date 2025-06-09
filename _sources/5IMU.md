@@ -1,14 +1,26 @@
-# IMU and Sensor fusion
-This section involves calculating yaw-pitch-roll in the 3-2-1 sequence firstly using the gyroscope to measure the angular velocitiy and then using Eulers method for integration to obtain a prediction for yaw-pitch-roll. The second part involves combining this prediction with a measurment form the accelarometer which can be used directly to calculate yaw-pitch-roll. Using sensor fusion these measurments are combined and allow yaw-pitch-roll to be calculated with very high accuracy.
+# Attitude using a gyroscope and accelarometer
+This section involves calculating yaw-pitch-roll (attitude) in the 3-2-1 sequence firstly using the gyroscope to measure the angular velocitiy $\hat{\omega}$ and then using Eulers method for integration to obtain a prediction for the attitude. The second part involves combining this prediction with a measurment form the accelarometer measuring $\hat{a}$ which can be used directly to calculate yaw-pitch-roll. Using the kalman filter prediction and measurment are combined to give a high accuracy estimate.
 
 
-```{figure} image-28.png
+```{figure} image-28.jpg
 :label: Sensor-Fusion-Kalman
 Kalman filter with sensor fusion
 ```
 
 ## Eulers method
-Using gyroscope (measures angular velocity, $\hat{w}$) and knowing the initial orientation at $t_0$ it is possible to determine the orientation of a craft at $t_k$. The relationship between the body angular velocity $\hat{w} = (\omega_1, \omega_2, \omega_3)$ and the time derivatives of the Euler angles $\hat{x} = (\psi, \theta, \phi)$ in the 3-2-1 (yaw-pitch-roll) sequence is given by the kinematic differential equation (KDE) below:
+Using gyroscope (measures angular velocity, $\hat{\omega}$) and knowing the attitude at $t_0$ it is possible to determine the attitude of a craft at $t_k$. The relationship between the body angular velocity $\hat{\omega} = (\omega_1, \omega_2, \omega_3)$ and the time derivatives of the Euler angles $\hat{\alpha} = (\psi, \theta, \phi)$ in the 3-2-1 (yaw-pitch-roll) sequence is given by the kinematic differential equation (KDE) below:
+
+```{margin}
+$\phi$, $\theta$ and $\psi$ are euler angles that describe the orientation of the object in space. Whereas $\omega_1$, $\omega_2$, $\omega_3$  are rates of rotation i.e. roll rate pitch rate and yaw rate.
+
+$\psi$: measures the rotation around the vertical (z) axis e.g. turning your head left and right in a "no" motion
+
+$\theta$: measures the rotation around the sided-to-side (y) axis e.g. nodding your head up and down in a "yes" motion.
+
+$\phi$: rotation around the front-to-back (x) axis. E.g tilting your head to touch your ear to your shoulder. 
+
+The Euler angle rates $\dot{\phi}$, $\dot{\theta}$, $\dot{\psi}$ are not the same as body angular rates because the orientation of the body axes changes as the object rotates. 
+```
 
 ```{math}
 :label: H
@@ -29,41 +41,31 @@ Using gyroscope (measures angular velocity, $\hat{w}$) and knowing the initial o
 \end{bmatrix}
 ```
 
-Or more simply:
+Or more simply :
+
 
 ```{math}
-:label: H-simple
-\hat{\dot{x}} = \Phi(\hat{x}) {\hat{\omega}}
+:label: eq-simple
+\hat{\dot{\alpha}} = \Phi(\hat{\alpha}) {\hat{\omega}}
 ```
 
-where $\Phi(\hat{\theta}) = \frac{1}{\cos{\theta}}\begin{bmatrix}
+where $\Phi(\hat{\alpha}) = \frac{1}{\cos{\theta}}\begin{bmatrix}
 0 & \sin\phi  & \cos\phi  \\
 0 & \cos\phi\cos\theta & -\sin\phi\cos\theta \\
 \cos\theta & \sin\phi\sin\theta & \cos\phi  \sin\theta
 \end{bmatrix}$ 
 
-```{note}
-$\phi$, $\theta$ and $\psi$ are euler angles that describe the orientation of the object in space. Whereas $\omega_1$, $\omega_2$, $\omega_3$  are rates of rotation i.e. roll rate pitch rate and yaw rate.
 
-$\psi$: measures the rotation around the vertical (z) axis e.g. turning your head left and right in a "no" motion
-
-$\theta$: measures the rotation around the sided-to-side (y) axis e.g. nodding your head up and down in a "yes" motion.
-
-$\phi$: rotation around the front-to-back (x) axis. E.g tilting your head to touch your ear to your shoulder. 
-
-The Euler angle rates $\dot{\phi}$, $\dot{\theta}$, $\dot{\psi}$ are not the same as body angular rates because the orientation of the body axes changes as the object rotates. 
-```
-
-An estimate of the next yaw-pitch-roll, $x^-_{k+1}$, are calculated using eulers method:
+The predicted attitude at time $t_{k+1}$ is calculated using eulers method:
 ```{math}
-:label: euler-method
-x^-_{k+1} = x_k + \dot{x}_k \Delta t
+:label: eq-euler
+\hat{\alpha}^-_{k+1} = \hat{\alpha}_k + \dot{\hat{\alpha}}_k \Delta t
 ```
 
-Subbing {eq}`H-simple` into {eq}`euler-method` gives:
+Subbing {eq}`eq-simple` into {eq}`eq-euler` gives:
 ```{math}
 :label: euler-method2
-\hat{x}^-_{k+1} = \hat{x}_{k} + \Phi(\hat{x}_k) \hat{\omega}_k \Delta t
+\hat{\alpha}^-_{k+1} = \hat{\alpha}_{k} + \Phi(\hat{\alpha}_k) \hat{\omega}_k \Delta t
 ```
 where $\Delta t = t_k - t_{k-1}$.
 
@@ -72,7 +74,7 @@ where $\Delta t = t_k - t_{k-1}$.
 Calibration signal involved shaking the device in just the $\omega_1$ direction then pausing and shaking the device in the $\omega_1$ and $\omega_2$ directions before pausing again and shaking the deivce in the $\omega_3$. The observed motion in the $\omega_3$ was accidental.
 ```
 
-Using the calibration data in {numref}`cal1` and assuming $x_0 = \vec{0}$, x_k can be calculated.
+Using the calibration data in {numref}`cal1`, knowing $x_0 = \vec{0}$ and {eq}`euler-method2`, attitude can be determined.
 
 ```{figure} image-29.png
 :name: roll-pitch-yaw-drift-real
@@ -87,10 +89,11 @@ Drift is caused by the error associated with the numerical integration accumulat
 
 A better way of modelling the system would be to use a kalman filter as even a noisy direct measurment of $\hat\alpha$ would correct for drift in the prediction. Try determining $A$ from {eq}`euler-method2` but this won't work since it can't be put into the form in $\hat{x}_{k+1} = A\hat{x}_k.$
 
-````{tip}
-
+```{tip}
 Use Euler parameters
+```
 
+````{margin}
 ```{math}
 \beta_0 = \sin\frac{\phi}{2}\sin\frac{\theta}{2}\sin\frac{\psi}{2} + \cos\frac{\phi}{2}\cos\frac{\theta}{2}\cos\frac{\psi}{2}
 ```
@@ -103,32 +106,34 @@ Use Euler parameters
 ```{math}
 \beta_3 = \cos\frac{\phi}{2}\cos\frac{\theta}{2}\sin\frac{\psi}{2} + \sin\frac{\phi}{2}\sin\frac{\theta}{2}\cos\frac{\psi}{2}
 ```
-
-Below is the Euler parameters KDE:
+Where $\Psi(\hat{\omega}) = \frac{1}{2} \begin{bmatrix} 0 & -\omega_1 & -\omega_2 & -\omega_3 \\ \omega_1 & 0 & \omega_3 & -\omega_2 \\ \omega_2 & -\omega_3 & 0 & \omega_1 \\ \omega_3 & \omega_2 & -\omega_1 & 0\end{bmatrix}$ {cite}`Barreto2021, chapter=11.3`.
+````
+Below is the corresponding Euler parameters KDE:
 
 ```{math}
 :label: EP KDE
 \begin{bmatrix} \dot{\beta_0} \\ \dot{\beta_1} \\ \dot{\beta_2} \\ \dot{\beta_3} \end{bmatrix} = \frac{1}{2} \begin{bmatrix} 0 & -\omega_1 & -\omega_2 & -\omega_3 \\ \omega_1 & 0 & \omega_3 & -\omega_2 \\ \omega_2 & -\omega_3 & 0 & \omega_1 \\ \omega_3 & \omega_2 & -\omega_1 & 0\end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix}
 ```
 
-or more simply:
+{cite}`Barreto2021, chapter=11.3` or more simply:
 
 ```{math}
 :label: EP-KDE-simple
-\vec{\dot{\beta}} = B(\vec{\omega}) \vec{\beta}
+\vec{\dot{\beta}} = \Psi(\hat{\omega}) \vec{\beta}
 ```
 
-It descrubes how the Euler parameters change over time in response to the angular velocity vector $\hat{z}$. 
-````
+
+
 
 This time the model will be defined using the Euler parameters
 - $\hat{x}_k = \vec{\beta}$
-- $\hat{x}_{k+1} = \hat{x}_k + \Delta t \vec{\dot{\beta}} = \hat{x}_k + \Delta t B \hat{x}_k = \hat{x}_{k+1} = (I + \Delta t B)\hat{x}_k \implies A = (I + \Delta t B)$
-- $x^-_0 = \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}$ 
-- $Q$, $R$ and $P^-_0$ can be determined by trial and error
+- $\hat{x}_{k+1} = \hat{x}_k + \Delta t \vec{\dot{\beta}} = \hat{x}_k + \Delta t \Psi(\hat{\omega}) \hat{x}_k = \hat{x}_{k+1} = (I + \Delta t \Psi(\hat{\omega}))\hat{x}_k \implies A = (I + \Delta t \Psi(\hat{\omega}))$
+- $\hat{x}^-_0 = \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}$ since $\hat{\alpha} = \vec{0}$
+- $Q = qI_{4 \times 4}$, $R = rI_{4 \times 4}$ and $P^-_0 = pI_{4 \times 4}$ to allow for simple tuning.
 
-```{admonition} Research Idea
-Look into a better way to determine $Q$ $P^-_0$. $R$ will normally be given by a sensor.
+
+```{warning}
+It is unlikely $Q$, $R$ and $P^-_0$ take forms like those above but in this case they allow for a sufficently good fit.
 ```
 
 
@@ -154,7 +159,7 @@ Where $N\dot{v}$ is the inertial accelatration and $\vec{g}$ is the accelaration
 :label: accelarometer3
 \implies \theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})
 ```
-
+From the calibration:
 ```{math}
 :label: accelarometer4
 \omega_3 = 0 \implies \psi = \psi_0 = 0
@@ -176,6 +181,14 @@ For tuning purposes $Q = qI$ and $R = rI$ although optimal Q and R are not alway
 Additional noise has been added to the accelarometer readings to make the effects of the kalman filter more visible. Usually the accelarometer is more sensative to noise than the gyroscope, however this noise is small and hard to visualise in this example.
 ```
 Below were tests carried out to ensure the kalman filter was correctly working. 
+````{margin}
+The output is $\vec{\beta}$ but can be converted into $\alpha$ using the following:
+```{math}
+\phi &= \arctan2\left(2(\beta_1 \beta_2 + \beta_0 \beta_3),\ \beta_0^2 + \beta_1^2 - \beta_2^2 - \beta_3^2\right) \\
+\theta &= \arcsin\left(-2(\beta_1 \beta_3 - \beta_0 \beta_2)\right) \\
+\psi &= \arctan2\left(2(\beta_2 \beta_3 + \beta_0 \beta_1),\ \beta_0^2 - \beta_1^2 - \beta_2^2 + \beta_3^2\right)
+```
+````
 ```{figure} Kalman_Filter_Tuning_test.png
 :name: Test1
 Testing the kalman filter with small $q$ and large $r$.
@@ -191,7 +204,7 @@ Testing the kalman filter with large $q$ and small $r$.
 
 ```{figure} Kalman_Filter_Tuning1.png
 :name: Tuning
-Kalman filter tuned optimally by eye
+Kalman filter tuned optimally by eye.
 ```
 
 ```{figure} Kalman_Filter_Tuning_zoomed.png
@@ -201,12 +214,13 @@ Zoomed in {numref}`Tuning`.
 {numref}`Tuning` and {numref}`TuningZoomed` show the kalman filter has produced a very good fit. The filtered signal appears both noise, drift and delay free.
 
 
-## Conclusion
+## Summary
 The Kalman filter produced an excelent fit in this case as the prediction (from gyroscope) and measurment (from accelarometer) were complimentary to eachother. The gyroscope was less suceptible to noise but was suceptible to drift whereas the accelarometer was more suceptible to noise and less suceptible to drift. Sensor fusion gets the best of both worlds. 
 
 ```{admonition} Idea
 Rewrite the part of the code that carries out kalman filter calculations and determines A in C++ as the programme runs really slowly.
 ```
-
+```{bibliography}
+```
 
 
