@@ -145,25 +145,45 @@ Let:
 - $H = I$ since there is a 1 to 1 correspondance between measurment and estimation.
 
 In the body fixed frame given by:
-```{math}
-:label: accelarometer2
-[\hat{a}]_B = [N\vec{\dot{v}}]_B - [\hat{g}]_B
+```{margin}
+Where $\vec{g} = \begin{bmatrix} 0 \\ 0 \\ g \end{bmatrix}$
 ```
-Where $N\dot{v}$ is the inertial accelatration and $\vec{g}$ is the accelaration due to gravity. Assume the inertial accelaration of the body is zero and the accelarometer is located at the center of mass. This can also be written in the frame of the earth using $B = \begin{bmatrix} \hat{n}_x & \hat{n}_y & \hat{n}_z \end{bmatrix}$, where $n_x$, $n_y$ and $n_z$ are 3 dimensional unit vectors in there respective directions. Since gravity only acts in the $z$ direction:
 
 ```{math}
 :label: accelarometer2
-[\vec{a}]_B = - g_z \hat{n}_z = \begin{bmatrix} \sin{\theta} \\ -\cos{\theta}\sin{\phi} \\ -\cos{\theta}\cos{\phi} \end{bmatrix}
+[\hat{a}]_B = [\vec{\dot{v}}]_B - [\vec{g}]_B
 ```
+
+
+
+Where $\dot{v}$ is the translational accelatration and $\vec{g}$ is the accelaration due to gravity. **Assume the translational accelaration of the body is zero and the accelarometer is located at the center of rotation.** 
+````{note}
+B is the linear transformation matrix which traforms form the frame of the earth to the frame of the device.
+```{math}
+B = \begin{bmatrix}
+\cos \psi \cos \theta & \sin \psi \cos \theta & -\sin \theta \\
+\cos \psi \sin \theta \sin \phi - \cos \phi \sin \psi & \sin \psi \sin \theta \sin \phi + \cos \phi \cos \psi & \cos \theta \sin \phi \\
+\cos \psi \sin \theta \cos \phi + \sin \phi \sin \psi & \sin \psi \sin \theta \cos \phi - \sin \phi \cos \psi & \cos \theta \cos \phi
+\end{bmatrix} 
+```
+or written in terms of unit vectors describing the effects on the $x$, $y$ and $z$ components.
+```{math}
+B = \begin{bmatrix} \hat{n}_x & \hat{n}_y & \hat{n}_z \end{bmatrix}
+```
+where $\hat{n}_x$, $\hat{n}_y$ and $\hat{n}_z$ are 3 dimensional unit vectors in there respective directions.
+````
+The accelaration in the frame of the body can be calculated from its position relative to the earth:
+
+```{math}
+:label: eq-accelarometer2
+[\vec{a}]_B = - B\vec{g}  = - g \hat{n}_z = \begin{bmatrix} \sin{\theta} \\ -\cos{\theta}\sin{\phi} \\ -\cos{\theta}\cos{\phi} \end{bmatrix}
+```
+In component form $a = \begin{bmatrix} a_1 \\ a_2 \\ a_3 \end{bmatrix}$ rearranging {eq}`eq-accelarometer2` gets:
 ```{math}
 :label: accelarometer3
-\implies \theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})
+\theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})
 ```
-From the calibration:
-```{math}
-:label: accelarometer4
-\omega_3 = 0 \implies \psi = \psi_0 = 0
-```
+From the accelarometer data alone it is possible to directly calculate $\theta$ and $\phi$ but not $\psi$. In this case $\psi = 0$ since no oscillations were performed in the $\omega_3$ direction.
 
 ```{figure} Acc.png
 :name: acc

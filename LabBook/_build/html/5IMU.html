@@ -509,16 +509,34 @@ Let:</p>
 <li><p><span class="math notranslate nohighlight">\(H = I\)</span> since there is a 1 to 1 correspondance between measurment and estimation.</p></li>
 </ul>
 <p>In the body fixed frame given by:</p>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<p>Where <span class="math notranslate nohighlight">\(\vec{g} = \begin{bmatrix} 0 \\ 0 \\ g \end{bmatrix}\)</span></p>
+</aside>
 <div class="math notranslate nohighlight" id="equation-accelarometer2">
-<span class="eqno">(31)<a class="headerlink" href="#equation-accelarometer2" title="Link to this equation">#</a></span>\[[\hat{a}]_B = [N\vec{\dot{v}}]_B - [\hat{g}]_B\]</div>
-<p>Where <span class="math notranslate nohighlight">\(N\dot{v}\)</span> is the inertial accelatration and <span class="math notranslate nohighlight">\(\vec{g}\)</span> is the accelaration due to gravity. Assume the inertial accelaration of the body is zero and the accelarometer is located at the center of mass. This can also be written in the frame of the earth using <span class="math notranslate nohighlight">\(B = \begin{bmatrix} \hat{n}_x &amp; \hat{n}_y &amp; \hat{n}_z \end{bmatrix}\)</span>, where <span class="math notranslate nohighlight">\(n_x\)</span>, <span class="math notranslate nohighlight">\(n_y\)</span> and <span class="math notranslate nohighlight">\(n_z\)</span> are 3 dimensional unit vectors in there respective directions. Since gravity only acts in the <span class="math notranslate nohighlight">\(z\)</span> direction:</p>
-<div class="math notranslate nohighlight" id="equation-accelarometer2">
-<span class="eqno">(31)<a class="headerlink" href="#equation-accelarometer2" title="Link to this equation">#</a></span>\[\begin{split}[\vec{a}]_B = - g_z \hat{n}_z = \begin{bmatrix} \sin{\theta} \\ -\cos{\theta}\sin{\phi} \\ -\cos{\theta}\cos{\phi} \end{bmatrix}\end{split}\]</div>
+<span class="eqno">(30)<a class="headerlink" href="#equation-accelarometer2" title="Link to this equation">#</a></span>\[[\hat{a}]_B = [\vec{\dot{v}}]_B - [\vec{g}]_B\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\dot{v}\)</span> is the translational accelatration and <span class="math notranslate nohighlight">\(\vec{g}\)</span> is the accelaration due to gravity. <strong>Assume the translational accelaration of the body is zero and the accelarometer is located at the center of rotation.</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>B is the linear transformation matrix which traforms form the frame of the earth to the frame of the device.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}B = \begin{bmatrix}
+\cos \psi \cos \theta &amp; \sin \psi \cos \theta &amp; -\sin \theta \\
+\cos \psi \sin \theta \sin \phi - \cos \phi \sin \psi &amp; \sin \psi \sin \theta \sin \phi + \cos \phi \cos \psi &amp; \cos \theta \sin \phi \\
+\cos \psi \sin \theta \cos \phi + \sin \phi \sin \psi &amp; \sin \psi \sin \theta \cos \phi - \sin \phi \cos \psi &amp; \cos \theta \cos \phi
+\end{bmatrix} \end{split}\]</div>
+<p>or written in terms of unit vectors describing the effects on the <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(z\)</span> components.</p>
+<div class="math notranslate nohighlight">
+\[B = \begin{bmatrix} \hat{n}_x &amp; \hat{n}_y &amp; \hat{n}_z \end{bmatrix}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hat{n}_x\)</span>, <span class="math notranslate nohighlight">\(\hat{n}_y\)</span> and <span class="math notranslate nohighlight">\(\hat{n}_z\)</span> are 3 dimensional unit vectors in there respective directions.</p>
+</div>
+<p>The accelaration in the frame of the body can be calculated from its position relative to the earth:</p>
+<div class="math notranslate nohighlight" id="equation-eq-accelarometer2">
+<span class="eqno">(31)<a class="headerlink" href="#equation-eq-accelarometer2" title="Link to this equation">#</a></span>\[\begin{split}[\vec{a}]_B = - B\vec{g}  = - g \hat{n}_z = \begin{bmatrix} \sin{\theta} \\ -\cos{\theta}\sin{\phi} \\ -\cos{\theta}\cos{\phi} \end{bmatrix}\end{split}\]</div>
+<p>In component form <span class="math notranslate nohighlight">\(a = \begin{bmatrix} a_1 \\ a_2 \\ a_3 \end{bmatrix}\)</span> rearranging <a class="reference internal" href="#equation-eq-accelarometer2">(31)</a> gets:</p>
 <div class="math notranslate nohighlight" id="equation-accelarometer3">
-<span class="eqno">(32)<a class="headerlink" href="#equation-accelarometer3" title="Link to this equation">#</a></span>\[\implies \theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})\]</div>
-<p>From the calibration:</p>
-<div class="math notranslate nohighlight" id="equation-accelarometer4">
-<span class="eqno">(33)<a class="headerlink" href="#equation-accelarometer4" title="Link to this equation">#</a></span>\[\omega_3 = 0 \implies \psi = \psi_0 = 0\]</div>
+<span class="eqno">(32)<a class="headerlink" href="#equation-accelarometer3" title="Link to this equation">#</a></span>\[\theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})\]</div>
+<p>From the accelarometer data alone it is possible to directly calculate <span class="math notranslate nohighlight">\(\theta\)</span> and <span class="math notranslate nohighlight">\(\phi\)</span> but not <span class="math notranslate nohighlight">\(\psi\)</span>. In this case <span class="math notranslate nohighlight">\(\psi = 0\)</span> since no oscillations were performed in the <span class="math notranslate nohighlight">\(\omega_3\)</span> direction.</p>
 <figure class="align-default" id="acc">
 <img alt="_images/Acc.png" src="_images/Acc.png" />
 <figcaption>
