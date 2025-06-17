@@ -216,6 +216,8 @@ yaw-pitch-roll against time using only accelarometer data for the same calibrati
 
 Using the real world accelarometer and gyroscope data we will tune $Q$ and $R$ to obtain the optimal fit for the data. 
 
+#### Still updating this bit
+
 ````{margin}
 Given quaternion components $\boldsymbol{\beta}_0$ ( $\beta_1$, $\beta_2$, and $\beta_3$) the Euler angles ( $\phi$, $\theta$, $\psi$) can be calculated as:
 ```{math}
