@@ -431,8 +431,7 @@ document.write(`
 <li><p><span class="math notranslate nohighlight">\(\hat{z}^-_k\)</span> and <span class="math notranslate nohighlight">\(\hat{z}_k\)</span> is the what the model predicts and esimates our measurments should be respectivly:</p></li>
 </ul>
 <div class="math notranslate nohighlight" id="equation-eq-h-calculate">
-<span class="eqno">(11)<a class="headerlink" href="#equation-eq-h-calculate" title="Link to this equation">#</a></span>\[\hat{z}_k = H\hat{x}_k
-\hat{z}^-_k = H\hat{x}^-_k\]</div>
+<span class="eqno">(11)<a class="headerlink" href="#equation-eq-h-calculate" title="Link to this equation">#</a></span>\[ \begin{align}\begin{aligned}\hat{z}_k = H\hat{x}_k\\\hat{z}^-_k = H\hat{x}^-_k\end{aligned}\end{align} \]</div>
 <p>Which is very useful for determining <span class="math notranslate nohighlight">\(H\)</span>.</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(w_k\)</span> is the linear process noise vector or noise associated with the prediction. <span class="math notranslate nohighlight">\(w_k\)</span> is white sequence noise (random noise uncorrelated with time), which makes the models prediction imperfect. E.g. unexpected bumps in the road for a moving car. (<span class="math notranslate nohighlight">\(n \times 1\)</span> column vector).</p></li>
