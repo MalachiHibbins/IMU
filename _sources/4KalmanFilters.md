@@ -5,6 +5,9 @@
 ```{important} 
 Predictions and estimates are not intechangable when talking about kalman filters. A prediction is a forecast of the next state based on the previous state and the mathematical model. Whereas a estimate is an update of the predicted state once new measurements have been taken.
 ```
+```{note}
+In all future sections we scalars will be written as plain text $a$ and vectors will be written in bold $\boldsymbol{a}$. Here the symbols are context free so so are all in plain text.
+```
 
 ## Dictionary
 
@@ -33,9 +36,9 @@ Here $v_k$ dissapears since we ining $H$.
 - $\hat{z}^-_k$ and $\hat{z}_k$ is the what the model predicts and esimates our measurments should be respectivly:
 ```{math}
 :label: eq-h-calculate
-\hat{z}_k = H\hat{x}_k
+\hat{z}_k &= H\hat{x}_k
 
-\hat{z}^-_k = H\hat{x}^-_k
+\hat{z}^-_k &= H\hat{x}^-_k
 ```
 Which is very useful for determining $H$.
 - $w_k$ is the linear process noise vector or noise associated with the prediction. $w_k$ is white sequence noise (random noise uncorrelated with time), which makes the models prediction imperfect. E.g. unexpected bumps in the road for a moving car. ($n \times 1$ column vector).
