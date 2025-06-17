@@ -153,7 +153,7 @@ It is unlikely that optimal $Q$, $R$ and $P^-_0$ are scalar multiples of the ide
 
 ```{figure} AttitudeKalman.jpg
 :label: fig-kal-att
-Kalman filter block diagram specific attitude determination
+Kalman filter block diagram specific to attitude determination
 ```
 
 ```{figure} Compare2.png
