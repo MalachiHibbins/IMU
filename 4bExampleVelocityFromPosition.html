@@ -414,17 +414,17 @@ document.write(`
 \implies H &amp;= \begin{bmatrix} 1 &amp; 0 \end{bmatrix}\end{split}\]</div>
 <p>For our model we will assume that there is no forcing function hence accelaration will be constant. This allows us to use equations of constant motion:</p>
 <div class="math notranslate nohighlight" id="equation-eq-motion-equations">
-<span class="eqno">(32)<a class="headerlink" href="#equation-eq-motion-equations" title="Link to this equation">#</a></span>\[\begin{split}s_{k+1} &amp;= s_k + \nu_k\Delta t \\
-\nu_{k+1} &amp;= \nu_k\end{split}\]</div>
-<p>We now need to write our update equations in a form which can be used by the kalman fitler <a class="reference internal" href="4KalmanFilters.html#equation-projection">(29)</a>:</p>
+<span class="eqno">(32)<a class="headerlink" href="#equation-eq-motion-equations" title="Link to this equation">#</a></span>\[\begin{split}s_{k+1} &amp;\approx s_k + \nu_k\Delta t \\
+\nu_{k+1} &amp;\approx \nu_k\end{split}\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\Delta t = t_{k+1} - t_k\)</span>. We now need to write our update equations in a form which can be used by the kalman fitler <a class="reference internal" href="4KalmanFilters.html#equation-projection">(29)</a>:</p>
 <div class="math notranslate nohighlight" id="equation-velocity">
-<span class="eqno">(33)<a class="headerlink" href="#equation-velocity" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} s_{k+1} \\ \nu_{k+1} \end{bmatrix} = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix} \begin{bmatrix} s_k \\ \nu_k \end{bmatrix}\end{split}\]</div>
+<span class="eqno">(33)<a class="headerlink" href="#equation-velocity" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} s \\ \nu \end{bmatrix}^-_{k+1} = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix} \begin{bmatrix} s \\ \nu \end{bmatrix}_k\end{split}\]</div>
 <p>Q is a bit more complicated to work out and is going to be a <span class="math notranslate nohighlight">\(2 \times 2\)</span> matrix of the form below:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}Q = E[w_kw_k^T] =  \begin{bmatrix} VAR(s) &amp; COV(s,\nu) \\ COV(\nu,s) &amp; VAR(\nu) \end{bmatrix} = \sigma^2 \begin{bmatrix} \frac{\Delta t^4}{4} &amp; \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} &amp; \Delta t^2 \end{bmatrix}\end{split}\]</div>
+\[\begin{split}Q = E[w_kw_k^T] =  \begin{bmatrix} VAR(s) &amp; COV(s,\nu) \\ COV(\nu,s) &amp; VAR(\nu) \end{bmatrix} = \sigma_a^2 \begin{bmatrix} \frac{\Delta t^4}{4} &amp; \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} &amp; \Delta t^2 \end{bmatrix}\end{split}\]</div>
 <p><span id="id1">[<a class="reference internal" href="4KalmanFilters.html#id9" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> <span id="id2">[<a class="reference internal" href="4KalmanFilters.html#id9" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span>
 where <span class="math notranslate nohighlight">\(\sigma_a^2\)</span> is the variance in the true accelaration, which is the model assumes is zero. <span class="math notranslate nohighlight">\(\sigma^2\)</span> will be used as a tuning parameter.
-<span class="math notranslate nohighlight">\(R = VAR(z_k)\)</span> is going to be the variance in the measurments of the position which we will denote as <span class="math notranslate nohighlight">\(\sigma_s\)</span>.</p>
+<span class="math notranslate nohighlight">\(R = VAR(z_k)\)</span> is going to be the variance in the measurments of the position which we will denote as <span class="math notranslate nohighlight">\(\sigma_s\)</span> <span id="id3">[<a class="reference internal" href="4KalmanFilters.html#id9" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span>.</p>
 <p>We will use the follwing parametres for the kalman filter.</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(\hat{\boldsymbol{x}}_k = \begin{bmatrix} s_k \\ \nu_k \end{bmatrix}\)</span></p></li>
@@ -432,11 +432,11 @@ where <span class="math notranslate nohighlight">\(\sigma_a^2\)</span> is the va
 <li><p><span class="math notranslate nohighlight">\(A = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix}\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(H = \begin{bmatrix} 1 &amp; 0 \end{bmatrix}\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span> will are tuned using the parameters <span class="math notranslate nohighlight">\(\sigma_a\)</span> and <span class="math notranslate nohighlight">\(\sigma_s\)</span>.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\hat{x}}_0 = \boldsymbol{0}\)</span> initially and <span class="math notranslate nohighlight">\(P_0 = \begin{bmatrix} P_s &amp; 0 \\ 0 &amp; P_v\end{bmatrix}\)</span> initially, these don’t matter so much as the kalman filter will eventually find the correct values as <span class="math notranslate nohighlight">\(k\)</span> increases.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\hat{x}}_0 = \boldsymbol{0}\)</span> initially and <span class="math notranslate nohighlight">\(P_0 \approx \begin{bmatrix} P_s &amp; 0 \\ 0 &amp; P_v\end{bmatrix}\)</span> initially, these don’t matter so much as the kalman filter will eventually find the correct values as <span class="math notranslate nohighlight">\(k\)</span> increases.</p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>While <span class="math notranslate nohighlight">\(P_0\)</span> isn’t necessarily a diagonal matrix its easier to visualise the ajustments of the two parameters in the diagonal compared to adjusting all the parameters.</p>
+<p>While optimal <span class="math notranslate nohighlight">\(P_0\)</span> isn’t necessarily a diagonal matrix its good enough for an initial approximation and tuned easily using the two parameters.</p>
 </div>
 </section>
 <section id="implementation">

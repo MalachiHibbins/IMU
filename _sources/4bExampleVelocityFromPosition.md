@@ -13,23 +13,23 @@ z_k &= H \begin{bmatrix} s_k \\ \nu_k \end{bmatrix} \\
 For our model we will assume that there is no forcing function hence accelaration will be constant. This allows us to use equations of constant motion:
 ```{math}
 :label: eq-motion-equations
-s_{k+1} &= s_k + \nu_k\Delta t \\
-\nu_{k+1} &= \nu_k
+s_{k+1} &\approx s_k + \nu_k\Delta t \\
+\nu_{k+1} &\approx \nu_k
 ```
-We now need to write our update equations in a form which can be used by the kalman fitler {eq}`projection`:
+Where $\Delta t = t_{k+1} - t_k$. We now need to write our update equations in a form which can be used by the kalman fitler {eq}`projection`:
 ```{math}
 :label: velocity
-\begin{bmatrix} s_{k+1} \\ \nu_{k+1} \end{bmatrix} = \begin{bmatrix} 1 & \Delta t \\ 0 & 1 \end{bmatrix} \begin{bmatrix} s_k \\ \nu_k \end{bmatrix}
+\begin{bmatrix} s \\ \nu \end{bmatrix}^-_{k+1} = \begin{bmatrix} 1 & \Delta t \\ 0 & 1 \end{bmatrix} \begin{bmatrix} s \\ \nu \end{bmatrix}_k
 ```
 
 Q is a bit more complicated to work out and is going to be a $2 \times 2$ matrix of the form below:
 
 ```{math}
-Q = E[w_kw_k^T] =  \begin{bmatrix} VAR(s) & COV(s,\nu) \\ COV(\nu,s) & VAR(\nu) \end{bmatrix} = \sigma^2 \begin{bmatrix} \frac{\Delta t^4}{4} & \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} & \Delta t^2 \end{bmatrix}
+Q = E[w_kw_k^T] =  \begin{bmatrix} VAR(s) & COV(s,\nu) \\ COV(\nu,s) & VAR(\nu) \end{bmatrix} = \sigma_a^2 \begin{bmatrix} \frac{\Delta t^4}{4} & \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} & \Delta t^2 \end{bmatrix}
 ```
 {cite}`Barreto2021,chapter=2.3` {cite}`Barreto2021,chapter=10.2`
 where $\sigma_a^2$ is the variance in the true accelaration, which is the model assumes is zero. $\sigma^2$ will be used as a tuning parameter.
-$R = VAR(z_k)$ is going to be the variance in the measurments of the position which we will denote as $\sigma_s$.
+$R = VAR(z_k)$ is going to be the variance in the measurments of the position which we will denote as $\sigma_s$ {cite}`Barreto2021,chapter=10.2`.
 
 We will use the follwing parametres for the kalman filter.
 - $\hat{\boldsymbol{x}}_k = \begin{bmatrix} s_k \\ \nu_k \end{bmatrix}$
@@ -37,10 +37,10 @@ We will use the follwing parametres for the kalman filter.
 - $A = \begin{bmatrix} 1 & \Delta t \\ 0 & 1 \end{bmatrix}$
 - $H = \begin{bmatrix} 1 & 0 \end{bmatrix}$ 
 - $Q$ and $R$ will are tuned using the parameters $\sigma_a$ and $\sigma_s$.
-- $\boldsymbol{\hat{x}}_0 = \boldsymbol{0}$ initially and $P_0 = \begin{bmatrix} P_s & 0 \\ 0 & P_v\end{bmatrix}$ initially, these don't matter so much as the kalman filter will eventually find the correct values as $k$ increases.
+- $\boldsymbol{\hat{x}}_0 = \boldsymbol{0}$ initially and $P_0 \approx \begin{bmatrix} P_s & 0 \\ 0 & P_v\end{bmatrix}$ initially, these don't matter so much as the kalman filter will eventually find the correct values as $k$ increases.
 
 ```{note}
-While $P_0$ isn't necessarily a diagonal matrix its easier to visualise the ajustments of the two parameters in the diagonal compared to adjusting all the parameters. 
+While optimal $P_0$ isn't necessarily a diagonal matrix its good enough for an initial approximation and tuned easily using the two parameters.
 ```
 
 ### Implementation
