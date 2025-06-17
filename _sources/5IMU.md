@@ -51,18 +51,22 @@ where $\Phi(\boldsymbol{\alpha}) = \frac{1}{\cos{\boldsymbol{\theta}}}\begin{bma
 \end{bmatrix}$ 
 
 
-The rates of rotation (provided by the gyroscope) are integrated step by step we can predict the craft's alttitude at any later tome $t_k$:
+The rates of rotation (provided by the gyroscope) are integrated step by step so we can predict the craft's alttitude at any later tome $t_k$:
 ```{math}
 :label: eq-euler
-\boldsymbol{\alpha}_{k+1} = \boldsymbol{\alpha}_k + \dot{\boldsymbol{\alpha}}_k \Delta t
+\boldsymbol{\alpha}_{k+1} \approx \boldsymbol{\alpha}_k + \dot{\boldsymbol{\alpha}}_k \Delta t
 ```
 
 Subbing the relationship between $\dot{\alpha}_k$ and $\omega$ {eq}`eq-simple` into the update rule {eq}`eq-euler` we get:
 ```{math}
 :label: euler-method2
-\boldsymbol{\alpha}_{k+1} = \boldsymbol{\alpha}_{k} + \Phi(\boldsymbol{\alpha}_k) \boldsymbol{\omega}_k \Delta t
+\boldsymbol{\alpha}_{k+1} \approx \boldsymbol{\alpha}_{k} + \Phi(\boldsymbol{\alpha}_k) \boldsymbol{\omega}_k \Delta t
 ```
 where $\Delta t = t_k - t_{k-1}$.
+
+```{admonition} why use $\approx$ not $=$
+Although the error from numerical integration is negligable term to term over a large numer of terms such as in this example the error accumulates. 
+```
 
 ```{figure} image-25.png
 :name: cal1
@@ -118,7 +122,7 @@ Where: $\Psi(\omega) = \frac{1}{2} \begin{bmatrix} 0 & -\omega_1 & -\omega_2 & -
 Now we need to integrate $\boldsymbol{\dot{\beta}}$ we do this using the euler method as we did in {eq}`eq-euler`.
 ```{math}
 :label: eq-Euler3
-\boldsymbol{\beta_{k+1}} \approx \boldsymbol{\beta}_k + \dot{\boldsymbol{\beta}}\Delta t
+\boldsymbol{\beta_{k+1}} \approx \boldsymbol{\beta}_k + \dot{\boldsymbol{\beta}}_k\Delta t
 ```
 This time we use $\approx$ instead of $=$ as we know from the previous example the numerical integration will mean $\beta_{k}$ drifts further away from its true value as $k$ increases. Now sub in {eq}`eq-KDE-simp`
 ```{math}
@@ -132,7 +136,7 @@ Lets rewrite this with $\beta$ on the right hand side side being our estimate of
 \hat{\boldsymbol{x}}^-_{k+1} \approx (I + \Delta t \Psi(\boldsymbol{\omega}))\hat{\boldsymbol{x}}_k
 ```
 Which is in the form required by {eq}`projection` with $A = (I + \Delta t \Psi(\omega))$
-It follows from the euler parameters {eq}`eq-EPs` and $\alpha_0 = \boldsymbol{0}$ that $\hat{x}_0 = \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}$. 
+It follows from the euler parameters {eq}`eq-EPs` and $\boldsymbol{\alpha}_0 = \boldsymbol{0}$ that $\hat{x}_0 = \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}$. 
 
 So we have now defined $\hat{\boldsymbol{x}}_k$, $\hat{\boldsymbol{x}}^-_k$ and $A$. Defining $\boldsymbol{z}_k$ is a little more complicated since although the gyroscope measures $\boldsymbol{\omega}_k$ which we use to calculate $\boldsymbol{z}_k$, this isn't a measurment of the state since we need to use approximations as explained below. Instead we will use a 'pseudo-measurment' instead of introducing a new sensor we will let our 'pseudo-measurment' be the previous state $\boldsymbol{z}_k = \hat{\boldsymbol{x}}_{k-1}$, this should help provide some corrective information to counteract noisy gyroscope data, similar to the low pass filter. A better 'pseudo-measurment' could be to implement a kalman filter which uses a different integration method to the one above, but even the best integration methods are suceptible to drift so will deviate further from the true signal voer time. 
 
@@ -145,6 +149,11 @@ Since both $z_k$ and $\hat{x}_k$ represent euler paramterers $H = \mathbb{I}_{4 
 
 ```{warning}
 It is unlikely that optimal $Q$, $R$ and $P^-_0$ are scalar multiples of the identity, but this method reduces the number of parametres that need to be tuned.
+```
+
+```{figure} AttitudeKalman.jpg
+:label: fig-kal-att
+Kalman filter block diagram specific attitude determination
 ```
 
 ```{figure} Compare2.png
@@ -214,44 +223,49 @@ yaw-pitch-roll against time using only accelarometer data for the same calibrati
 
 ### Improved Kalman Filter
 
-Using real world accelarometer data for the same calibration 
+Using the real world accelarometer and gyroscope data we will tune $Q$ and $R$ to obtain the optimal fit for the data. 
 
-
-Below were tests carried out to ensure the kalman filter was correctly working. 
 ````{margin}
-The output is $\boldsymbol{\beta}$ but can be converted into $\alpha$ using the following:
+Given quaternion components $\boldsymbol{\beta}_0$ ( $\beta_1$, $\beta_2$, and $\beta_3$) the Euler angles ( $\phi$, $\theta$, $\psi$) can be calculated as:
 ```{math}
-\phi &= \arctan2\left(2(\beta_1 \beta_2 + \beta_0 \beta_3),\ \beta_0^2 + \beta_1^2 - \beta_2^2 - \beta_3^2\right) \\
+\phi &= \arctan\left(\frac{2(\beta_1 \beta_2 + \beta_0 \beta_3)}{\beta_0^2 + \beta_1^2 - \beta_2^2 - \beta_3^2}\right) \\
 \theta &= \arcsin\left(-2(\beta_1 \beta_3 - \beta_0 \beta_2)\right) \\
-\psi &= \arctan2\left(2(\beta_2 \beta_3 + \beta_0 \beta_1),\ \beta_0^2 - \beta_1^2 - \beta_2^2 + \beta_3^2\right)
+\psi &= \arctan\left(\frac{2(\beta_2 \beta_3 + \beta_0 \beta_1)}{\beta_0^2 - \beta_1^2 - \beta_2^2 + \beta_3^2}\right)
 ```
 ````
 ```{figure} Kalman_Filter_Tuning_test.png
 :name: Test1
-Testing the kalman filter with small $q$ and large $r$.
+Testing the kalman filter with small $q$ and large $r$. $\phi_a$ represents $\phi$ measured from accelarometer data. $\phi_f$ represents $\phi$ from the kalman filter with sensor fusion.
 ```
 
 {numref}`Test1` is similar to the predicted data in {numref}`roll-pitch-yaw-drift-real` which would suggest the filter is working correctly as small $q$ and large $r$ mean the filter gives more weighting to predicted (gyroscope) data compared to measured (accelarometer) data.
 
 ```{figure} Kalman_Filter_Tuning_test2.png
 :name: Test2
-Testing the kalman filter with large $q$ and small $r$.
+Testing the kalman filter with large $q$ and small $r$. $\phi_a$ represents $\phi$ measured from accelarometer data. $\phi_f$ represents $\phi$ from the kalman filter with sensor fusion.
 ```
 {numref}`Test2` is very noisy and is similar to the predicted data in {numref}`acc`, similarly this would suggest the filter is working correctly since large $q$ and small $r$ mean the filter gives more weighting to measured data compared to predicted data.
 
 ```{figure} Kalman_Filter_Tuning1.png
 :name: Tuning
-Kalman filter tuned optimally by eye.
+Kalman filter tuned optimally by eye. $\phi_a$ represents $\phi$ measured from accelarometer data. $\phi_f$ represents $\phi$ from the kalman filter with sensor fusion.
 ```
 
 ```{figure} Kalman_Filter_Tuning_zoomed.png
 :name: TuningZoomed
-Zoomed in {numref}`Tuning`.
+Zoomed in {numref}`Tuning`. $\phi_a$ represents $\phi$ measured from accelarometer data. $\phi_f$ represents $\phi$ from the kalman filter with sensor fusion.
 ```
 {numref}`Tuning` and {numref}`TuningZoomed` show the kalman filter has produced a very good fit. The filtered signal appears both noise, drift and delay free.
 
 
 ## Summary
+Lets compare all three filters side by side.
+```{figure} Comparison3.png
+:name: fig-comparison3
+All three filters side by side.
+```
+Figure {numref}`fig-comparison3` shows the only the kalman filter (with fusion) is accurate for determining lattitude longterm. Even though the error from numerical integration is small if it isn't regularly corrected for will be subject to integration drift.
+
 The Kalman filter produced an excelent fit in this case as the prediction (from gyroscope) and measurment (from accelarometer) were complimentary to eachother. The gyroscope was less suceptible to noise but was suceptible to drift whereas the accelarometer was more suceptible to noise and less suceptible to drift. Sensor fusion gets the best of both worlds. 
 
 ```{admonition} Idea

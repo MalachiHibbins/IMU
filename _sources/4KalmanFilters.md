@@ -34,6 +34,7 @@ Here $v_k$ dissapears since we ining $H$.
 ```{math}
 :label: eq-h-calculate
 \hat{z}_k = H\hat{x}_k
+
 \hat{z}^-_k = H\hat{x}^-_k
 ```
 Which is very useful for determining $H$.
