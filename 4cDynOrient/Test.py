@@ -1,4 +1,3 @@
-import Calibration
 import Integrate
 import AdvKalman
 
@@ -6,6 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 import numpy as np
 import pandas as pd
+import time
 
 
 # Data parameters
@@ -26,8 +26,8 @@ H = np.identity(4)
 x_i = np.array([1, 0, 0, 0]) # initial state vector
 
 # Determine by tuning
-q = 0.1
-r = 0.1
+q = 0.01
+r = 100
 p = 0.1
 Q = np.identity(4) * q
 R = np.identity(4) * r
@@ -57,18 +57,21 @@ a_3 = np.array(data_df.loc["fz", "data"])
 as__ = np.column_stack((a_1, a_2, a_3))
 
 def run(Q, R, p_i, additional_noise_w, additional_noise_a):
-    # Add additional noise to the gyroscope data
+    # Add additional noise to the gyroscope data by default is 0
     ws = ws_ + rng.normal(0, additional_noise_w, (len(w_1), 3))
     t_w = np.arange(0, len(w_1) * dt, dt)
 
     # Calculate the euler angles using euler integration
+    start_time = time.perf_counter()
     eulers_g = Integrate.integrate(ws, dt=0.01, eulers_initial=np.array([0, 0, 0]))
-
+    end_time = time.perf_counter()
+    integrate_time = end_time - start_time
+    
     psi_g = eulers_g[:, 0]
     theta_g = eulers_g[:, 1]
     phi_g = eulers_g[:, 2]
 
-    # Add additional noise to the accelerometer data   
+    # Add additional noise to the accelerometer data
     as_ = as__ + rng.normal(0, additional_noise_a, (len(a_1), 3))
     t_a = np.arange(0, len(a_1) * dt, dt)
 
@@ -77,16 +80,37 @@ def run(Q, R, p_i, additional_noise_w, additional_noise_a):
     psi_a = eulers_a[0]
     theta_a = eulers_a[1]
     phi_a = eulers_a[2]
+    
+    # Use the kalman filter with pseudo-measurement
+    start_time = time.perf_counter()
+    filtered_signal_n = AdvKalman.filter_no_fusion(ws, x_i, p_i, dt, H=H, Q=Q, R=R)
+    end_time = time.perf_counter()
+    kalman_no_fusion_time = end_time - start_time
+    
+    phi_n = filtered_signal_n[:, 0]
+    theta_n = filtered_signal_n[:, 1]
+    psi_n = filtered_signal_n[:, 2]
 
     # Use the Kalman filter to fuse the gyroscope and accelerometer data
+    start_time = time.perf_counter()
     filtered_signal = AdvKalman.filter(as_, ws, x_i, p_i, dt, H=H, Q=Q, R=R)
+    end_time = time.perf_counter()
+    kalman_fusion_time = end_time - start_time
 
     phi_f = filtered_signal[:, 0]
     theta_f = filtered_signal[:, 1]
     psi_f = filtered_signal[:, 2]
-    return t_w, t_a, w_1, w_2, w_3, a_1, a_2, a_3, phi_g, theta_g, psi_g, phi_a, theta_a, psi_a, phi_f, theta_f, psi_f
+    
+    print("Times:")
+    print("---")
+    print(f"Integrate time: {integrate_time:.4f} seconds")
+    print(f"Kalman no fusion time: {kalman_no_fusion_time:.4f} seconds")
+    print(f"Kalman fusion time: {kalman_fusion_time:.4f} seconds")
+    print("---")
+    
+    return t_w, t_a, w_1, w_2, w_3, a_1, a_2, a_3, phi_g, theta_g, psi_g, phi_a, theta_a, psi_a, phi_f, theta_f, psi_f, phi_n, theta_n, psi_n
 
-t_w, t_a, w_1, w_2, w_3, a_1, a_2, a_3, phi_g, theta_g, psi_g, phi_a, theta_a, psi_a, phi_f, theta_f, psi_f = run(Q, R, p_i, additional_noise_w, additional_noise_a)
+t_w, t_a, w_1, w_2, w_3, a_1, a_2, a_3, phi_g, theta_g, psi_g, phi_a, theta_a, psi_a, phi_f, theta_f, psi_f, phi_n, theta_n, psi_n = run(Q, R, p_i, additional_noise_w, additional_noise_a)
 
 figsize = (8, 8)
 
@@ -154,7 +178,87 @@ ax9.set_xlabel('$t$')
 #ax9.hlines(0, t_w.min(), t_w.max(), color='black', linestyle='--')
 ax9.legend()
 
-# plot euler angles
+# Compare euler integration with kalman filter (no fusion) 
+fig8, axs = plt.subplots(3, 2, figsize=figsize, sharex=True)
+axs[0,0].plot(t_w, phi_g, label='Euler Method', color='green', alpha=alpha)
+axs[0,0].set_ylabel('$\phi$')
+axs[0,1].plot(t_w, phi_n, label='Kalman Filter (no fusion)', color='blue', alpha=alpha)
+
+axs[1,0].plot(t_w, theta_g, label='Euler Method', color='green', alpha=alpha)
+axs[1,0].set_ylabel('$\\theta$')
+axs[1,1].plot(t_w, theta_n, label='Kalman Filter (no fusion)', color='blue', alpha=alpha)
+
+axs[2,0].plot(t_w, psi_g, label='Euler Method', color='green', alpha=alpha)
+axs[2,0].set_ylabel('$\psi$')
+axs[2,0].set_xlabel('$t$')
+axs[2,1].plot(t_w, psi_n, label='Kalman Filter (no fusion)', color='blue', alpha=alpha)
+axs[2,1].set_xlabel('$t$')
+
+
+axs_ = axs[2,0], axs[2,1]
+handels, labels = [], []
+for ax in axs_:
+    h, l = ax.get_legend_handles_labels()
+    handels.extend(h)
+    labels.extend(l)
+
+axs[2,0].legend(handels, labels, loc='upper center')
+fig8.tight_layout()
+
+# Just  plot the euler angles from integration
+fig9, (ax10, ax11, ax12) = plt.subplots(3, 1, figsize=figsize, sharex=True)
+alpha = 0.8
+ax10.plot(t_w, phi_g, label='$\phi^-$', color='green', alpha=alpha)
+ax10.set_ylabel('$\phi$')
+ax11.plot(t_w, theta_g, label='$\\theta^-$', color='orange', alpha=alpha)
+ax11.set_ylabel('$\\theta$')
+ax12.plot(t_w, psi_g, label='$\psi^-$', color='blue', alpha=alpha)
+ax12.set_ylabel('$\psi$')
+ax12.set_xlabel('$t$')
+
+# Compare all three filters
+alpha = 0.8
+fig7, axs = plt.subplots(3, 3, figsize=figsize, sharex=True, sharey=True)
+axs[0,0].plot(t_w, phi_g, label='Euler Method', color='green', alpha=alpha)
+axs[0,0].set_ylabel('$\phi$')
+axs[0,1].plot(t_w, phi_n, label='Kalman Filter (no fusion)', color='blue', alpha=alpha)
+axs[0,2].plot(t_w, phi_f, label='Kalman Filter (with fusion)', color='yellow', alpha=alpha)
+
+axs[1,0].plot(t_w, theta_g, label='Euler Method', color='green', alpha=alpha)
+axs[1,0].set_ylabel('$\\theta$')
+axs[1,1].plot(t_w, theta_n, label='Kalman Filter (no fusion)', color='blue', alpha=alpha)
+axs[1,2].plot(t_w, theta_f, label='Kalman Filter (with fusion)', color='yellow', alpha=alpha)
+
+axs[2,0].plot(t_w, psi_g, label='Euler Method', color='green', alpha=alpha)
+axs[2,0].set_ylabel('$\psi$')
+axs[2,0].set_xlabel('$t$')
+axs[2,1].plot(t_w, psi_n, label='Kalman Filter (no fusion)', color='blue', alpha=alpha)
+axs[2,1].set_xlabel('$t$')
+axs[2,2].plot(t_w, psi_f, label='Kalman Filter (with fusion)', color='yellow', alpha=alpha)
+axs[2,2].set_xlabel('$t$')
+
+axs_ = axs[2,0], axs[2,1], axs[2,2]
+handels, labels = [], []
+for ax in axs_:
+    h, l = ax.get_legend_handles_labels()
+    handels.extend(h)
+    labels.extend(l)
+
+axs[2,2].legend(handels, labels, loc='upper center')
+fig7.tight_layout()
+
+
+# plot kalman no fusion data
+fig6, (ax13, ax14, ax15) = plt.subplots(3, 1, figsize=figsize, sharex=True)
+ax13.plot(t_w, phi_n, label='$\phi_n$', color='darkgreen')
+ax13.set_ylabel('$\phi$')
+ax14.plot(t_w, theta_n, label='$\\theta_n$', color='darkorange')
+ax14.set_ylabel('$\\theta$')
+ax15.plot(t_w, psi_n, label='$\psi_n$', color='darkblue')
+ax15.set_ylabel('$\psi$')
+ax15.set_xlabel('$t$')
+
+# plot kalman filtered (fusion) and accelerometer data
 alpha = 0.8
 fig4, (ax4, ax5, ax6) = plt.subplots(3, 1, figsize=(12, 14), sharex=True, sharey=True)
 plt.subplots_adjust(left=0.1, bottom=0.35)
@@ -177,6 +281,8 @@ ax6.set_ylabel('$\psi$')
 ax6.set_xlabel('$t$')
 ax6.hlines(0, t_w.min(), t_w.max(), color='black', linestyle='--')
 ax6.legend()
+
+
 
 # Add sliders for tuning the Kalman filter parameters
 filter_color = 'yellow'
@@ -202,7 +308,7 @@ def update(val):
     R = np.identity(4) * r
     p_i = np.identity(4) * p
     
-    t_w, t_a, w_1, w_2, w_3, a_1, a_2, a_3, phi_g, theta_g, psi_g, phi_a, theta_a, psi_a, phi_f, theta_f, psi_f = run(Q, R, p_i, additional_noise_w, additional_noise_a)
+    t_w, t_a, w_1, w_2, w_3, a_1, a_2, a_3, phi_g, theta_g, psi_g, phi_a, theta_a, psi_a, phi_f, theta_f, psi_f, phi_n, theta_n, psi_n = run(Q, R, p_i, additional_noise_w, additional_noise_a)
     l4s.set_offsets(np.column_stack((t_a, phi_a)))
     l4p.set_data(t_w, phi_f)
     l5s.set_offsets(np.column_stack((t_a, theta_a)))

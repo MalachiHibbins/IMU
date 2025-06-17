@@ -1,14 +1,9 @@
 # Attitude using a gyroscope and accelarometer
-This section involves calculating yaw-pitch-roll (attitude) in the 3-2-1 sequence firstly using the gyroscope to measure the angular velocitiy $\hat{\omega}$ and then using Eulers method for integration to obtain a prediction for the attitude. The second part involves combining this prediction with a measurment form the accelarometer measuring $\hat{a}$ which can be used directly to calculate yaw-pitch-roll. Using the kalman filter prediction and measurment are combined to give a high accuracy estimate.
+This section involves calculating the attitude of an object (yaw-pitch-roll), using real world sensor data. Firstly using the gyroscope to measure the angular velocitiy and then using Eulers method for integration to obtain a prediction for the attitude, then improving this using a kalman filter, however this estimate drifts and becomes less accurate over time. To improve it we implement sensor fusion using our kalman filter, which combines gyroscope data with accelarometer data.
 
-
-```{figure} image-28.jpg
-:label: Sensor-Fusion-Kalman
-Kalman filter with sensor fusion
-```
 
 ## Eulers method
-Using gyroscope (measures angular velocity, $\hat{\omega}$) and knowing the attitude at $t_0$ it is possible to determine the attitude of a craft at $t_k$. The relationship between the body angular velocity $\hat{\omega} = (\omega_1, \omega_2, \omega_3)$ and the time derivatives of the Euler angles $\hat{\alpha} = (\psi, \theta, \phi)$ in the 3-2-1 (yaw-pitch-roll) sequence is given by the kinematic differential equation (KDE) below:
+Using gyroscope (measures angular velocity, $\boldsymbol{\omega}$) and knowing the attitude at $t_0$ it is possible to determine the attitude of a craft at $t_k$. The relationship between the body angular velocity $\boldsymbol{\omega} = (\omega_1, \omega_2, \omega_3)$ and the time derivatives of the Euler angles $\boldsymbol{\alpha} = (\psi, \theta, \phi)$ in the 3-2-1 (yaw-pitch-roll) sequence is given by the kinematic differential equation (KDE) below:
 
 ```{margin}
 $\phi$, $\theta$ and $\psi$ are euler angles that describe the orientation of the object in space. Whereas $\omega_1$, $\omega_2$, $\omega_3$  are rates of rotation i.e. roll rate pitch rate and yaw rate.
@@ -46,117 +41,139 @@ Or more simply :
 
 ```{math}
 :label: eq-simple
-\hat{\dot{\alpha}} = \Phi(\hat{\alpha}) {\hat{\omega}}
+\dot{\boldsymbol{\alpha}} = \Phi(\boldsymbol{\alpha}) {\boldsymbol{\omega}}
 ```
 
-where $\Phi(\hat{\alpha}) = \frac{1}{\cos{\theta}}\begin{bmatrix}
+where $\Phi(\boldsymbol{\alpha}) = \frac{1}{\cos{\boldsymbol{\theta}}}\begin{bmatrix}
 0 & \sin\phi  & \cos\phi  \\
 0 & \cos\phi\cos\theta & -\sin\phi\cos\theta \\
 \cos\theta & \sin\phi\sin\theta & \cos\phi  \sin\theta
 \end{bmatrix}$ 
 
 
-The predicted attitude at time $t_{k+1}$ is calculated using eulers method:
+The rates of rotation (provided by the gyroscope) are integrated step by step we can predict the craft's alttitude at any later tome $t_k$:
 ```{math}
 :label: eq-euler
-\hat{\alpha}^-_{k+1} = \hat{\alpha}_k + \dot{\hat{\alpha}}_k \Delta t
+\boldsymbol{\alpha}_{k+1} = \boldsymbol{\alpha}_k + \dot{\boldsymbol{\alpha}}_k \Delta t
 ```
 
-Subbing {eq}`eq-simple` into {eq}`eq-euler` gives:
+Subbing the relationship between $\dot{\alpha}_k$ and $\omega$ {eq}`eq-simple` into the update rule {eq}`eq-euler` we get:
 ```{math}
 :label: euler-method2
-\hat{\alpha}^-_{k+1} = \hat{\alpha}_{k} + \Phi(\hat{\alpha}_k) \hat{\omega}_k \Delta t
+\boldsymbol{\alpha}_{k+1} = \boldsymbol{\alpha}_{k} + \Phi(\boldsymbol{\alpha}_k) \boldsymbol{\omega}_k \Delta t
 ```
 where $\Delta t = t_k - t_{k-1}$.
 
 ```{figure} image-25.png
 :name: cal1
-Calibration signal involved shaking the device in just the $\omega_1$ direction then pausing and shaking the device in the $\omega_1$ and $\omega_2$ directions before pausing again and shaking the deivce in the $\omega_3$. The observed motion in the $\omega_3$ was accidental.
+Calibration signal involved shaking the device in just the $\omega_1$ direction then pausing and shaking the device in the $\omega_1$ and $\omega_2$ directions before pausing again and shaking the deivce in the $\omega_3$. The observed motion in the $\omega_3$ direction was erroneous.
 ```
 
-Using the calibration data in {numref}`cal1`, knowing $x_0 = \vec{0}$ and {eq}`euler-method2`, attitude can be determined.
+Using the calibration data in {numref}`cal1` and knowing the initial attitude we can use {eq}`euler-method2` to estimate the attitude over time
 
-```{figure} image-29.png
+```{figure} image-26.png
 :name: roll-pitch-yaw-drift-real
-$x_k$ and $x^-_k$ plotted against time.
+$\boldsymbol{\alpha}_k$ in each direction plotted against $t_k$.
 ```
 
-Overall $x^-_k$ resembles the shape of $x_k$ quite well. However as $k$ increases $x^-_k$ 'drift' away from $x_k$ in all 3 directions. The drift is least significant in the $\phi$ direction but was predicting oscillations in the third part of the calibration even though there were no oscillations in the $\omega_3$ direction, the drift also changed direction multiple times. The most significant drift was in the $\theta$ direction. Interestingly there weren't any oscillations in the first part of the calibration in the $\theta$ direction, likely because the estimation gets less accurate over time. There was also substantial drift in the $\psi$ directions as well as picking up oscilations in the x and y directions. 
+Overall the attitude $\boldsymbol{\alpha}_k$ follows the generic shape of the true attude. The drift is least significant in the $\phi$ direction but was predicting oscillations in the third part of the calibration even though there were no oscillations in the $\omega_3$ direction at that time, and the drift also changes direction randomly. Drift was most pronounced in the $\theta$ direction therefore the estimate becomes less accurate over time.
 
 Drift is caused by the error associated with the numerical integration accumulating over time. The unexpected oscillations are likely from the gyroscope being sensetive to noise. Furthermore the oscillations could be coupled meaning small oscillations in one direction can be amplified in another.
 
-## Sensor Fusion and Kalman filters
+## Kalman filters
 
-A better way of modelling the system would be to use a kalman filter as even a noisy direct measurment of $\hat\alpha$ would correct for drift in the prediction. Try determining $A$ from {eq}`euler-method2` but this won't work since it can't be put into the form in $\hat{x}_{k+1} = A\hat{x}_k.$
+To improve our model we could use a kalman filter. However there is a problem as its not possible to put our update equation {eq}`euler-method2` into the form required for the kalman filter {eq}`projection`. To fix this we will need to write $\phi$, $\theta$ and $\phi$ in terms of euler parameters.
 
-```{tip}
-Use Euler parameters
-```
-
-````{margin}
+````{tip}
+Use Euler parameters:
 ```{math}
+:label: eq-EPs
 \beta_0 = \sin\frac{\phi}{2}\sin\frac{\theta}{2}\sin\frac{\psi}{2} + \cos\frac{\phi}{2}\cos\frac{\theta}{2}\cos\frac{\psi}{2}
-```
-```{math}
+
 \beta_1 = \sin\frac{\phi}{2}\cos\frac{\theta}{2}\cos\frac{\psi}{2} + \cos\frac{\phi}{2}\sin\frac{\theta}{2}\sin\frac{\psi}{2}
-```
-```{math}
+
 \beta_2 = \cos\frac{\phi}{2}\sin\frac{\theta}{2}\cos\frac{\psi}{2} + \sin\frac{\phi}{2}\cos\frac{\theta}{2}\sin\frac{\psi}{2}
-```
-```{math}
+
 \beta_3 = \cos\frac{\phi}{2}\cos\frac{\theta}{2}\sin\frac{\psi}{2} + \sin\frac{\phi}{2}\sin\frac{\theta}{2}\cos\frac{\psi}{2}
 ```
-Where $\Psi(\hat{\omega}) = \frac{1}{2} \begin{bmatrix} 0 & -\omega_1 & -\omega_2 & -\omega_3 \\ \omega_1 & 0 & \omega_3 & -\omega_2 \\ \omega_2 & -\omega_3 & 0 & \omega_1 \\ \omega_3 & \omega_2 & -\omega_1 & 0\end{bmatrix}$ {cite}`Barreto2021, chapter=11.3`.
 ````
 Below is the corresponding Euler parameters KDE:
 
 ```{math}
-:label: EP KDE
+:label: EP-KDE
 \begin{bmatrix} \dot{\beta_0} \\ \dot{\beta_1} \\ \dot{\beta_2} \\ \dot{\beta_3} \end{bmatrix} = \frac{1}{2} \begin{bmatrix} 0 & -\omega_1 & -\omega_2 & -\omega_3 \\ \omega_1 & 0 & \omega_3 & -\omega_2 \\ \omega_2 & -\omega_3 & 0 & \omega_1 \\ \omega_3 & \omega_2 & -\omega_1 & 0\end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix}
 ```
 
 {cite}`Barreto2021, chapter=11.3` or more simply:
 
-```{math}
-:label: EP-KDE-simple
-\vec{\dot{\beta}} = \Psi(\hat{\omega}) \vec{\beta}
+```{margin}
+Where: $\Psi(\omega) = \frac{1}{2} \begin{bmatrix} 0 & -\omega_1 & -\omega_2 & -\omega_3 \\ \omega_1 & 0 & \omega_3 & -\omega_2 \\ \omega_2 & -\omega_3 & 0 & \omega_1 \\ \omega_3 & \omega_2 & -\omega_1 & 0\end{bmatrix}$ 
 ```
 
+```{math}
+:label: eq-KDE-simp
+\boldsymbol{\dot{\beta}} = \Psi(\boldsymbol{\omega}) \boldsymbol{\beta}
+```
+
+Now we need to integrate $\boldsymbol{\dot{\beta}}$ we do this using the euler method as we did in {eq}`eq-euler`.
+```{math}
+:label: eq-Euler3
+\boldsymbol{\beta_{k+1}} \approx \boldsymbol{\beta}_k + \dot{\boldsymbol{\beta}}\Delta t
+```
+This time we use $\approx$ instead of $=$ as we know from the previous example the numerical integration will mean $\beta_{k}$ drifts further away from its true value as $k$ increases. Now sub in {eq}`eq-KDE-simp`
+```{math}
+:label: eq-Euler4
+\boldsymbol{\beta}_{k+1} \approx (\mathbb{I} + \Delta t \Psi(\boldsymbol{\omega}))\boldsymbol{\beta}_k
+```
+
+Lets rewrite this with $\beta$ on the right hand side side being our estimate of the state and beta on the right hand side becoming the prediction of our state, this means we can change the $\approx$ for an $=$:
+```{math}
+:label: eq-proj-att
+\hat{\boldsymbol{x}}^-_{k+1} \approx (I + \Delta t \Psi(\boldsymbol{\omega}))\hat{\boldsymbol{x}}_k
+```
+Which is in the form required by {eq}`projection` with $A = (I + \Delta t \Psi(\omega))$
+It follows from the euler parameters {eq}`eq-EPs` and $\alpha_0 = \boldsymbol{0}$ that $\hat{x}_0 = \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}$. 
+
+So we have now defined $\hat{\boldsymbol{x}}_k$, $\hat{\boldsymbol{x}}^-_k$ and $A$. Defining $\boldsymbol{z}_k$ is a little more complicated since although the gyroscope measures $\boldsymbol{\omega}_k$ which we use to calculate $\boldsymbol{z}_k$, this isn't a measurment of the state since we need to use approximations as explained below. Instead we will use a 'pseudo-measurment' instead of introducing a new sensor we will let our 'pseudo-measurment' be the previous state $\boldsymbol{z}_k = \hat{\boldsymbol{x}}_{k-1}$, this should help provide some corrective information to counteract noisy gyroscope data, similar to the low pass filter. A better 'pseudo-measurment' could be to implement a kalman filter which uses a different integration method to the one above, but even the best integration methods are suceptible to drift so will deviate further from the true signal voer time. 
 
 
+```{important}
+A direct measurment or a measurment of thes state is one that can measure the state without needing to rely on previous meeasurments or approximations its error should be guassian. The accelarometer will provide a direct measurment as you will see below whereas the gyroscope will not as it relies on you knowing the previous state to be able to predict the next, which is affected by noise which isn't gaussian as it drifts from the true signal over time.
+```
 
-This time the model will be defined using the Euler parameters
-- $\hat{x}_k = \vec{\beta}$
-- $\hat{x}_{k+1} = \hat{x}_k + \Delta t \vec{\dot{\beta}} = \hat{x}_k + \Delta t \Psi(\hat{\omega}) \hat{x}_k = \hat{x}_{k+1} = (I + \Delta t \Psi(\hat{\omega}))\hat{x}_k \implies A = (I + \Delta t \Psi(\hat{\omega}))$
-- $\hat{x}^-_0 = \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}$ since $\hat{\alpha} = \vec{0}$
-- $Q = qI_{4 \times 4}$, $R = rI_{4 \times 4}$ and $P^-_0 = pI_{4 \times 4}$ to allow for simple tuning.
-
+Since both $z_k$ and $\hat{x}_k$ represent euler paramterers $H = \mathbb{I}_{4 \times 4}$ which can be understood from {eq}`eq-h-calculate`. Finally the tuning parameters were set $Q = q\mathbb{I}_{4 \times 4}$, $R = r\mathbb{I}_{4 \times 4}$ and $P_0 = p\mathbb{I}_{4 \times 4}$ to allow for simple tuning.
 
 ```{warning}
-It is unlikely $Q$, $R$ and $P^-_0$ take forms like those above but in this case they allow for a sufficently good fit.
+It is unlikely that optimal $Q$, $R$ and $P^-_0$ are scalar multiples of the identity, but this method reduces the number of parametres that need to be tuned.
 ```
 
+```{figure} Compare2.png
+:label: fig-att-kal1
+The euler method for calcualting attitude alongside the kalman filtered example discussed above
+```
 
-In this exampe the measurment from the gyroscope ($\hat\omega$) is being used to form the prediction. Furthermore knowing $\hat\omega$ isn't enough on its own to calculate yaw-pitch-roll so can't be used to calculate $\hat x$.  One solution to this would be to form a 'pseudo measurement' letting $z_k = \hat{x}^-_{k+1}$, however this doesn't contain corrective information so won't correct for drift. A better method would be sensor fusion, this involves combining different sensors to get a better estimate. 
+This kalman filter example hasn't improved the fit. The integration drift hasn't been corrected for. This is because the measurment in this case didn't contain any corrective information so didn't correct for drift. **The only difference the kalman filter makes in this case is it puts a greater emphasis on previous measurments**. To improve on this fit we could use a sensor which is less suceptible to drift and combine the set of measurments using sensor fusion.
 
-IMU uses an accelarometer and a gyroscope which measures $\hat{a}$ and $\hat{\omega}$ respectivly.
-Let:
-- $\hat{z} = \vec{\beta}$ which will be determined from measurments of $\hat{a}$
-- $H = I$ since there is a 1 to 1 correspondance between measurment and estimation.
+## Kalman filters with sensor fusion
+Sensor fusion involves combining different sensors to get a better estimate. A typical six axis IMU will contain a gyroscope and a accelarometer. Accelarometer data is generally much noisier than gyroscope data but is not suceptible to drift as it gives a direct measurment of the accelaration as it is a direct measurment. By combining these we hope to produce a filtered signal with less noise than the accelarometer and no drift. 
 
-In the body fixed frame given by:
+### Accelarometer Data
+
+In this example we will use accelarometer data to calcualte $\boldsymbol{z}_k$ which represents the attitude in terms of euler parameters as measured using the accelarometer. The accelarometer measures the accelaration, $\boldsymbol{a}$ in the x, y and z directions. A acclarometer moving at a constant velocity can always identify which direction is down due to the accelaraiton from gravity. This means it can determine $\theta$ and $\phi$ but not $\psi$.
+
+The accelaration in the body fixed frame, the frame of the craft as seen by a stationary observer on earth is given by:
 ```{margin}
-Where $\vec{g} = \begin{bmatrix} 0 \\ 0 \\ g \end{bmatrix}$
+Where $\boldsymbol{g} = \begin{bmatrix} 0 \\ 0 \\ g \end{bmatrix}$
 ```
 
 ```{math}
 :label: accelarometer2
-[\hat{a}]_B = [\vec{\dot{v}}]_B - [\vec{g}]_B
+[\boldsymbol{a}]_B = [\dot{\boldsymbol{v}}]_B - [\boldsymbol{g}]_B
 ```
 
 
 
-Where $\dot{v}$ is the translational accelatration and $\vec{g}$ is the accelaration due to gravity. **Assume the translational accelaration of the body is zero and the accelarometer is located at the center of rotation.** 
+Where $\dot{\boldsymbol{v}}$ is the translational acceleration and $\boldsymbol{g}$ is the accelaration due to gravity. **Assumption: the translational accelaration of the body is zero and the accelarometer is located at the center of rotation for this example.** 
 ````{note}
 B is the linear transformation matrix which traforms form the frame of the earth to the frame of the device.
 ```{math}
@@ -166,43 +183,41 @@ B = \begin{bmatrix}
 \cos \psi \sin \theta \cos \phi + \sin \phi \sin \psi & \sin \psi \sin \theta \cos \phi - \sin \phi \cos \psi & \cos \theta \cos \phi
 \end{bmatrix} 
 ```
-or written in terms of unit vectors describing the effects on the $x$, $y$ and $z$ components.
+This can be written in terms of unit vectors describing the effects on the $x$, $y$ and $z$ components.
 ```{math}
-B = \begin{bmatrix} \hat{n}_x & \hat{n}_y & \hat{n}_z \end{bmatrix}
+B = \begin{bmatrix} \hat{\boldsymbol{n}}_x & \hat{\boldsymbol{n}}_y & \hat{\boldsymbol{n}}_z \end{bmatrix}
 ```
-where $\hat{n}_x$, $\hat{n}_y$ and $\hat{n}_z$ are 3 dimensional unit vectors in there respective directions.
+where $\hat{n}_x$, $\hat{n}_y$ and $\hat{n}_z$ are 3 dimensional unit vectors in the $x$, $y$ and $z$ directions.
 ````
 The accelaration in the frame of the body can be calculated from its position relative to the earth:
 
 ```{math}
 :label: eq-accelarometer2
-[\vec{a}]_B = - B\vec{g}  = - g \hat{n}_z = \begin{bmatrix} \sin{\theta} \\ -\cos{\theta}\sin{\phi} \\ -\cos{\theta}\cos{\phi} \end{bmatrix}
+[\boldsymbol{a}]_B = - B\boldsymbol{g}  = - g \hat{\boldsymbol{n}}_z = g \begin{bmatrix} \sin{\theta} \\ -\cos{\theta}\sin{\phi} \\ -\cos{\theta}\cos{\phi} \end{bmatrix}
 ```
-In component form $a = \begin{bmatrix} a_1 \\ a_2 \\ a_3 \end{bmatrix}$ rearranging {eq}`eq-accelarometer2` gets:
+In component form $\boldsymbol{a} = \begin{bmatrix} a_1 \\ a_2 \\ a_3 \end{bmatrix}$ rearranging {eq}`eq-accelarometer2` gets:
 ```{math}
 :label: accelarometer3
 \theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})
 ```
-From the accelarometer data alone it is possible to directly calculate $\theta$ and $\phi$ but not $\psi$. In this case $\psi = 0$ since no oscillations were performed in the $\omega_3$ direction.
+From the accelarometer data alone it is possible to directly calculate $\theta$ and $\phi$ but not $\psi$. In this example we let $\psi = 0$ since no oscillations were performed in the $\omega_3$ direction.
+
+```{warning}
+Additional noise has been added to the accelarometer readings to make the effects of the kalman filter more visible. Usually the accelarometer is more sensative to noise than the gyroscope. Although the accelarometer data in the next few examples is definately noiser it is hard to visualise, therefore additional guassian noise has been added.
+```
 
 ```{figure} Acc.png
 :name: acc
-yaw-pitch-roll against time from data direct measurment using the accelarometer.
+yaw-pitch-roll against time using only accelarometer data for the same calibration mentioned above.
 ```
-{numref}`acc` is much noiser than the predicted data from the gyroscope, see {numref}`roll-pitch-yaw-drift-real`. However overall this data isn't suceptible to drift so on the whole is more accurate. 
+{numref}`acc` is much noiser than the predicted data from the gyroscope, see {numref}`roll-pitch-yaw-drift-real`. For small $k$ the gyroscope is more accurate as the drifit is less significant compared to the noise from the accelarometer however for large $k$ the accelarometer is more accurate as the gyroscope measurments are subject to drift. 
 
-## Implemementation
-Several tests were carried out to ensure that the kalmen filter was implemeneted correctly.
+### Improved Kalman Filter
 
-```{note}
-For tuning purposes $Q = qI$ and $R = rI$ although optimal Q and R are not always of this form it is clearly easier to modify one parameter compared to a parameter for each entry of the matrix when optimising by eye.
-```
-```{warning}
-Additional noise has been added to the accelarometer readings to make the effects of the kalman filter more visible. Usually the accelarometer is more sensative to noise than the gyroscope, however this noise is small and hard to visualise in this example.
-```
-Below were tests carried out to ensure the kalman filter was correctly working. 
+Using the real world accelarometer and gyroscope data we will tune $Q$ and $R$ to obtain the optimal fit for the data. 
+
 ````{margin}
-The output is $\vec{\beta}$ but can be converted into $\alpha$ using the following:
+Given quaternion components $\boldsymbol{\beta}_0$ ( $\beta_1$, $\beta_2$, and $\beta_3$) the Euler angles ( $\phi$, $\theta$, $\psi$) can be calculated as:
 ```{math}
 \phi &= \arctan2\left(2(\beta_1 \beta_2 + \beta_0 \beta_3),\ \beta_0^2 + \beta_1^2 - \beta_2^2 - \beta_3^2\right) \\
 \theta &= \arcsin\left(-2(\beta_1 \beta_3 - \beta_0 \beta_2)\right) \\

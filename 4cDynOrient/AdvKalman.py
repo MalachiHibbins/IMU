@@ -37,6 +37,26 @@ def a2euler(as_):
     psi = np.zeros_like(theta)
     return np.array([psi, theta, phi])
 
+def filter_no_fusion(ws, x_i, p_i, dt, **kwargs):
+    n = len(ws)
+    filtered_signal = np.zeros((n, 3))
+    x = x_i.copy()
+    p = p_i.copy()
+    
+    for i in range(1, n):
+        w_1, w_2, w_3 = ws[i]
+        B = 0.5 * np.array([
+            [0, -w_1, -w_2, -w_3], 
+            [w_1, 0, w_3, -w_2], 
+            [w_2, -w_3, 0, w_1], 
+            [w_3, w_2, -w_1, 0]
+        ])
+        A = np.eye(4) + dt * B
+        x, p = calcualte(x, p, x, A, **kwargs)
+        
+        filtered_signal[i] = EP2euler(x)
+    return filtered_signal
+
 def filter(as_, ws, x_i, p_i, dt, **kwargs):
     n = len(ws)
     filtered_signal = np.zeros((n, 3))
