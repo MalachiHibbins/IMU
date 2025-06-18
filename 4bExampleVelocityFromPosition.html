@@ -189,6 +189,7 @@
 <li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Battery output</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Velocity from position</a></li>
 <li class="toctree-l1"><a class="reference internal" href="5IMU.html">Attitude using a gyroscope and accelarometer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Position using GPS and Accelarometer data</a></li>
 </ul>
 
     </div>
@@ -389,7 +390,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-velocity-and-position-data">Using velocity and position data</a></li>
 </ul>
             </nav>
         </div>
@@ -416,6 +416,10 @@ document.write(`
 <div class="math notranslate nohighlight" id="equation-eq-motion-equations">
 <span class="eqno">(32)<a class="headerlink" href="#equation-eq-motion-equations" title="Link to this equation">#</a></span>\[\begin{split}s_{k+1} &amp;\approx s_k + \nu_k\Delta t \\
 \nu_{k+1} &amp;\approx \nu_k\end{split}\]</div>
+<div class="admonition-why-use-approx-not admonition">
+<p class="admonition-title">why use <span class="math notranslate nohighlight">\(\approx\)</span> not <span class="math notranslate nohighlight">\(=\)</span></p>
+<p>Although the error from numerical integration is negligable term to term over a large numer of terms such as in this example the error accumulates.</p>
+</div>
 <p>Where <span class="math notranslate nohighlight">\(\Delta t = t_{k+1} - t_k\)</span>. We now need to write our update equations in a form which can be used by the kalman fitler <a class="reference internal" href="4KalmanFilters.html#equation-projection">(29)</a>:</p>
 <div class="math notranslate nohighlight" id="equation-velocity">
 <span class="eqno">(33)<a class="headerlink" href="#equation-velocity" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} s \\ \nu \end{bmatrix}^-_{k+1} = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix} \begin{bmatrix} s \\ \nu \end{bmatrix}_k\end{split}\]</div>
@@ -467,10 +471,6 @@ The <span class="math notranslate nohighlight">\(r^2\)</span> value mean squared
 </div>
 <p>Here it’s clear the differentiated kalman position is a poor fit as its too noisy, but the kalman filtered velocity fits like a low pass filter. <strong>A kalman filter compares predicted values with measurments, which are weighted in a similar fasion to the low pass filter, to create an estimate of the true state measurments</strong>. The fit for <span class="math notranslate nohighlight">\(\nu_k\)</span> would be greatly improved using a second kalman filter which would use the velocity from this kalman filter as a prediction and compare it with real velocity data.</p>
 </section>
-</section>
-<section id="using-velocity-and-position-data">
-<h2>Using velocity and position data<a class="headerlink" href="#using-velocity-and-position-data" title="Link to this heading">#</a></h2>
-<p>This example includes velocity and position measurments to help improve the fit for both velocity and position.</p>
 </section>
 </section>
 
@@ -543,7 +543,6 @@ The <span class="math notranslate nohighlight">\(r^2\)</span> value mean squared
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-velocity-and-position-data">Using velocity and position data</a></li>
 </ul>
   </nav></div>
 
