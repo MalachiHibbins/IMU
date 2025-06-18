@@ -211,7 +211,7 @@ Unlike the low pass filter Kalman filters also consider the physics of the syste
 
 ```{math}
 :label: projection
-\hat{x}^-_{k+1} = A_k \hat{x}_k
+\hat{x}^-_{k+1} = A \hat{x}_k
 ```
 
 The error covariance matrix associated with this prediction $\hat{x}^-_{k+1}$ is obtained from:
@@ -222,7 +222,7 @@ If $\mu_x$ is transformed linearly $\mu_y = F\mu_x$ its covariance matrix, $\Sig
 
 ```{math}
 :label: projection-covariance
-P_k = A_kP_kA_k^T+Q
+P^-_k = AP_kA^T+Q
 ```
 
 $Q$ also appears here as this is how much the true state is expected to vary from the predictions. Together these two equations encode the prediction phase of the filter.  If we only had a model we wouldn't need the estimation phase i.e. we had no measurments. 

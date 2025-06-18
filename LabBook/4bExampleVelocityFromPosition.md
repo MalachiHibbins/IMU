@@ -16,6 +16,9 @@ For our model we will assume that there is no forcing function hence accelaratio
 s_{k+1} &\approx s_k + \nu_k\Delta t \\
 \nu_{k+1} &\approx \nu_k
 ```
+```{admonition} why use $\approx$ not $=$
+Although the error from numerical integration is negligable term to term over a large numer of terms such as in this example the error accumulates. 
+```
 Where $\Delta t = t_{k+1} - t_k$. We now need to write our update equations in a form which can be used by the kalman fitler {eq}`projection`:
 ```{math}
 :label: velocity
@@ -76,5 +79,3 @@ What happens if we implement a model that instead of relying on constant accelar
 
 Here it's clear the differentiated kalman position is a poor fit as its too noisy, but the kalman filtered velocity fits like a low pass filter. **A kalman filter compares predicted values with measurments, which are weighted in a similar fasion to the low pass filter, to create an estimate of the true state measurments**. The fit for $\nu_k$ would be greatly improved using a second kalman filter which would use the velocity from this kalman filter as a prediction and compare it with real velocity data.
 
-## Using velocity and position data
-This example includes velocity and position measurments to help improve the fit for both velocity and position. 

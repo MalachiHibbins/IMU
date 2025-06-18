@@ -11,3 +11,4 @@ chapters:
 - file: 4aExampleBatteryOutput
 - file: 4bExampleVelocityFromPosition
 - file: 5IMU
+- file: 6ExtendedKalman

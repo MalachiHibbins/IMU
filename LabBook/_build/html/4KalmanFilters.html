@@ -189,6 +189,7 @@
 <li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Battery output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
 <li class="toctree-l1"><a class="reference internal" href="5IMU.html">Attitude using a gyroscope and accelarometer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Position using GPS and Accelarometer data</a></li>
 </ul>
 
     </div>
@@ -553,14 +554,14 @@ We can group the terms more intuitivly by substituting in the defenition for the
 <h2>Prediction step<a class="headerlink" href="#prediction-step" title="Link to this heading">#</a></h2>
 <p>Unlike the low pass filter Kalman filters also consider the physics of the system, the predictions which are used alongside measurments for state estimation. The system dynamically changes over time and is modelled using <span class="math notranslate nohighlight">\(A\)</span>, which describes how the state is predicted to change between <span class="math notranslate nohighlight">\(t_k\)</span> and <span class="math notranslate nohighlight">\(t_{k+1}\)</span>:</p>
 <div class="math notranslate nohighlight" id="equation-projection">
-<span class="eqno">(29)<a class="headerlink" href="#equation-projection" title="Link to this equation">#</a></span>\[\hat{x}^-_{k+1} = A_k \hat{x}_k\]</div>
+<span class="eqno">(29)<a class="headerlink" href="#equation-projection" title="Link to this equation">#</a></span>\[\hat{x}^-_{k+1} = A \hat{x}_k\]</div>
 <p>The error covariance matrix associated with this prediction <span class="math notranslate nohighlight">\(\hat{x}^-_{k+1}\)</span> is obtained from:</p>
 <aside class="margin sidebar">
 <p class="sidebar-title"></p>
 <p>If <span class="math notranslate nohighlight">\(\mu_x\)</span> is transformed linearly <span class="math notranslate nohighlight">\(\mu_y = F\mu_x\)</span> its covariance matrix, <span class="math notranslate nohighlight">\(\Sigma_x\)</span>, can be transformed using <span class="math notranslate nohighlight">\(\Sigma_y = F\Sigma_xF^T\)</span>. <span id="id6">[<a class="reference internal" href="#id9" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span></p>
 </aside>
 <div class="math notranslate nohighlight" id="equation-projection-covariance">
-<span class="eqno">(30)<a class="headerlink" href="#equation-projection-covariance" title="Link to this equation">#</a></span>\[P_k = A_kP_kA_k^T+Q\]</div>
+<span class="eqno">(30)<a class="headerlink" href="#equation-projection-covariance" title="Link to this equation">#</a></span>\[P^-_k = AP_kA^T+Q\]</div>
 <p><span class="math notranslate nohighlight">\(Q\)</span> also appears here as this is how much the true state is expected to vary from the predictions. Together these two equations encode the prediction phase of the filter.  If we only had a model we wouldn’t need the estimation phase i.e. we had no measurments.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
