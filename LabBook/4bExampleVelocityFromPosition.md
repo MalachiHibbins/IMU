@@ -55,14 +55,14 @@ The $r^2$ value mean squared error (MSE) and mean absolute error (MAE) are given
 
 ```{figure} image-23.png
 :name: fig-original
-The measured noisy $s_k$, noise free $s_k$ and kalman filtered $s_k$ plotted against index and kalman filtered $\nu_k$ noise free $\nu_k$ and the differentiated kalman filtered $s_k$ against index.
+The measured noisy $s_k$, noise free $s_k$ and kalman filtered $s_k$ plotted against index and kalman filtered $\nu_k$ noise free $\nu_k$ and the differentiated kalman filtered $s_k$ against index. [View on GitHub](https://github.com/MalachiHibbins/IMU/tree/main/4bIntermKalman)
 ```
 
 The fit is bad for both graphs is very bad and the filtered signal is lagging behind the true signal. This is because too much emphasis is being put on the measured values compared to the predicted values. Specifically kalman filter is relying too much on the model for velocity, which suggests velocity remains the same from one time step to the next which is erronous. This means the velocity is consistantly delayed so the position will also be delayed. Lets fix this by reducing the amount we trust the model, increase $Q$ (by increasing $\sigma_a$), and increasing the amount we trust the measurments, reduce $R$ (by decreasing $\sigma_s$).
 
 ```{figure} image-24.png
 :name: fig-increased-R-and-increased-Q
-See {numref}`fig-original` with increased $Q$ and decreased $R$.
+See {numref}`fig-original` with increased $Q$ and decreased $R$. [View on GitHub](https://github.com/MalachiHibbins/IMU/tree/main/4bIntermKalman)
 ```
 
 Figure {numref}`fig-increased-R-and-increased-Q` shows a slightly improved fit with position and a significantly improved fit with velocity. This makes sense for the postion data since decreasing $R$ increases the weighting for the measurment. However the velocity fit is now significantly less smooth since more emphasis is being put on the measured positions which is always noiser than the prediction. There is a clear tradeoff between having a a smooth fit and having an accurate fit. Smoother fits more accurately represent the true shape of the data, but will often cause there may be a delay or drift. Both filtered sets have random residuals, indicating they are ga good fit.

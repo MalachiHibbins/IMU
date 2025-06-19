@@ -70,14 +70,14 @@ Although the error from numerical integration is negligable term to term over a 
 
 ```{figure} image-25.png
 :name: cal1
-Calibration signal involved shaking the device in just the $\omega_1$ direction then pausing and shaking the device in the $\omega_1$ and $\omega_2$ directions before pausing again and shaking the deivce in the $\omega_3$. The observed motion in the $\omega_3$ direction was erroneous.
+Calibration signal involved shaking the device in just the $\omega_1$ direction then pausing and shaking the device in the $\omega_1$ and $\omega_2$ directions before pausing again and shaking the deivce in the $\omega_3$. The observed motion in the $\omega_3$ direction was erroneous. [View in Github](https://github.com/MalachiHibbins/IMU/tree/main/5IMU)
 ```
 
 Using the calibration data in {numref}`cal1` and knowing the initial attitude we can use {eq}`euler-method2` to estimate the attitude over time
 
 ```{figure} image-26.png
 :name: roll-pitch-yaw-drift-real
-$\boldsymbol{\alpha}_k$ in each direction plotted against $t_k$.
+$\boldsymbol{\alpha}_k$ in each direction plotted against $t_k$. [View in Github](https://github.com/MalachiHibbins/IMU/tree/main/5IMU)
 ```
 
 Overall the attitude $\boldsymbol{\alpha}_k$ follows the generic shape of the true attude. The drift is least significant in the $\phi$ direction but was predicting oscillations in the third part of the calibration even though there were no oscillations in the $\omega_3$ direction at that time, and the drift also changes direction randomly. Drift was most pronounced in the $\theta$ direction therefore the estimate becomes less accurate over time.
@@ -153,12 +153,12 @@ It is unlikely that optimal $Q$, $R$ and $P^-_0$ are scalar multiples of the ide
 
 ```{figure} AttitudeKalman.jpg
 :label: fig-kal-att
-Kalman filter block diagram specific to attitude determination
+Kalman filter block diagram specific to attitude determination. [View in Github](https://github.com/MalachiHibbins/IMU/tree/main/5IMU)
 ```
 
 ```{figure} Compare2.png
 :label: fig-att-kal1
-The euler method for calcualting attitude alongside the kalman filtered example discussed above
+The euler method for calcualting attitude alongside the kalman filtered example discussed above. [View in Github](https://github.com/MalachiHibbins/IMU/tree/main/5IMU)
 ```
 
 This kalman filter example hasn't improved the fit. The integration drift hasn't been corrected for. This is because the measurment in this case didn't contain any corrective information so didn't correct for drift. **The only difference the kalman filter makes in this case is it puts a greater emphasis on previous measurments**. To improve on this fit we could use a sensor which is less suceptible to drift and combine the set of measurments using sensor fusion.
@@ -217,7 +217,7 @@ Additional noise has been added to the accelarometer readings to make the effect
 
 ```{figure} Acc.png
 :name: acc
-yaw-pitch-roll against time using only accelarometer data for the same calibration mentioned above.
+yaw-pitch-roll against time using only accelarometer data for the same calibration mentioned above. [View in Github](https://github.com/MalachiHibbins/IMU/tree/main/5IMU)
 ```
 {numref}`acc` is much noiser than the predicted data from the gyroscope, see {numref}`roll-pitch-yaw-drift-real`. For small $k$ the gyroscope is more accurate as the drifit is less significant compared to the noise from the accelarometer however for large $k$ the accelarometer is more accurate as the gyroscope measurments are subject to drift. 
 
@@ -235,25 +235,25 @@ Given quaternion components $\boldsymbol{\beta}_0$ ( $\beta_1$, $\beta_2$, and $
 ````
 ```{figure} Kalman_Filter_Tuning_test.png
 :name: Test1
-Testing the kalman filter with small $q$ and large $r$. $\phi_a$ represents $\phi$ measured from accelarometer data. $\phi_f$ represents $\phi$ from the kalman filter with sensor fusion.
+Testing the kalman filter with small $q$ and large $r$. $\phi_a$ represents $\phi$ measured from accelarometer data. $\phi_f$ represents $\phi$ from the kalman filter with sensor fusion. [View in Github](https://github.com/MalachiHibbins/IMU/tree/main/5IMU)
 ```
 
 {numref}`Test1` is similar to the predicted data in {numref}`roll-pitch-yaw-drift-real` which would suggest the filter is working correctly as small $q$ and large $r$ mean the filter gives more weighting to predicted (gyroscope) data compared to measured (accelarometer) data.
 
 ```{figure} Kalman_Filter_Tuning_test2.png
 :name: Test2
-Testing the kalman filter with large $q$ and small $r$. $\phi_a$ represents $\phi$ measured from accelarometer data. $\phi_f$ represents $\phi$ from the kalman filter with sensor fusion.
+Testing the kalman filter with large $q$ and small $r$. $\phi_a$ represents $\phi$ measured from accelarometer data. $\phi_f$ represents $\phi$ from the kalman filter with sensor fusion. [View in Github](https://github.com/MalachiHibbins/IMU/tree/main/5IMU)
 ```
 {numref}`Test2` is very noisy and is similar to the predicted data in {numref}`acc`, similarly this would suggest the filter is working correctly since large $q$ and small $r$ mean the filter gives more weighting to measured data compared to predicted data.
 
 ```{figure} Kalman_Filter_Tuning1.png
 :name: Tuning
-Kalman filter tuned optimally by eye. $\phi_a$ represents $\phi$ measured from accelarometer data. $\phi_f$ represents $\phi$ from the kalman filter with sensor fusion.
+Kalman filter tuned optimally by eye. $\phi_a$ represents $\phi$ measured from accelarometer data. $\phi_f$ represents $\phi$ from the kalman filter with sensor fusion. [View in Github](https://github.com/MalachiHibbins/IMU/tree/main/5IMU)
 ```
 
 ```{figure} Kalman_Filter_Tuning_zoomed.png
 :name: TuningZoomed
-Zoomed in {numref}`Tuning`. $\phi_a$ represents $\phi$ measured from accelarometer data. $\phi_f$ represents $\phi$ from the kalman filter with sensor fusion.
+Zoomed in {numref}`Tuning`. $\phi_a$ represents $\phi$ measured from accelarometer data. $\phi_f$ represents $\phi$ from the kalman filter with sensor fusion. [View in Github](https://github.com/MalachiHibbins/IMU/tree/main/5IMU)
 ```
 {numref}`Tuning` and {numref}`TuningZoomed` show the kalman filter has produced a very good fit. The filtered signal appears both noise, drift and delay free.
 
@@ -262,7 +262,7 @@ Zoomed in {numref}`Tuning`. $\phi_a$ represents $\phi$ measured from accelaromet
 Lets compare all three filters side by side.
 ```{figure} Comparison3.png
 :name: fig-comparison3
-All three filters side by side.
+All three filters side by side. [View in Github](https://github.com/MalachiHibbins/IMU/tree/main/5IMU)
 ```
 Figure {numref}`fig-comparison3` shows the only the kalman filter (with fusion) is accurate for determining lattitude longterm. Even though the error from numerical integration is small if it isn't regularly corrected for will be subject to integration drift.
 
@@ -271,7 +271,6 @@ The Kalman filter produced an excelent fit in this case as the prediction (from 
 ```{admonition} Idea
 Rewrite the part of the code that carries out kalman filter calculations and determines A in C++ as the programme runs really slowly.
 ```
-```{bibliography}
-```
+
 
 

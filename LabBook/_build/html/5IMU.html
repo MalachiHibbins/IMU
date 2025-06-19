@@ -190,6 +190,7 @@
 <li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Attitude using a gyroscope and accelarometer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Position using GPS and Accelarometer data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -456,14 +457,14 @@ document.write(`
 <figure class="align-default" id="cal1">
 <img alt="_images/image-25.png" src="_images/image-25.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Calibration signal involved shaking the device in just the <span class="math notranslate nohighlight">\(\omega_1\)</span> direction then pausing and shaking the device in the <span class="math notranslate nohighlight">\(\omega_1\)</span> and <span class="math notranslate nohighlight">\(\omega_2\)</span> directions before pausing again and shaking the deivce in the <span class="math notranslate nohighlight">\(\omega_3\)</span>. The observed motion in the <span class="math notranslate nohighlight">\(\omega_3\)</span> direction was erroneous.</span><a class="headerlink" href="#cal1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Calibration signal involved shaking the device in just the <span class="math notranslate nohighlight">\(\omega_1\)</span> direction then pausing and shaking the device in the <span class="math notranslate nohighlight">\(\omega_1\)</span> and <span class="math notranslate nohighlight">\(\omega_2\)</span> directions before pausing again and shaking the deivce in the <span class="math notranslate nohighlight">\(\omega_3\)</span>. The observed motion in the <span class="math notranslate nohighlight">\(\omega_3\)</span> direction was erroneous. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#cal1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Using the calibration data in <a class="reference internal" href="#cal1"><span class="std std-numref">Fig. 16</span></a> and knowing the initial attitude we can use <a class="reference internal" href="#equation-euler-method2">(37)</a> to estimate the attitude over time</p>
 <figure class="align-default" id="roll-pitch-yaw-drift-real">
 <img alt="_images/image-26.png" src="_images/image-26.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 17 </span><span class="caption-text"><span class="math notranslate nohighlight">\(\boldsymbol{\alpha}_k\)</span> in each direction plotted against <span class="math notranslate nohighlight">\(t_k\)</span>.</span><a class="headerlink" href="#roll-pitch-yaw-drift-real" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 17 </span><span class="caption-text"><span class="math notranslate nohighlight">\(\boldsymbol{\alpha}_k\)</span> in each direction plotted against <span class="math notranslate nohighlight">\(t_k\)</span>. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#roll-pitch-yaw-drift-real" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Overall the attitude <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}_k\)</span> follows the generic shape of the true attude. The drift is least significant in the <span class="math notranslate nohighlight">\(\phi\)</span> direction but was predicting oscillations in the third part of the calibration even though there were no oscillations in the <span class="math notranslate nohighlight">\(\omega_3\)</span> direction at that time, and the drift also changes direction randomly. Drift was most pronounced in the <span class="math notranslate nohighlight">\(\theta\)</span> direction therefore the estimate becomes less accurate over time.</p>
@@ -481,7 +482,7 @@ document.write(`
 <p>Below is the corresponding Euler parameters KDE:</p>
 <div class="math notranslate nohighlight" id="equation-ep-kde">
 <span class="eqno">(39)<a class="headerlink" href="#equation-ep-kde" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} \dot{\beta_0} \\ \dot{\beta_1} \\ \dot{\beta_2} \\ \dot{\beta_3} \end{bmatrix} = \frac{1}{2} \begin{bmatrix} 0 &amp; -\omega_1 &amp; -\omega_2 &amp; -\omega_3 \\ \omega_1 &amp; 0 &amp; \omega_3 &amp; -\omega_2 \\ \omega_2 &amp; -\omega_3 &amp; 0 &amp; \omega_1 \\ \omega_3 &amp; \omega_2 &amp; -\omega_1 &amp; 0\end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix}\end{split}\]</div>
-<p><span id="id1">[<a class="reference internal" href="#id4" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> or more simply:</p>
+<p><span id="id1">[<a class="reference internal" href="99Bibliography.html#id3" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> or more simply:</p>
 <aside class="margin sidebar">
 <p class="sidebar-title"></p>
 <p>Where: <span class="math notranslate nohighlight">\(\Psi(\omega) = \frac{1}{2} \begin{bmatrix} 0 &amp; -\omega_1 &amp; -\omega_2 &amp; -\omega_3 \\ \omega_1 &amp; 0 &amp; \omega_3 &amp; -\omega_2 \\ \omega_2 &amp; -\omega_3 &amp; 0 &amp; \omega_1 \\ \omega_3 &amp; \omega_2 &amp; -\omega_1 &amp; 0\end{bmatrix}\)</span></p>
@@ -509,16 +510,16 @@ It follows from the euler parameters <a class="reference internal" href="#equati
 <p class="admonition-title">Warning</p>
 <p>It is unlikely that optimal <span class="math notranslate nohighlight">\(Q\)</span>, <span class="math notranslate nohighlight">\(R\)</span> and <span class="math notranslate nohighlight">\(P^-_0\)</span> are scalar multiples of the identity, but this method reduces the number of parametres that need to be tuned.</p>
 </div>
-<figure class="align-default" id="id7">
+<figure class="align-default" id="id2">
 <img alt="_images/AttitudeKalman.jpg" src="_images/AttitudeKalman.jpg" />
 <figcaption>
-<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Kalman filter block diagram specific to attitude determination</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Kalman filter block diagram specific to attitude determination. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="align-default" id="id8">
+<figure class="align-default" id="id3">
 <img alt="_images/Compare2.png" src="_images/Compare2.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 19 </span><span class="caption-text">The euler method for calcualting attitude alongside the kalman filtered example discussed above</span><a class="headerlink" href="#id8" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 19 </span><span class="caption-text">The euler method for calcualting attitude alongside the kalman filtered example discussed above. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>This kalman filter example hasn’t improved the fit. The integration drift hasn’t been corrected for. This is because the measurment in this case didn’t contain any corrective information so didn’t correct for drift. <strong>The only difference the kalman filter makes in this case is it puts a greater emphasis on previous measurments</strong>. To improve on this fit we could use a sensor which is less suceptible to drift and combine the set of measurments using sensor fusion.</p>
@@ -565,7 +566,7 @@ It follows from the euler parameters <a class="reference internal" href="#equati
 <figure class="align-default" id="acc">
 <img alt="_images/Acc.png" src="_images/Acc.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 20 </span><span class="caption-text">yaw-pitch-roll against time using only accelarometer data for the same calibration mentioned above.</span><a class="headerlink" href="#acc" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 20 </span><span class="caption-text">yaw-pitch-roll against time using only accelarometer data for the same calibration mentioned above. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#acc" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p><a class="reference internal" href="#acc"><span class="std std-numref">Fig. 20</span></a> is much noiser than the predicted data from the gyroscope, see <a class="reference internal" href="#roll-pitch-yaw-drift-real"><span class="std std-numref">Fig. 17</span></a>. For small <span class="math notranslate nohighlight">\(k\)</span> the gyroscope is more accurate as the drifit is less significant compared to the noise from the accelarometer however for large <span class="math notranslate nohighlight">\(k\)</span> the accelarometer is more accurate as the gyroscope measurments are subject to drift.</p>
@@ -584,27 +585,27 @@ It follows from the euler parameters <a class="reference internal" href="#equati
 <figure class="align-default" id="test1">
 <img alt="_images/Kalman_Filter_Tuning_test.png" src="_images/Kalman_Filter_Tuning_test.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 21 </span><span class="caption-text">Testing the kalman filter with small <span class="math notranslate nohighlight">\(q\)</span> and large <span class="math notranslate nohighlight">\(r\)</span>. <span class="math notranslate nohighlight">\(\phi_a\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> measured from accelarometer data. <span class="math notranslate nohighlight">\(\phi_f\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> from the kalman filter with sensor fusion.</span><a class="headerlink" href="#test1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 21 </span><span class="caption-text">Testing the kalman filter with small <span class="math notranslate nohighlight">\(q\)</span> and large <span class="math notranslate nohighlight">\(r\)</span>. <span class="math notranslate nohighlight">\(\phi_a\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> measured from accelarometer data. <span class="math notranslate nohighlight">\(\phi_f\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> from the kalman filter with sensor fusion. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#test1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p><a class="reference internal" href="#test1"><span class="std std-numref">Fig. 21</span></a> is similar to the predicted data in <a class="reference internal" href="#roll-pitch-yaw-drift-real"><span class="std std-numref">Fig. 17</span></a> which would suggest the filter is working correctly as small <span class="math notranslate nohighlight">\(q\)</span> and large <span class="math notranslate nohighlight">\(r\)</span> mean the filter gives more weighting to predicted (gyroscope) data compared to measured (accelarometer) data.</p>
 <figure class="align-default" id="test2">
 <img alt="_images/Kalman_Filter_Tuning_test2.png" src="_images/Kalman_Filter_Tuning_test2.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 22 </span><span class="caption-text">Testing the kalman filter with large <span class="math notranslate nohighlight">\(q\)</span> and small <span class="math notranslate nohighlight">\(r\)</span>. <span class="math notranslate nohighlight">\(\phi_a\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> measured from accelarometer data. <span class="math notranslate nohighlight">\(\phi_f\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> from the kalman filter with sensor fusion.</span><a class="headerlink" href="#test2" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 22 </span><span class="caption-text">Testing the kalman filter with large <span class="math notranslate nohighlight">\(q\)</span> and small <span class="math notranslate nohighlight">\(r\)</span>. <span class="math notranslate nohighlight">\(\phi_a\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> measured from accelarometer data. <span class="math notranslate nohighlight">\(\phi_f\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> from the kalman filter with sensor fusion. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#test2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p><a class="reference internal" href="#test2"><span class="std std-numref">Fig. 22</span></a> is very noisy and is similar to the predicted data in <a class="reference internal" href="#acc"><span class="std std-numref">Fig. 20</span></a>, similarly this would suggest the filter is working correctly since large <span class="math notranslate nohighlight">\(q\)</span> and small <span class="math notranslate nohighlight">\(r\)</span> mean the filter gives more weighting to measured data compared to predicted data.</p>
 <figure class="align-default" id="tuning">
 <img alt="_images/Kalman_Filter_Tuning1.png" src="_images/Kalman_Filter_Tuning1.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 23 </span><span class="caption-text">Kalman filter tuned optimally by eye. <span class="math notranslate nohighlight">\(\phi_a\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> measured from accelarometer data. <span class="math notranslate nohighlight">\(\phi_f\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> from the kalman filter with sensor fusion.</span><a class="headerlink" href="#tuning" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 23 </span><span class="caption-text">Kalman filter tuned optimally by eye. <span class="math notranslate nohighlight">\(\phi_a\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> measured from accelarometer data. <span class="math notranslate nohighlight">\(\phi_f\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> from the kalman filter with sensor fusion. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#tuning" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-default" id="tuningzoomed">
 <img alt="_images/Kalman_Filter_Tuning_zoomed.png" src="_images/Kalman_Filter_Tuning_zoomed.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 24 </span><span class="caption-text">Zoomed in <a class="reference internal" href="#tuning"><span class="std std-numref">Fig. 23</span></a>. <span class="math notranslate nohighlight">\(\phi_a\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> measured from accelarometer data. <span class="math notranslate nohighlight">\(\phi_f\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> from the kalman filter with sensor fusion.</span><a class="headerlink" href="#tuningzoomed" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 24 </span><span class="caption-text">Zoomed in <a class="reference internal" href="#tuning"><span class="std std-numref">Fig. 23</span></a>. <span class="math notranslate nohighlight">\(\phi_a\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> measured from accelarometer data. <span class="math notranslate nohighlight">\(\phi_f\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> from the kalman filter with sensor fusion. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#tuningzoomed" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p><a class="reference internal" href="#tuning"><span class="std std-numref">Fig. 23</span></a> and <a class="reference internal" href="#tuningzoomed"><span class="std std-numref">Fig. 24</span></a> show the kalman filter has produced a very good fit. The filtered signal appears both noise, drift and delay free.</p>
@@ -616,7 +617,7 @@ It follows from the euler parameters <a class="reference internal" href="#equati
 <figure class="align-default" id="fig-comparison3">
 <img alt="_images/Comparison3.png" src="_images/Comparison3.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 25 </span><span class="caption-text">All three filters side by side.</span><a class="headerlink" href="#fig-comparison3" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 25 </span><span class="caption-text">All three filters side by side. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#fig-comparison3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Figure <a class="reference internal" href="#fig-comparison3"><span class="std std-numref">Fig. 25</span></a> shows the only the kalman filter (with fusion) is accurate for determining lattitude longterm. Even though the error from numerical integration is small if it isn’t regularly corrected for will be subject to integration drift.</p>
@@ -624,26 +625,6 @@ It follows from the euler parameters <a class="reference internal" href="#equati
 <div class="admonition-idea admonition">
 <p class="admonition-title">Idea</p>
 <p>Rewrite the part of the code that carries out kalman filter calculations and determines A in C++ as the programme runs really slowly.</p>
-</div>
-<div class="docutils container" id="id2">
-<div role="list" class="citation-list">
-<div class="citation" id="id4" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">BAOOl21</a><span class="fn-bracket">]</span></span>
-<p>Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: <a class="reference external" href="https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305">https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305</a>, <a class="reference external" href="https://doi.org/10.1201/9780429200656">doi:10.1201/9780429200656</a>.</p>
-</div>
-<div class="citation" id="id3" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>BH12<span class="fn-bracket">]</span></span>
-<p>Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: <a class="reference external" href="http://proquest.safaribooksonline.com/9780470609699">http://proquest.safaribooksonline.com/9780470609699</a>.</p>
-</div>
-<div class="citation" id="id5" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>CXEB23<span class="fn-bracket">]</span></span>
-<p>Vincenzo Capuano, Liangchun Xu, and Jose Estrada Benavides. Smartphone mems accelerometer and gyroscope measurement errors: laboratory testing and analysis of the effects on positioning performance. <em>Sensors</em>, 23(17):7609, 2023. URL: <a class="reference external" href="https://dx.doi.org/10.3390/s23177609">https://dx.doi.org/10.3390/s23177609</a>, <a class="reference external" href="https://doi.org/10.3390/s23177609">doi:10.3390/s23177609</a>.</p>
-</div>
-<div class="citation" id="id6" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>GZL+22<span class="fn-bracket">]</span></span>
-<p>George Grouios, Efthymios Ziagkas, Andreas Loukovitis, Konstantinos Chatzinikolaou, and Eirini Koidou. Accelerometers in our pocket: does smartphone accelerometer technology provide accurate data? <em>Sensors</em>, 23(1):192, 2022. URL: <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9824767/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9824767/</a>, <a class="reference external" href="https://doi.org/10.3390/s23010192">doi:10.3390/s23010192</a>.</p>
-</div>
-</div>
 </div>
 </section>
 </section>

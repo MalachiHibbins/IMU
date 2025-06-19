@@ -1,5 +1,5 @@
 # Position using GPS and Accelarometer data
-Here we will improve on the [the velocity from position example](LabBook/4bExampleVelocityFromPosition.md) example using sensor fusion. While the system using only position data (which we measumre using GPS) works well for predicting the position, its not so good at predicting the velocity. The current model {eq}`eq-motion-equations` represents an oversimplification as it assumes no accelaration (the accelaration doesn't change between steps) which means that the velocity has to be corrected for by the measurments which is what causes lag. We could improve our model using real world accelarometer data which we can integrate to find velocity and position. There are other reasons for including the accelarometer data for example when GPS isn't available due to some form of blocking e.g. being in a tunnel, the device can still roughly determine its position.  
+Here we will improve on the [the velocity from position example](4bExampleVelocityFromPosition.md) example using sensor fusion. While the system using only position data (which we measumre using GPS) works well for predicting the position, its not so good at predicting the velocity. The current model {eq}`eq-motion-equations` represents an oversimplification as it assumes no accelaration (the accelaration doesn't change between steps) which means that the velocity has to be corrected for by the measurments which is what causes lag. We could improve our model using real world accelarometer data which we can integrate to find velocity and position. There are other reasons for including the accelarometer data for example when GPS isn't available due to some form of blocking e.g. being in a tunnel, the device can still roughly determine its position.  
 
 ## Model
 To begin with we will work with the simple 1D case. Our new model is built on {eq}`eq-motion-equations` with an additional 2nd order term:
@@ -10,7 +10,7 @@ s_{k+1} &\approx s_k + \nu_k\Delta t + \frac{1}{2}a_k \Delta t^2\\
 \nu_{k+1} &\approx \nu_k + a\Delta t
 ```
 
-The parameters from [the velocity from position example](LabBook/4bExampleVelocityFromPosition.md) remain the same except for $A$ which changes because the model changes.
+The parameters from [the velocity from position model](4bExampleVelocityFromPosition.md#model) remain the same except for $A$ which changes because the model changes.
 - $\hat{\boldsymbol{x}}$ is the column vector of position and velocity
 - $z$ is the measurment of position from the GPS
 - $H = \begin{bmatrix} 1 & 0 \end{bmatrix}$
@@ -53,7 +53,7 @@ Which gives $u_k = \begin{bmatrix} \Delta t^2 \\ \Delta t \end{bmatrix}$ and $u_
 
 ```{figure} image-31.png
 :name: fig-improved-vel-pos
-Velocity and position as a functon of time plotted for the extended kalman filter using the same parameters in {numref}`fig-increased-R-and-increased-Q`, tuned by eye.
+Velocity and position as a functon of time plotted for the extended kalman filter using the same parameters in {numref}`fig-increased-R-and-increased-Q`, tuned by eye. [View in Github](https://github.com/MalachiHibbins/IMU/tree/main/6ExtendedKalman)
 ```
 
 Compared to {numref}`fig-increased-R-and-increased-Q` the externded kalman fitler with acceleration measurments gives a better fit for position and a significantly better fit for velocity, helped by the significantly better model. Even without measurment corrections the accelarometer gives a supprisingly good fit although there is a tiny bit of drift visible at the end. However the drift is significantly larger when integrated twice. 

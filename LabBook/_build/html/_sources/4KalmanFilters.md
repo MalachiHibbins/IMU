@@ -247,5 +247,3 @@ Block diagram of the Kalman filter process.
 - $z_k$ are the inputs (measured state)
 - $\hat{x}_k$ are the outputs (estimated state)
 
-```{bibliography}
-```
