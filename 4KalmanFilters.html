@@ -445,13 +445,13 @@ document.write(`
 </ul>
 <div class="math notranslate nohighlight" id="equation-eq-process-noise-cov">
 <span class="eqno">(12)<a class="headerlink" href="#equation-eq-process-noise-cov" title="Link to this equation">#</a></span>\[Q_k = \mathbb{E}[w_k w_k^T]\]</div>
-<p><span id="id1">[<a class="reference internal" href="5IMU.html#id3" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span></p>
+<p><span id="id1">[<a class="reference internal" href="99Bibliography.html#id2" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span></p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(R\)</span> is the covariance matrix of <span class="math notranslate nohighlight">\(v_k\)</span>. i.e. how much the measured state is effected by noise in the state transition model. <span class="math notranslate nohighlight">\(R\)</span> tells the kalman filter how much to “trust” the measurments compared to model predictions.  Large <span class="math notranslate nohighlight">\(R\)</span> suggests the model is more reliable than the measurments and puts more emphasis on <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> compared to <span class="math notranslate nohighlight">\(z_k\)</span> when computing <span class="math notranslate nohighlight">\(\hat{x}_{k+1}\)</span>, small <span class="math notranslate nohighlight">\(R\)</span> puts more emphasis on <span class="math notranslate nohighlight">\(z_k\)</span> compared to <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span>.</p></li>
 </ul>
 <div class="math notranslate nohighlight" id="equation-eq-measurement-noise-cov">
 <span class="eqno">(13)<a class="headerlink" href="#equation-eq-measurement-noise-cov" title="Link to this equation">#</a></span>\[R_k = \mathbb{E}[v_k v_k^T]\]</div>
-<p><span id="id2">[<a class="reference internal" href="5IMU.html#id3" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span></p>
+<p><span id="id2">[<a class="reference internal" href="99Bibliography.html#id2" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span></p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(e_k\)</span> and <span class="math notranslate nohighlight">\(e^-_k\)</span> are the error in the estimation and the error in the prediction respectivly defined as <span class="math notranslate nohighlight">\(e_k = x_k-\hat{x}_k\)</span> and <span class="math notranslate nohighlight">\(e^-_k = x_k-\hat{x}^-_k\)</span>.</p></li>
 <li><p><span class="math notranslate nohighlight">\(P_k\)</span> and <span class="math notranslate nohighlight">\(P^-_k\)</span> are the associated error covariance matricies for <span class="math notranslate nohighlight">\(e_k\)</span> and <span class="math notranslate nohighlight">\(e^-_k\)</span> respectivly defined by:</p></li>
@@ -461,7 +461,7 @@ document.write(`
 <p>and</p>
 <div class="math notranslate nohighlight" id="equation-eq-prediction-cov">
 <span class="eqno">(15)<a class="headerlink" href="#equation-eq-prediction-cov" title="Link to this equation">#</a></span>\[P^-_k = \mathbb{E}[e^-_k (e^-_k)^T]\]</div>
-<p><span id="id3">[<a class="reference internal" href="5IMU.html#id3" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span></p>
+<p><span id="id3">[<a class="reference internal" href="99Bibliography.html#id2" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span></p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(K_k\)</span> is the kalman gain which has similar effects to <span class="math notranslate nohighlight">\(\alpha\)</span> in the low pass filter.</p></li>
 <li><p><span class="math notranslate nohighlight">\(x_0\)</span> is the initial state estimate. provided at the start of the estimation process.</p></li>
@@ -536,14 +536,14 @@ We can group the terms more intuitivly by substituting in the defenition for the
 <p>Which is a general expression for the updated error covariance matrix for subpotimal <span class="math notranslate nohighlight">\(K_k\)</span>. Now we will optimise <span class="math notranslate nohighlight">\(K_k\)</span> by minimising the MSE corresponding to finding the value of <span class="math notranslate nohighlight">\(K_k\)</span> that minises the individual terms along the leading diagonal of <span class="math notranslate nohighlight">\(P_k\)</span> as these terms represent the estimation error variances for the elements of the state vector elements being selected. This leaves:</p>
 <aside class="margin sidebar">
 <p class="sidebar-title"></p>
-<p>For a more detailed derivation see <span id="id4">[<a class="reference internal" href="5IMU.html#id3" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span>.</p>
+<p>For a more detailed derivation see <span id="id4">[<a class="reference internal" href="99Bibliography.html#id2" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span>.</p>
 </aside>
 <div class="math notranslate nohighlight" id="equation-eq-kalman-gain">
 <span class="eqno">(27)<a class="headerlink" href="#equation-eq-kalman-gain" title="Link to this equation">#</a></span>\[K_k = P^-_k H^T (H P^-_k H^T + R)^{-1}\]</div>
 <p>In this case <span class="math notranslate nohighlight">\(K_k\)</span> is the optimum kalman gain. When considering the optimum kalman gain <a class="reference internal" href="#equation-p-k-minimise">(26)</a> can be simplified to by ignoring the last two terms:</p>
 <div class="math notranslate nohighlight" id="equation-eq-error-covariance-update">
 <span class="eqno">(28)<a class="headerlink" href="#equation-eq-error-covariance-update" title="Link to this equation">#</a></span>\[P_k = P^-_k - K_k H P^-_k\]</div>
-<p><span id="id5">[<a class="reference internal" href="5IMU.html#id3" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span></p>
+<p><span id="id5">[<a class="reference internal" href="99Bibliography.html#id2" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span></p>
 <p>Whereas the low pass filter passes <span class="math notranslate nohighlight">\(\hat{x}_{k-1}\)</span> directly between time steps <span class="math notranslate nohighlight">\(t_{k-1}\)</span> and <span class="math notranslate nohighlight">\(t_{k}\)</span> the kalman filter predicts the next step before a measurement is carried out and compares this with the measurement to give new estimate.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -558,7 +558,7 @@ We can group the terms more intuitivly by substituting in the defenition for the
 <p>The error covariance matrix associated with this prediction <span class="math notranslate nohighlight">\(\hat{x}^-_{k+1}\)</span> is obtained from:</p>
 <aside class="margin sidebar">
 <p class="sidebar-title"></p>
-<p>If <span class="math notranslate nohighlight">\(\mu_x\)</span> is transformed linearly <span class="math notranslate nohighlight">\(\mu_y = F\mu_x\)</span> its covariance matrix, <span class="math notranslate nohighlight">\(\Sigma_x\)</span>, can be transformed using <span class="math notranslate nohighlight">\(\Sigma_y = F\Sigma_xF^T\)</span>. <span id="id6">[<a class="reference internal" href="5IMU.html#id4" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span></p>
+<p>If <span class="math notranslate nohighlight">\(\mu_x\)</span> is transformed linearly <span class="math notranslate nohighlight">\(\mu_y = F\mu_x\)</span> its covariance matrix, <span class="math notranslate nohighlight">\(\Sigma_x\)</span>, can be transformed using <span class="math notranslate nohighlight">\(\Sigma_y = F\Sigma_xF^T\)</span>. <span id="id6">[<a class="reference internal" href="99Bibliography.html#id3" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span></p>
 </aside>
 <div class="math notranslate nohighlight" id="equation-projection-covariance">
 <span class="eqno">(30)<a class="headerlink" href="#equation-projection-covariance" title="Link to this equation">#</a></span>\[P^-_k = AP_kA^T+Q\]</div>
@@ -584,27 +584,6 @@ We can group the terms more intuitivly by substituting in the defenition for the
 <li><p><span class="math notranslate nohighlight">\(z_k\)</span> are the inputs (measured state)</p></li>
 <li><p><span class="math notranslate nohighlight">\(\hat{x}_k\)</span> are the outputs (estimated state)</p></li>
 </ul>
-<div class="docutils container" id="id7">
-<div role="list" class="citation-list">
-<div class="citation" id="id9" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">BAOOl21</a><span class="fn-bracket">]</span></span>
-<p>Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: <a class="reference external" href="https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305">https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305</a>, <a class="reference external" href="https://doi.org/10.1201/9780429200656">doi:10.1201/9780429200656</a>.</p>
-</div>
-<div class="citation" id="id8" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>BH12<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>,<a role="doc-backlink" href="#id3">3</a>,<a role="doc-backlink" href="#id4">4</a>,<a role="doc-backlink" href="#id5">5</a>)</span>
-<p>Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: <a class="reference external" href="http://proquest.safaribooksonline.com/9780470609699">http://proquest.safaribooksonline.com/9780470609699</a>.</p>
-</div>
-<div class="citation" id="id10" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>CXEB23<span class="fn-bracket">]</span></span>
-<p>Vincenzo Capuano, Liangchun Xu, and Jose Estrada Benavides. Smartphone mems accelerometer and gyroscope measurement errors: laboratory testing and analysis of the effects on positioning performance. <em>Sensors</em>, 23(17):7609, 2023. URL: <a class="reference external" href="https://dx.doi.org/10.3390/s23177609">https://dx.doi.org/10.3390/s23177609</a>, <a class="reference external" href="https://doi.org/10.3390/s23177609">doi:10.3390/s23177609</a>.</p>
-</div>
-<div class="citation" id="id11" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>GZL+22<span class="fn-bracket">]</span></span>
-<p>George Grouios, Efthymios Ziagkas, Andreas Loukovitis, Konstantinos Chatzinikolaou, and Eirini Koidou. Accelerometers in our pocket: does smartphone accelerometer technology provide accurate data? <em>Sensors</em>, 23(1):192, 2022. URL: <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9824767/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9824767/</a>, <a class="reference external" href="https://doi.org/10.3390/s23010192">doi:10.3390/s23010192</a>.</p>
-</div>
-</div>
-</div>
 </section>
 </section>
 
