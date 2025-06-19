@@ -62,6 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '5IMU';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Position using GPS and Accelarometer data" href="6ExtendedKalman.html" />
     <link rel="prev" title="Velocity from position" href="4bExampleVelocityFromPosition.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -188,6 +189,7 @@
 <li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Battery output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Attitude using a gyroscope and accelarometer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Position using GPS and Accelarometer data</a></li>
 </ul>
 
     </div>
@@ -479,7 +481,7 @@ document.write(`
 <p>Below is the corresponding Euler parameters KDE:</p>
 <div class="math notranslate nohighlight" id="equation-ep-kde">
 <span class="eqno">(39)<a class="headerlink" href="#equation-ep-kde" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} \dot{\beta_0} \\ \dot{\beta_1} \\ \dot{\beta_2} \\ \dot{\beta_3} \end{bmatrix} = \frac{1}{2} \begin{bmatrix} 0 &amp; -\omega_1 &amp; -\omega_2 &amp; -\omega_3 \\ \omega_1 &amp; 0 &amp; \omega_3 &amp; -\omega_2 \\ \omega_2 &amp; -\omega_3 &amp; 0 &amp; \omega_1 \\ \omega_3 &amp; \omega_2 &amp; -\omega_1 &amp; 0\end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix}\end{split}\]</div>
-<p><span id="id1">[<a class="reference internal" href="4KalmanFilters.html#id9" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> or more simply:</p>
+<p><span id="id1">[<a class="reference internal" href="#id4" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> or more simply:</p>
 <aside class="margin sidebar">
 <p class="sidebar-title"></p>
 <p>Where: <span class="math notranslate nohighlight">\(\Psi(\omega) = \frac{1}{2} \begin{bmatrix} 0 &amp; -\omega_1 &amp; -\omega_2 &amp; -\omega_3 \\ \omega_1 &amp; 0 &amp; \omega_3 &amp; -\omega_2 \\ \omega_2 &amp; -\omega_3 &amp; 0 &amp; \omega_1 \\ \omega_3 &amp; \omega_2 &amp; -\omega_1 &amp; 0\end{bmatrix}\)</span></p>
@@ -507,16 +509,16 @@ It follows from the euler parameters <a class="reference internal" href="#equati
 <p class="admonition-title">Warning</p>
 <p>It is unlikely that optimal <span class="math notranslate nohighlight">\(Q\)</span>, <span class="math notranslate nohighlight">\(R\)</span> and <span class="math notranslate nohighlight">\(P^-_0\)</span> are scalar multiples of the identity, but this method reduces the number of parametres that need to be tuned.</p>
 </div>
-<figure class="align-default" id="id5">
+<figure class="align-default" id="id7">
 <img alt="_images/AttitudeKalman.jpg" src="_images/AttitudeKalman.jpg" />
 <figcaption>
-<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Kalman filter block diagram specific to attitude determination</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Kalman filter block diagram specific to attitude determination</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="align-default" id="id6">
+<figure class="align-default" id="id8">
 <img alt="_images/Compare2.png" src="_images/Compare2.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 19 </span><span class="caption-text">The euler method for calcualting attitude alongside the kalman filtered example discussed above</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 19 </span><span class="caption-text">The euler method for calcualting attitude alongside the kalman filtered example discussed above</span><a class="headerlink" href="#id8" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>This kalman filter example hasn’t improved the fit. The integration drift hasn’t been corrected for. This is because the measurment in this case didn’t contain any corrective information so didn’t correct for drift. <strong>The only difference the kalman filter makes in this case is it puts a greater emphasis on previous measurments</strong>. To improve on this fit we could use a sensor which is less suceptible to drift and combine the set of measurments using sensor fusion.</p>
@@ -633,6 +635,14 @@ It follows from the euler parameters <a class="reference internal" href="#equati
 <span class="label"><span class="fn-bracket">[</span>BH12<span class="fn-bracket">]</span></span>
 <p>Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: <a class="reference external" href="http://proquest.safaribooksonline.com/9780470609699">http://proquest.safaribooksonline.com/9780470609699</a>.</p>
 </div>
+<div class="citation" id="id5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>CXEB23<span class="fn-bracket">]</span></span>
+<p>Vincenzo Capuano, Liangchun Xu, and Jose Estrada Benavides. Smartphone mems accelerometer and gyroscope measurement errors: laboratory testing and analysis of the effects on positioning performance. <em>Sensors</em>, 23(17):7609, 2023. URL: <a class="reference external" href="https://dx.doi.org/10.3390/s23177609">https://dx.doi.org/10.3390/s23177609</a>, <a class="reference external" href="https://doi.org/10.3390/s23177609">doi:10.3390/s23177609</a>.</p>
+</div>
+<div class="citation" id="id6" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>GZL+22<span class="fn-bracket">]</span></span>
+<p>George Grouios, Efthymios Ziagkas, Andreas Loukovitis, Konstantinos Chatzinikolaou, and Eirini Koidou. Accelerometers in our pocket: does smartphone accelerometer technology provide accurate data? <em>Sensors</em>, 23(1):192, 2022. URL: <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9824767/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9824767/</a>, <a class="reference external" href="https://doi.org/10.3390/s23010192">doi:10.3390/s23010192</a>.</p>
+</div>
 </div>
 </div>
 </section>
@@ -676,6 +686,15 @@ It follows from the euler parameters <a class="reference internal" href="#equati
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">Velocity from position</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="6ExtendedKalman.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Position using GPS and Accelarometer data</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>

@@ -385,6 +385,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smartphone-example">Smartphone example</a></li>
 </ul>
             </nav>
         </div>
@@ -403,7 +404,7 @@ document.write(`
 <h2>Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h2>
 <p>To begin with we will work with the simple 1D case. Our new model is built on <a class="reference internal" href="4bExampleVelocityFromPosition.html#equation-eq-motion-equations">(32)</a> with an additional 2nd order term:</p>
 <div class="math notranslate nohighlight" id="equation-eq-motion-equations2">
-<span class="eqno">(47)<a class="headerlink" href="#equation-eq-motion-equations2" title="Link to this equation">#</a></span>\[\begin{split}s_{k+1} &amp;\approx s_k + \nu_k\Delta t + \frac{1}{2}a_k \Delta t\\
+<span class="eqno">(47)<a class="headerlink" href="#equation-eq-motion-equations2" title="Link to this equation">#</a></span>\[\begin{split}s_{k+1} &amp;\approx s_k + \nu_k\Delta t + \frac{1}{2}a_k \Delta t^2\\
 \nu_{k+1} &amp;\approx \nu_k + a\Delta t\end{split}\]</div>
 <p>The parameters from <a class="reference internal" href="#LabBook/4bExampleVelocityFromPosition.md"><span class="xref myst">the velocity from position example</span></a> remain the same except for <span class="math notranslate nohighlight">\(A\)</span> which changes because the model changes.</p>
 <ul class="simple">
@@ -411,23 +412,47 @@ document.write(`
 <li><p><span class="math notranslate nohighlight">\(z\)</span> is the measurment of position from the GPS</p></li>
 <li><p><span class="math notranslate nohighlight">\(H = \begin{bmatrix} 1 &amp; 0 \end{bmatrix}\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(Q = \sigma_a^2 \begin{bmatrix} \frac{\Delta t^4}{4} &amp; \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} &amp; \Delta t^2 \end{bmatrix}\)</span> Where <span class="math notranslate nohighlight">\(\sigma_a\)</span> will be the standard deviation in the accelaration measurments.</p></li>
-<li><p><span class="math notranslate nohighlight">\(R = \simga_s\)</span> Where <span class="math notranslate nohighlight">\(\sigma_s\)</span> will be the standard deviation in the position measurments.
-We need <span class="math notranslate nohighlight">\(A\)</span> to be a <span class="math notranslate nohighlight">\(2 \times 2\)</span> matrix, since it has the same number of rows and columns as the number of entries in \hat{z}, but this isn’t possible since <a class="reference internal" href="#equation-eq-motion-equations2">(47)</a> contains 3 terms.</p></li>
+<li><p><span class="math notranslate nohighlight">\(R = \sigma_s^2\)</span> Where <span class="math notranslate nohighlight">\(\sigma_s\)</span> will be the standard deviation in the position measurments.
+We need <span class="math notranslate nohighlight">\(A\)</span> to be a <span class="math notranslate nohighlight">\(2 \times 2\)</span> matrix, since it has the same number of rows and columns as the number of entries in <span class="math notranslate nohighlight">\(\hat{z}\)</span>, but this isn’t possible since <a class="reference internal" href="#equation-eq-motion-equations2">(47)</a> contains 3 terms.</p></li>
 </ul>
-<div class="admonition-extended-kalman-filters admonition">
-<p class="admonition-title">Extended Kalman filters</p>
-<p>So we can’t write our equations of motion in the correct for form for the simple kalman filter. This is because the equations of motion <a class="reference internal" href="#equation-eq-motion-equations2">(47)</a> in this case aren’t linear. The extended kalman filter predicts the next state using:</p>
-<div class="math notranslate nohighlight" id="equation-eq-proj-ext">
-<span class="eqno">(48)<a class="headerlink" href="#equation-eq-proj-ext" title="Link to this equation">#</a></span>\[\hat{\boldsymbol{x}}^-_k = A\hat{\boldsymbol{x}}_k + B\hat\boldsymbol{u}_k\]</div>
-<p>Where <span class="math notranslate nohighlight">\(u_k\)</span> is the forcing function and <span class="math notranslate nohighlight">\(B\)</span> is its associated control matrix where <span class="math notranslate nohighlight">\(u_k\)</span> is the forcing function and <span class="math notranslate nohighlight">\(B\)</span> is its associated control matrix.</p>
 <aside class="margin sidebar">
 <p class="sidebar-title"></p>
-<p>If <span class="math notranslate nohighlight">\(\mu_x\)</span> is transformed linearly <span class="math notranslate nohighlight">\(\mu_y = F\mu_x\)</span> its covariance matrix, <span class="math notranslate nohighlight">\(\Sigma_x\)</span>, can be transformed using <span class="math notranslate nohighlight">\(\Sigma_y = F\Sigma_xF^T\)</span>. <span id="id1">[<a class="reference internal" href="4KalmanFilters.html#id9" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span></p>
+<p>If <span class="math notranslate nohighlight">\(\mu_x\)</span> is transformed linearly <span class="math notranslate nohighlight">\(\mu_y = F\mu_x\)</span> its covariance matrix, <span class="math notranslate nohighlight">\(\Sigma_x\)</span>, can be transformed using <span class="math notranslate nohighlight">\(\Sigma_y = F\Sigma_xF^T\)</span>. <span id="id1">[<a class="reference internal" href="5IMU.html#id4" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span></p>
 </aside>
+<div class="admonition-extended-kalman-filters admonition">
+<p class="admonition-title">Extended Kalman Filters</p>
+<p>So we can’t write our equations of motion in the correct for form for the simple kalman filter. This is because the equations of motion <a class="reference internal" href="#equation-eq-motion-equations2">(47)</a> in this case aren’t linear. The extended kalman filter predicts the next state using:</p>
+<div class="math notranslate nohighlight" id="equation-eq-proj-ext">
+<span class="eqno">(48)<a class="headerlink" href="#equation-eq-proj-ext" title="Link to this equation">#</a></span>\[\hat{\boldsymbol{x}}^-_{k+1} = A\hat{\boldsymbol{x}}_k + B\boldsymbol{u}_k\]</div>
+<p>Where <span class="math notranslate nohighlight">\(u_k\)</span> is the forcing function and <span class="math notranslate nohighlight">\(B\)</span> is its associated control matrix where <span class="math notranslate nohighlight">\(u_k\)</span> is the forcing function and <span class="math notranslate nohighlight">\(B\)</span> is its associated control matrix.</p>
 <div class="math notranslate nohighlight" id="equation-eq-proj-cov-ext">
-<span class="eqno">(49)<a class="headerlink" href="#equation-eq-proj-cov-ext" title="Link to this equation">#</a></span>\[P^-_k = A_kP_kA_k^T+B_kR^uB_k^T+Q\]</div>
-<p>Where <span class="math notranslate nohighlight">\(R^u\)</span> is the associated error covariance matrix for <span class="math notranslate nohighlight">\(u_k\)</span>. Equation <a class="reference internal" href="#equation-eq-proj-cov-ext">(49)</a> is the updated form of <a class="reference internal" href="4KalmanFilters.html#equation-eq-error-covariance-update">(28)</a> with the final term <span class="math notranslate nohighlight">\(B_kR^uB_k^T\)</span> corresponding to the covariance update for <span class="math notranslate nohighlight">\(R^u\)</span>.</p>
+<span class="eqno">(49)<a class="headerlink" href="#equation-eq-proj-cov-ext" title="Link to this equation">#</a></span>\[P^-_{k+1} = A_kP_kA_k^T+B_kR^uB_k^T+Q\]</div>
+<p>Where <span class="math notranslate nohighlight">\(R^u\)</span> is the associated error covariance matrix for <span class="math notranslate nohighlight">\(u_k\)</span>. Equation <a class="reference internal" href="#equation-eq-proj-cov-ext">(49)</a> is the updated form of <a class="reference internal" href="4KalmanFilters.html#equation-eq-error-covariance-update">(28)</a> with the final term <span class="math notranslate nohighlight">\(B_kR^uB_k^T\)</span> corresponding to the covariance update for <span class="math notranslate nohighlight">\(R^u\)</span>. <span class="math notranslate nohighlight">\(R^u\)</span> becomes one of our kalman parameters when using the extended kalman filter.</p>
+<figure class="align-default" id="fig-block-kalman">
+<img alt="_images/ExpandedKalman.jpg" src="_images/ExpandedKalman.jpg" />
+<figcaption>
+<p><span class="caption-number">Fig. 26 </span><span class="caption-text">Block diagram for the extended kalman filter. The estimation phase is equivalent to <a class="reference internal" href="4KalmanFilters.html#fig-kalman-block-diagram"><span class="std std-numref">Fig. 7</span></a> but the prediction stage has been updated.</span><a class="headerlink" href="#fig-block-kalman" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
 </div>
+<p>So lets re-write <a class="reference internal" href="#equation-eq-motion-equations2">(47)</a> in the form of <a class="reference internal" href="#equation-eq-proj-cov-ext">(49)</a> to determine <span class="math notranslate nohighlight">\(u_k\)</span> and <span class="math notranslate nohighlight">\(B\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix} s \\ \nu \end{bmatrix}^-_{k+1} = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix} \begin{bmatrix} s \\ \nu \end{bmatrix}_k + \begin{bmatrix} \Delta t^2 \\ \Delta t \end{bmatrix} a_k.\end{split}\]</div>
+<p>Which gives <span class="math notranslate nohighlight">\(u_k = \begin{bmatrix} \Delta t^2 \\ \Delta t \end{bmatrix}\)</span> and <span class="math notranslate nohighlight">\(u_k = a_k\)</span>. Sine we are working in one dimension <span class="math notranslate nohighlight">\(R^u = \sigma_a'^2\)</span> which we will determine by tuning.</p>
+<figure class="align-default" id="fig-improved-vel-pos">
+<img alt="_images/image-31.png" src="_images/image-31.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 27 </span><span class="caption-text">Velocity and position as a functon of time plotted for the extended kalman filter, tuned by eye.</span><a class="headerlink" href="#fig-improved-vel-pos" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Compared to <a class="reference internal" href="4bExampleVelocityFromPosition.html#fig-increased-r-and-increased-q"><span class="std std-numref">Fig. 15</span></a> the externded kalman fitler with acceleration measurments gives a better fit for position and a significantly better fit for velocity. The residuals graphs aren’t random prehaps caused by a small delay but the residuals are very small compared to <a class="reference internal" href="4bExampleVelocityFromPosition.html#fig-increased-r-and-increased-q"><span class="std std-numref">Fig. 15</span></a>.</p>
+</section>
+<section id="smartphone-example">
+<h2>Smartphone example<a class="headerlink" href="#smartphone-example" title="Link to this heading">#</a></h2>
+<p>Now we will consider a more realistic example of predicting 1D motion simulating sensors found in mobile phones. Mobile phones are equipt with low performance micro electrical mechanical systems (MEMS) from which we can implement IMU combined with correcting GPS data can form an intertial measurment system (INS).</p>
+<p><strong>Accelarometer</strong>. A typical mobile phone accelarometer takes readings at a rate of between <span class="math notranslate nohighlight">\(10\)</span> Hz <span class="math notranslate nohighlight">\(6664\)</span> Hz here we will assume about <span class="math notranslate nohighlight">\(400\)</span> Hz <span id="id2">[<a class="reference internal" href="5IMU.html#id6" title="George Grouios, Efthymios Ziagkas, Andreas Loukovitis, Konstantinos Chatzinikolaou, and Eirini Koidou. Accelerometers in our pocket: does smartphone accelerometer technology provide accurate data? Sensors, 23(1):192, 2022. URL: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9824767/, doi:10.3390/s23010192.">GZL+22</a>]</span>, has an error of approximately <span class="math notranslate nohighlight">\(0.01\)</span> ms<span class="math notranslate nohighlight">\(^{-1}\)</span> <span id="id3">[<a class="reference internal" href="5IMU.html#id5" title="Vincenzo Capuano, Liangchun Xu, and Jose Estrada Benavides. Smartphone mems accelerometer and gyroscope measurement errors: laboratory testing and analysis of the effects on positioning performance. Sensors, 23(17):7609, 2023. URL: https://dx.doi.org/10.3390/s23177609, doi:10.3390/s23177609.">CXEB23</a>]</span>. Accelarometers become less reliable over time, there noise over time is desribed by random walks, hence they need to be corrected for by GPS.</p>
+<p><strong>GPS</strong> A typical GPS accearometer takes readings at a rate of <span class="math notranslate nohighlight">\(1\)</span> Hz and has an error of approximately <span class="math notranslate nohighlight">\(5\)</span> m but this vary changable due to geographical factors. Futhermore in some case GPS is bocked entirely. GPS is relied apon for correcting measurments as the noise is uncorrelated over time.</p>
+<p>Lets look</p>
 </section>
 </section>
 
@@ -487,6 +512,7 @@ We need <span class="math notranslate nohighlight">\(A\)</span> to be a <span cl
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smartphone-example">Smartphone example</a></li>
 </ul>
   </nav></div>
 
