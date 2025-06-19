@@ -7,8 +7,8 @@ import numpy as np
 
 # Gerneral Parameters
 maximum = 10
-std = 0.1
-std_a = 0.02  # Standard deviation for acceleration noise
+std = 0.3
+std_a = 0.05  # Standard deviation for acceleration noise
 rng = np.random.default_rng(seed=1)
 dt = 0.01
 q = np.array([[(dt**4)/4, (dt**3)/2], [(dt**3)/2, dt**2]])
@@ -27,7 +27,7 @@ v_k = 0.0
 P_0_s = 5.0 
 P_0_v = 5.0
 s_e = 0.0
-v_e = 2.0
+v_e = 2.4
 
 alpha = 0.05
 
@@ -82,30 +82,31 @@ noisy_signal, signal, noisy_signal_v, signal_v, noisy_signal_a, signal_a, s_k, v
 x_vals = np.arange(len(noisy_signal))
 
 # Plot initial data
-fig, axes = plt.subplots(2, 2, figsize=figsize, sharex=True)
-ax1 = axes[0, 0]
-ax2 = axes[0, 1]
-#ax25 = axes[0, 2]
-ax3 = axes[1, 0]
-ax4 = axes[1, 1]
-#ax5 = axes[1, 2]
+# fig, axes = plt.subplots(1, 2, figsize=figsize, sharex=True)
+# ax1 = axes[0, 0]
+# ax2 = axes[0, 1]
+# #ax25 = axes[0, 2]
+# ax3 = axes[1, 0]
+# ax4 = axes[1, 1]
+# #ax5 = axes[1, 2]
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=figsize, sharex=True)
 plt.subplots_adjust(left=0.1, bottom=0.35)
 
 # Position Plot
 l1 = ax1.scatter(np.arange(len(noisy_signal)), noisy_signal, label='Measured Position', color='blue', alpha=alpha)
 l2, = ax1.plot(signal, label='True Position', color='green')
-l3, = ax1.plot(s_k, label='Filtered Position', color='orange', alpha=0.7)
+l3, = ax1.plot(s_k, label='Filtered Position', color='orange', linestyle='dashed')
 l31, = ax1.plot(s_k_i, label='Double Integrated Accelarometer Data', color='purple')
-ax1.set_xlabel('Sample Index')
+# ax1.set_xlabel('Sample Index')
 ax1.set_ylabel('Position')
 ax1.set_title('Kalman Filtered Position')
 ax1.legend(loc="upper right")
 
 # Velocity Plot
-l43 = ax2.scatter(x_vals[:-1], ds_k, label='Differentiated Filtered Position', color='blue', alpha=alpha)
+#l43 = ax2.scatter(x_vals[:-1], ds_k, label='Differentiated Filtered Position', color='blue', alpha=alpha)
 #l41 = ax2.scatter(np.arange(len(noisy_signal)), noisy_signal_v, label='Noisy Velocity', color='blue', alpha=0.1)
 l42, = ax2.plot(signal_v, label='True Velocity', color='green')
-l4, = ax2.plot(v_k, label='Filtered Velocity', color='orange')
+l4, = ax2.plot(v_k, label='Filtered Velocity', color='orange', linestyle='dashed')
 l44, = ax2.plot(v_k_i, label='Integrated Accelarometer Data', color='purple')
 ax2.set_xlabel('Sample Index')
 ax2.set_ylabel('Velocity')
@@ -120,21 +121,21 @@ ax2.legend(loc="upper right")
 # ax25.set_title('Measured and True Acceleration')
 # ax25.legend(loc="upper right")
 
-# Residual Plot position
-l5, = ax3.plot(s_k - signal, label='Filtred Position -  True Position', color='red', alpha=0.5)
-ax3.axhline(0, color='black', linestyle='--', label='Zero Line')
-ax3.set_xlabel('Sample Index')
-ax3.set_ylabel('Residual')
-ax3.set_title('Residuals of Kalman Filtered Position')
-ax3.legend(loc="upper right")
+# # Residual Plot position
+# l5, = ax3.plot(s_k - signal, label='Filtred Position -  True Position', color='red', alpha=0.5)
+# ax3.axhline(0, color='black', linestyle='--', label='Zero Line')
+# ax3.set_xlabel('Sample Index')
+# ax3.set_ylabel('Residual')
+# ax3.set_title('Residuals of Kalman Filtered Position')
+# ax3.legend(loc="upper right")
 
-# Residual Plot velocity
-l7, = ax4.plot(v_k - signal_v, label='Filtered Velocity - True Velocity', color='red', alpha=0.5)
-ax4.axhline(0, color='black', linestyle='--', label='Zero Line')
-ax4.set_xlabel('Sample Index')
-ax4.set_ylabel('Residual')
-ax4.set_title('Residuals of Kalman Filtered Velocity')
-ax4.legend(loc="upper right")
+# # Residual Plot velocity
+# l7, = ax4.plot(v_k - signal_v, label='Filtered Velocity - True Velocity', color='red', alpha=0.5)
+# ax4.axhline(0, color='black', linestyle='--', label='Zero Line')
+# ax4.set_xlabel('Sample Index')
+# ax4.set_ylabel('Residual')
+# ax4.set_title('Residuals of Kalman Filtered Velocity')
+# ax4.legend(loc="upper right")
 
 # Residual Plot acceleration
 # ax5.plot(noisy_signal_a - signal_a, label='Measured Acceleration - True Acceleration', color='red', alpha=0.5)
@@ -201,10 +202,10 @@ def update(val):
     #l41.set_offsets(np.column_stack((x_vals, noisy_signal_v)))
     l42.set_data(x_vals, signal_v)
     #l43.set_offsets(np.column_stack((x_vals[:-1], ds_k)))
-    l5.set_data(x_vals, s_k - signal)
+    # l5.set_data(x_vals, s_k - signal)
     l6.set_text(f'$r^2$: {r_2:.4f} \n MSE: {rmse:.4f} \n MAE: {mea:.4f}')
     l61.set_text(f'$r^2$: {r_2_v:.4f} \n MSE: {rmse_v:.4f} \n MAE: {mea_v:.4f}')
-    l7.set_data(x_vals, v_k - signal_v)
+    # l7.set_data(x_vals, v_k - signal_v)
     # l25.set_data(x_vals, signal_a)
     
     for ax in [ax1, ax2, ax3, ax4]:

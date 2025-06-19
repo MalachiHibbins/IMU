@@ -1,5 +1,5 @@
 # Position using GPS and Accelarometer data
-Here we will improve on the [the velocity from position example](LabBook/4bExampleVelocityFromPosition.md) example using sensor fusion. While the system using only position data (which we measumre using GPS) works well for predicting the position, its not so good at predicting the velocity. The current model {eq}`eq-motion-equations` represents an oversimplification as it assumes no accelaration which means that the velocity has to be corrected for by the measurments which is what causes lag. We could improve our model using real world accelarometer data which we can integrate to find velocity and position. There are other reasons for including the accelarometer data for example when GPS isn't available due to some form of blocking e.g. being in a tunnel, the device can still roughly determine its position.  
+Here we will improve on the [the velocity from position example](LabBook/4bExampleVelocityFromPosition.md) example using sensor fusion. While the system using only position data (which we measumre using GPS) works well for predicting the position, its not so good at predicting the velocity. The current model {eq}`eq-motion-equations` represents an oversimplification as it assumes no accelaration (the accelaration doesn't change between steps) which means that the velocity has to be corrected for by the measurments which is what causes lag. We could improve our model using real world accelarometer data which we can integrate to find velocity and position. There are other reasons for including the accelarometer data for example when GPS isn't available due to some form of blocking e.g. being in a tunnel, the device can still roughly determine its position.  
 
 ## Model
 To begin with we will work with the simple 1D case. Our new model is built on {eq}`eq-motion-equations` with an additional 2nd order term:
@@ -39,7 +39,7 @@ P^-_{k+1} = A_kP_kA_k^T+B_kR^uB_k^T+Q
 Where $R^u$ is the associated error covariance matrix for $u_k$. Equation {eq}`eq-proj-cov-ext` is the updated form of {eq}`eq-error-covariance-update` with the final term $B_kR^uB_k^T$ corresponding to the covariance update for $R^u$. $R^u$ becomes one of our kalman parameters when using the extended kalman filter.
 ```{figure} ExpandedKalman.jpg
 :name: fig-block-kalman
-Block diagram for the extended kalman filter. The prediction stage required updating but the estimation stage remains the same.
+Block diagram for the extended kalman filter. The estimation phase is equivalent to {numref}`fig-kalman-block-diagram` but the prediction stage has been updated.
 ```
 ````
 
@@ -50,4 +50,21 @@ So lets re-write {eq}`eq-motion-equations2` in the form of {eq}`eq-proj-cov-ext`
 ```
 
 Which gives $u_k = \begin{bmatrix} \Delta t^2 \\ \Delta t \end{bmatrix}$ and $u_k = a_k$. Sine we are working in one dimension $R^u = \sigma_a'^2$ which we will determine by tuning.
+
+```{figure} image-31.png
+:name: fig-improved-vel-pos
+Velocity and position as a functon of time plotted for the extended kalman filter using the same parameters in {numref}`fig-increased-R-and-increased-Q`, tuned by eye.
+```
+
+Compared to {numref}`fig-increased-R-and-increased-Q` the externded kalman fitler with acceleration measurments gives a better fit for position and a significantly better fit for velocity, helped by the significantly better model. Even without measurment corrections the accelarometer gives a supprisingly good fit although there is a tiny bit of drift visible at the end. However the drift is significantly larger when integrated twice. 
+
+## Smartphone example
+Now we will consider a more realistic example of predicting 1D motion simulating sensors found in mobile phones. Mobile phones are equipt with low performance micro electrical mechanical systems (MEMS) from which we can implement IMU combined with correcting GPS data can form an intertial measurment system (INS).
+
+**Accelarometer**. A typical mobile phone accelarometer takes readings at a rate of between $10$ Hz $6664$ Hz here we will assume about $400$ Hz {cite}`Grouios2022`, has an error of approximately $0.01$ ms$^{-1}$ {cite}`Capuano2023, section=3`. Accelarometers become less reliable over time, there noise over time is desribed by random walks, hence they need to be corrected for by GPS.
+
+**GPS** A typical GPS accearometer takes readings at a rate of $1$ Hz and has an error of approximately $5$ m but this vary changable due to geographical factors. Futhermore in some case GPS is bocked entirely. GPS is relied apon for correcting measurments as the noise is uncorrelated over time.
+
+Lets look 
+
 
