@@ -1,9 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.widgets import Slider
+import scipy.constants as sc
+
 import OrientationKalman
 
-g = 9.81
+g = sc.g  # Acceleration due to gravity in m/s^2
 LSB2g = 16384**-1
 LSB2w = 131**-1
 
@@ -11,6 +14,8 @@ class Analyse:
     def __init__ (self, data_filename, calibration_filename):
         """Converts the raw data to standard units (m/s^2 for accelerometer and rad/s for gyroscope)."""
         ax_off, ay_off, az_off, gx_off, gy_off, gz_off = self.offsets(calibration_filename)
+        self.q = 10**-1.6  # Process noise covariance
+        self.r = 10**0.7  # Measurement noise covariance
         
         df = pd.read_csv(data_filename, header = 0)
         df.set_index("t", inplace=True)
@@ -21,8 +26,28 @@ class Analyse:
         self.w = np.column_stack([df['gx'] - gx_off, df['gy'] - gy_off, df['gz'] - gz_off ]) * LSB2w * (np.pi / 180)
         
         self.dt = np.diff(df.index).mean() / 1000
-        self.theta, self.theta_a, self.theta_g = OrientationKalman.run(self.w, self.a, dt=self.dt)
+        self.t = df.index.values / 1000  # Convert to seconds
+        self.theta, self.theta_a, self.theta_g = OrientationKalman.run(self.w, self.a, dt=self.dt, q=self.q, r=self.r)
         
+    def setup_sliders(self, fig, length = 0.8, height = 0.03):
+        axq = fig.add_axes([0.1, 0.01, length, height], facecolor='lightgoldenrodyellow')
+        axr = fig.add_axes([0.1, 0.05, length, height], facecolor='lightgoldenrodyellow')
+        
+        self.s_logq = Slider(axq, '$\log(q)$', -3, 5, valinit=np.log10(self.q), valstep=0.1)
+        self.s_logr = Slider(axr, '$\log(r)$', -3, 5, valinit=np.log10(self.r), valstep=0.1)
+        
+    def check_slider_updates(self):
+        self.s_logq.on_changed(lambda val: self.update())
+        self.s_logr.on_changed(lambda val: self.update())
+        
+    def update(self):
+        self.q = 10**self.s_logq.val
+        self.r = 10**self.s_logr.val
+        self.theta, self.theta_a, self.theta_g = OrientationKalman.run(self.w, self.a, dt=self.dt, q=self.q, r=self.r)
+        self.line_yaw.set_ydata(self.theta[:, 0])
+        self.line_pitch.set_ydata(self.theta[:, 1])
+        self.line_roll.set_ydata(self.theta[:, 2])
+        fig.canvas.draw_idle()
         
     def offsets(self, filename):
         df = pd.read_csv(filename, header = 0)
@@ -61,66 +86,59 @@ class Analyse:
 
         fig.tight_layout()
         fig.canvas.setWindowTitle('Raw IMU Data')
-    
-    def plot_orientation_from_gyro(self):
-        fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 8))
-        ax1.plot(self.theta_g[:, 0], label='psi (yaw)')
-        ax1.set_title('Yaw (psi) from Gyroscope')
-        ax2.plot(self.theta_g[:, 1], label='theta (pitch)')
-        ax2.set_title('Pitch (theta) from Gyroscope')
-        ax3.plot(self.theta_g[:, 2], label='phi (roll)')
-        ax3.set_title('Roll (phi) from Gyroscope')
-        for ax in (ax1, ax2, ax3):
-            ax.set_xlabel('Time (s)')
-            ax.set_ylabel('Angle (rad)')
-            ax.legend()
-            ax.hlines(0, 0, len(self.theta), color='black', linestyle='--', linewidth=0.5)
-        fig.tight_layout()
-        fig.canvas.setWindowTitle('Orientation from Gyroscope')
-            
-    def plot_orientation_from_accelerometer(self):
-        fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 8))
-        ax2.plot(self.theta_a[0, :], label='theta (pitch)')
-        ax2.set_title('Yaw (psi) from Accelerometer')
-        ax3.plot(self.theta_a[1, :], label='phi (roll)')
-        ax3.set_title('Pitch (theta) from Accelerometer')
-        for ax in (ax2, ax3):
-            ax.set_xlabel('Time (s)')
-            ax.set_ylabel('Angle (rad)')
-            ax.legend()
-            ax.hlines(0, 0, len(self.theta), color='black', linestyle='--', linewidth=0.5)
-        fig.tight_layout()
-        fig.canvas.setWindowTitle('Orientation from Accelerometer')
         
-    def plot_orientation(self):
-        fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 8))
-        ax1.plot(self.theta[:, 0], label='psi (yaw)')
-        ax1.set_title('Yaw (psi)')
-        ax2.plot(self.theta[:, 1], label='theta (pitch)')
-        ax2.set_title('Pitch (theta)')
-        ax3.plot(self.theta[:, 2], label='phi (roll)')
-        ax3.set_title('Roll (phi)')
-        for ax in (ax1, ax2, ax3):
-            ax.set_xlabel('Time (s)')
-            ax.set_ylabel('Angle (rad)')
-            ax.legend()
-            ax.hlines(0, 0, len(self.theta), color='black', linestyle='--', linewidth=0.5)
-        fig.tight_layout()
-        fig.canvas.setWindowTitle('Orientation from Gyroscope and Accelerometer')
+    def setup_plot(self):
+        length = len(self.theta_g[:, 0])
+        fig, axs = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
+        axs[0].set_ylabel('Yaw, $\psi$ (rad)')
+        axs[0].hlines(y=0, xmin=0, xmax=length, colors = 'k', linestyle = 'dashed')
+        axs[1].set_ylabel('Pitch, $\\theta$ (rad)')
+        axs[1].hlines(y=0, xmin=0, xmax=length, colors = 'k', linestyle = 'dashed')
+        axs[2].set_ylabel('Roll, $\phi$ (rad)')
+        axs[2].hlines(y=0, xmin=0, xmax=length, colors = 'k', linestyle = 'dashed')
+        axs[2].set_xlabel('time (s)')
+        return fig, axs
+    
+    def plot_orientation_from_gyro(self, fig = None, axs = None, alpha = 0.8):
+        if fig == None and axs == None:
+            fig, axs = self.setup_plot()
+        axs[0].plot(self.theta_g[:, 0], label='gyro', alpha = alpha)
+        axs[1].plot(self.theta_g[:, 1], label='gyro', alpha = alpha)
+        axs[2].plot(self.theta_g[:, 2], label='gyro', alpha = alpha)
+        return fig, axs
+            
+    def plot_orientation_from_accelerometer(self, fig = None, axs = None, alpha = 0.8):
+        if fig == None and axs == None:
+            fig, axs = self.setup_plot()
+        axs[1].plot(self.theta_a[0, :], label='accelarometer', alpha = alpha)
+        axs[2].plot(self.theta_a[1, :], label='accelarometer', alpha = alpha)
+        return fig, axs
+        
+    def plot_orientation_fused(self, fig = None, axs = None, alpha = 0.8):
+        if fig == None and axs == None:
+            fig, axs = self.setup_plot()
+            plt.subplots_adjust(left=0.1, bottom=0.15)
+        
+        self.setup_sliders(fig)
+        self.line_yaw, = axs[0].plot(self.theta[:, 0], label='Kalman', alpha = alpha)
+        self.line_pitch, = axs[1].plot(self.theta[:, 1], label='Kalman', alpha = alpha)
+        self.line_roll, = axs[2].plot(self.theta[:, 2], label='Kalman', alpha = alpha)
+        axs[2].set_xlabel('time (s)')
+        self.check_slider_updates()
+        return fig, axs
+        
+
             
     def plot_accelaration(self):
         fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(10, 8))
         ax1.plot(self.a[:, 0], label='ax')
-        ax1.set_title('Accelerometer X-axis')
+        ax1.ylabel('X Acceleration (ms$^{-2}$)')
         ax2.plot(self.a[:, 1], label='ay')
-        ax2.set_title('Accelerometer Y-axis')
+        ax2.ylabel('Y Acceleration (ms$^{-2}$)')
         ax3.plot(self.a[:, 2], label='az')
-        ax3.set_title('Accelerometer Z-axis')
-        for ax in (ax1, ax2, ax3):
-            ax.set_xlabel('Time (s)')
-            ax.set_ylabel('Acceleration (m/s²)')
-            ax.legend()
-        fig.canvas.setWindowTitle('Accelerometer Data')
+        ax3.ylabel('Z Acceleration (ms$^{-2}$)')
+        ax3.set_ylabel('Acceleration (m/s²)')
+        ax3.set_xlabel('Time')
         
     def plot_attitude(self):
         """Plots a 3D animation of the orientation, showing all three IMU axes."""
@@ -176,6 +194,13 @@ class Analyse:
         
 
 
-test = Analyse("Data/test.csv", "Data/Calibration.csv")
-test.plot_attitude()
+test = Analyse("Data/angle12.csv", "Data/cal12.csv")
+test.plot_raw_data()
+#fig, axs = test.plot_orientation_fused()
+fig, axs = test.plot_orientation_from_accelerometer()
+fig, axs = test.plot_orientation_from_gyro(fig, axs)
+ax1, ax2, ax3 = axs
+ax1.legend()
+ax2.legend()
+ax3.legend()
 plt.show()
