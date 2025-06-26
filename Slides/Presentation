@@ -1,0 +1,92 @@
+---
+marp: true
+style: |
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+  }
+---
+
+# Kalman Filters 
+
+- What it is
+- How it works
+- Example
+- Sensor fusion
+- Example
+*Malachi Hibbins*
+
+---
+
+## Introduction
+- Kalman filters are an optimal estimation algorithm which looks at noisy measurements and attempts to predict the true state 
+- A Kalman filter considers:
+- **The model**: *Predicts* the next state from the current state *estimate*.
+- **The measurement** containing noise
+- And combines these to form an *updated estimate* of the state.
+
+---
+## Prediction 
+
+- The true state, $x_k$, evolves according to the linear model defined in $A$:
+$$x_{k} = Ax_{k-1} + w_{k-1}$$
+- $w_k$ is white noise associated with the linear process.  $w_k \sim \mathcal{N}(0, Q)$
+- However we don't have access to $x_k$ or only its estimate $\hat{x}_k$. 
+>Predict next state
+>$$\hat{x}^-_{k} = A \hat{x}_{k-1}$$
+>Calculate the error covariance of prediction
+>$$P^-_{k} = AP_{k-1}A^T+Q$$
+- $P_k$ and $P^-_{k}$ are error covariance matrices for $\hat{x}_k$ and $\hat{x}^-_k$
+- $Q$ is the error covariance matrix for $w_k$ 
+
+---
+
+## Measurment
+- The measurment ($z_k$) is the measurment from the sensor:
+  $$z_k = Hx_k + v_k$$
+- $H$ is the state to measurment matrix. 
+- $v_k$ is the noise associated with the measurment. $v_k \sim \mathcal{N}(0, R)$
+- Equation on its own is unhelpful since we don't have access to $x_k$ or $v_k$
+- We can say the following about the predicted ($\hat{z}^-_k$) and estimated ($\hat{z}_k$) measurments based on the model
+$$\hat{z}^-_k = H\hat{x}^-_k$$
+$$\hat{z}_k = H\hat{x}_k$$
+
+--- 
+
+## Update
+
+- $\hat{x}^-_{k+1}$ is combined with the measurment, $z_k$, to give the updated estimate, $\hat{x}_{k+1}$:
+>Estimate Update Equation
+>$$
+>\hat{x}_{k} = \hat{x}^-_k + K_k(z_k - H\hat{x}^-_k)
+>$$
+- $K_k$ is the kalman gain. Recalculated for each step to minise the MSE between true state and estimation
+- $H$ is the state to measurment matrix
+>Estimate Update Alternative Form
+$$\hat{x}_k = \hat{x}^-_k + K_k(z_k - \hat{z}^-_k)$$
+
+---
+
+## Resources
+
+
+
+<div class="columns">
+  <div>
+    <img src="image.png" width="300">
+  </div>
+  <div>
+  For detailed mathematical examples: Brown, R.G. and Hwang, P.Y.C. (2012) Introduction to random signals and applied Kalman filtering. Available at:
+  
+   http://proquest.safaribooksonline.com/9780470609699
+
+  My notes (work in progress):
+  https://malachihibbins.github.io/IMU/0Intro.html
+  
+  Kalman filter videos:
+
+  </div>
+</div>
+
+

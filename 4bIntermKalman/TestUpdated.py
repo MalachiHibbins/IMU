@@ -14,6 +14,9 @@ q = np.array([[(dt**4)/4, (dt**3)/2], [(dt**3)/2, dt**2]])
 # Fixed Kalman Filter Parameters
 A = np.array([[1, dt], [0, 1]]) 
 H = np.array([[1, 0]])
+plot_residuels = False
+plot_differentiated_filtered = False
+alpha_scatter = 0.1
 
 
 # Variable Parameters
@@ -73,17 +76,22 @@ noisy_signal, signal, noisy_signal_v, signal_v, s_k, v_k, r_2, rmse, mea, r_2_v,
 x_vals = np.arange(len(noisy_signal))
 
 # Plot initial data
-fig, axes = plt.subplots(2, 2, figsize=figsize, sharex=True)
-ax1 = axes[0, 0]
-ax2 = axes[0, 1]
-ax3 = axes[1, 0]
-ax4 = axes[1, 1]
+if plot_residuels:
+    fig, axes = plt.subplots(2, 2, figsize=figsize, sharex=True)
+    ax1 = axes[0, 0]
+    ax2 = axes[0, 1]
+    ax3 = axes[1, 0]
+    ax4 = axes[1, 1]
+else:
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=figsize, sharex=True)
 plt.subplots_adjust(left=0.1, bottom=0.35)
 
+
+
 # Position Plot
-l1 = ax1.scatter(np.arange(len(noisy_signal)), noisy_signal, label='Measured Position', color='blue', alpha=0.2)
-l2, = ax1.plot(signal, label='True Position', color='green')
-l3, = ax1.plot(s_k, label='Filtered Position', color='orange', alpha=0.7)
+l1 = ax1.scatter(np.arange(len(noisy_signal)), noisy_signal, label='Measured Position', color='blue', alpha=alpha_scatter)
+l11, = ax1.plot(signal, label='True Position', color='green')
+l12, = ax1.plot(s_k, label='Filtered Position', color='orange', alpha=0.7)
 ax1.set_xlabel('Sample Index')
 ax1.set_ylabel('Position')
 ax1.set_title('Kalman Filtered Position')
@@ -92,34 +100,36 @@ ax1.legend(loc="upper right")
 
 
 # Velocity Plot
-l43 = ax2.scatter(x_vals[:-1], ds_k, label='Differentiated Filtered Position', color='blue', alpha=0.2)
+if plot_differentiated_filtered:
+    l22 = ax2.scatter(x_vals[:-1], ds_k, label='Differentiated Filtered Position', color='red', alpha=alpha_scatter)
 #l41 = ax2.scatter(np.arange(len(noisy_signal)), noisy_signal_v, label='Noisy Velocity', color='blue', alpha=0.1)
-l42, = ax2.plot(signal_v, label='True Velocity', color='green')
-l4, = ax2.plot(v_k, label='Filtered Velocity', color='orange')
+l21, = ax2.plot(signal_v, label='True Velocity', color='green')
+l20, = ax2.plot(v_k, label='Filtered Velocity', color='orange')
 ax2.set_xlabel('Sample Index')
 ax2.set_ylabel('Velocity')
 ax2.set_title('Kalman Filtered Velocity')
 ax2.legend(loc="upper right")
 
-# Residual Plot position
-l5, = ax3.plot(s_k - signal, label='Filtred Position -  True Position', color='red', alpha=0.5)
-ax3.axhline(0, color='black', linestyle='--', label='Zero Line')
-ax3.set_xlabel('Sample Index')
-ax3.set_ylabel('Residual')
-ax3.set_title('Residuals of Kalman Filtered Position')
-ax3.legend(loc="upper right")
+if plot_residuels:
+    # Residual Plot position
+    l30, = ax3.plot(s_k - signal, label='Filtred Position -  True Position', color='red', alpha=0.5)
+    ax3.axhline(0, color='black', linestyle='--', label='Zero Line')
+    ax3.set_xlabel('Sample Index')
+    ax3.set_ylabel('Residual')
+    ax3.set_title('Residuals of Kalman Filtered Position')
+    ax3.legend(loc="upper right")
 
-# Residual Plot velocity
-l7, = ax4.plot(v_k - signal_v, label='Filtered Velocity - True Velocity', color='red', alpha=0.5)
-ax4.axhline(0, color='black', linestyle='--', label='Zero Line')
-ax4.set_xlabel('Sample Index')
-ax4.set_ylabel('Residual')
-ax4.set_title('Residuals of Kalman Filtered Velocity')
-ax4.legend(loc="upper right")
+    # Residual Plot velocity
+    l40, = ax4.plot(v_k - signal_v, label='Filtered Velocity - True Velocity', color='red', alpha=0.5)
+    ax4.axhline(0, color='black', linestyle='--', label='Zero Line')
+    ax4.set_xlabel('Sample Index')
+    ax4.set_ylabel('Residual')
+    ax4.set_title('Residuals of Kalman Filtered Velocity')
+    ax4.legend(loc="upper right")
 
 # Display R^2, RMSE, and MAE
-l6 = ax1.text(40, -1, f'$r^2$: {r_2:.4f} \n MSE: {rmse:.4f} \n MAE: {mea:.4f}', fontsize=10)
-l61 = ax2.text(750, -1.7, f'$r^2$: {r_2_v:.4f} \n MSE: {rmse_v:.4f} \n MAE: {mea_v:.4f}', fontsize=10)
+t1 = ax1.text(40, -1, f'$r^2$: {r_2:.4f} \n MSE: {rmse:.4f} \n MAE: {mea:.4f}', fontsize=10)
+t2 = ax2.text(750, -1.7, f'$r^2$: {r_2_v:.4f} \n MSE: {rmse_v:.4f} \n MAE: {mea_v:.4f}', fontsize=10)
 
 # Filter sliders
 filter_color = 'yellow'
@@ -133,8 +143,8 @@ ax_s_e = plt.axes([0.1, 0.09, width, height])
 ax_v_e = plt.axes([0.1, 0.05, width, height])
 
 
-log_sigma = Slider(ax_sigma, '$\log(\sigma_a)$', -3, 10, valinit=np.log10(sigma), color = filter_color)  # Axes for slider, label, min, max, initial value
-log_s_R = Slider(ax_R, '$\log(\sigma_s)$', -3, 6, valinit=np.log10(R), color = filter_color)
+log_sigma = Slider(ax_sigma, '$\log(\sigma_Q)$', -3, 10, valinit=np.log10(sigma), color = filter_color)  # Axes for slider, label, min, max, initial value
+log_s_R = Slider(ax_R, '$\log(\sigma_R)$', -3, 6, valinit=np.log10(R), color = filter_color)
 s_P0_s = Slider(ax_P0_s, '$P_0^s$', 0, 10, valinit=P_0_s, color = filter_color)
 s_P0_v = Slider(ax_P0_v, '$P_0^v$', 0, 10, valinit=P_0_v, color = filter_color)
 s_s_e = Slider(ax_s_e, '$s_0$', 0, 50, valinit=s_e, color = filter_color)
@@ -165,19 +175,21 @@ def update(val):
     s_e = s_s_e.val
     v_e = s_v_e.val
     
-    
     noisy_signal, signal, noisy_signal_v, signal_v, s_k, v_k, r_2, rmse, mea, r_2_v, rmse_v, mea_v, ds_k = run_kalman(A, H, sigma, q, R, P_0_s, P_0_v, std, dt, maximum, s_e, v_e)
     l1.set_offsets(np.column_stack((x_vals, noisy_signal)))
-    l2.set_data(x_vals, signal)
-    l3.set_data(x_vals, s_k)
-    l4.set_data(x_vals, v_k)
+    l11.set_data(x_vals, signal)
+    l12.set_data(x_vals, s_k)
+    l20.set_data(x_vals, v_k)
     #l41.set_offsets(np.column_stack((x_vals, noisy_signal_v)))
-    l42.set_data(x_vals, signal_v)
-    l43.set_offsets(np.column_stack((x_vals[:-1], ds_k)))
-    l5.set_data(x_vals, s_k - signal)
-    l6.set_text(f'$r^2$: {r_2:.4f} \n MSE: {rmse:.4f} \n MAE: {mea:.4f}')
-    l61.set_text(f'$r^2$: {r_2_v:.4f} \n MSE: {rmse_v:.4f} \n MAE: {mea_v:.4f}')
-    l7.set_data(x_vals, v_k - signal_v)
+    l21.set_data(x_vals, signal_v)
+    if plot_differentiated_filtered:
+        l22.set_offsets(np.column_stack((x_vals[:-1], ds_k)))
+    if plot_residuels:
+        l30.set_data(x_vals, s_k - signal)
+        l40.set_data(x_vals, v_k - signal_v)
+    t1.set_text(f'$r^2$: {r_2:.4f} \n MSE: {rmse:.4f} \n MAE: {mea:.4f}')
+    t2.set_text(f'$r^2$: {r_2_v:.4f} \n MSE: {rmse_v:.4f} \n MAE: {mea_v:.4f}')
+    
     
     for ax in [ax1, ax2, ax3, ax4]:
         ax.relim()

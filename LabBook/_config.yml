@@ -42,4 +42,7 @@ html:
 math:
   eq_number: true
 
+launch_buttons:
+  slides: true
+
 numbered: true

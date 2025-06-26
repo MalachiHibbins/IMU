@@ -62,6 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '6ExtendedKalman';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Bibliography" href="99Bibliography.html" />
     <link rel="prev" title="Attitude using a gyroscope and accelarometer" href="5IMU.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -189,6 +190,7 @@
 <li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
 <li class="toctree-l1"><a class="reference internal" href="5IMU.html">Attitude using a gyroscope and accelarometer</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Position using GPS and Accelarometer data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -417,7 +419,7 @@ We need <span class="math notranslate nohighlight">\(A\)</span> to be a <span cl
 </ul>
 <aside class="margin sidebar">
 <p class="sidebar-title"></p>
-<p>If <span class="math notranslate nohighlight">\(\mu_x\)</span> is transformed linearly <span class="math notranslate nohighlight">\(\mu_y = F\mu_x\)</span> its covariance matrix, <span class="math notranslate nohighlight">\(\Sigma_x\)</span>, can be transformed using <span class="math notranslate nohighlight">\(\Sigma_y = F\Sigma_xF^T\)</span>. <span id="id1">[<a class="reference internal" href="5IMU.html#id4" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span></p>
+<p>If <span class="math notranslate nohighlight">\(\mu_x\)</span> is transformed linearly <span class="math notranslate nohighlight">\(\mu_y = F\mu_x\)</span> its covariance matrix, <span class="math notranslate nohighlight">\(\Sigma_x\)</span>, can be transformed using <span class="math notranslate nohighlight">\(\Sigma_y = F\Sigma_xF^T\)</span>. <span id="id1">[<a class="reference internal" href="99Bibliography.html#id3" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span></p>
 </aside>
 <div class="admonition-extended-kalman-filters admonition">
 <p class="admonition-title">Extended Kalman Filters</p>
@@ -450,7 +452,7 @@ We need <span class="math notranslate nohighlight">\(A\)</span> to be a <span cl
 <section id="smartphone-example">
 <h2>Smartphone example<a class="headerlink" href="#smartphone-example" title="Link to this heading">#</a></h2>
 <p>Now we will consider a more realistic example of predicting 1D motion simulating sensors found in mobile phones. Mobile phones are equipt with low performance micro electrical mechanical systems (MEMS) from which we can implement IMU combined with correcting GPS data can form an intertial measurment system (INS).</p>
-<p><strong>Accelarometer</strong>. A typical mobile phone accelarometer takes readings at a rate of between <span class="math notranslate nohighlight">\(10\)</span> Hz <span class="math notranslate nohighlight">\(6664\)</span> Hz here we will assume about <span class="math notranslate nohighlight">\(400\)</span> Hz <span id="id2">[<a class="reference internal" href="5IMU.html#id6" title="George Grouios, Efthymios Ziagkas, Andreas Loukovitis, Konstantinos Chatzinikolaou, and Eirini Koidou. Accelerometers in our pocket: does smartphone accelerometer technology provide accurate data? Sensors, 23(1):192, 2022. URL: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9824767/, doi:10.3390/s23010192.">GZL+22</a>]</span>, has an error of approximately <span class="math notranslate nohighlight">\(0.01\)</span> ms<span class="math notranslate nohighlight">\(^{-1}\)</span> <span id="id3">[<a class="reference internal" href="5IMU.html#id5" title="Vincenzo Capuano, Liangchun Xu, and Jose Estrada Benavides. Smartphone mems accelerometer and gyroscope measurement errors: laboratory testing and analysis of the effects on positioning performance. Sensors, 23(17):7609, 2023. URL: https://dx.doi.org/10.3390/s23177609, doi:10.3390/s23177609.">CXEB23</a>]</span>. Accelarometers become less reliable over time, there noise over time is desribed by random walks, hence they need to be corrected for by GPS.</p>
+<p><strong>Accelarometer</strong>. A typical mobile phone accelarometer takes readings at a rate of between <span class="math notranslate nohighlight">\(10\)</span> Hz <span class="math notranslate nohighlight">\(6664\)</span> Hz here we will assume about <span class="math notranslate nohighlight">\(400\)</span> Hz <span id="id2">[<a class="reference internal" href="99Bibliography.html#id5" title="George Grouios, Efthymios Ziagkas, Andreas Loukovitis, Konstantinos Chatzinikolaou, and Eirini Koidou. Accelerometers in our pocket: does smartphone accelerometer technology provide accurate data? Sensors, 23(1):192, 2022. URL: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9824767/, doi:10.3390/s23010192.">GZL+22</a>]</span>, has an error of approximately <span class="math notranslate nohighlight">\(0.01\)</span> ms<span class="math notranslate nohighlight">\(^{-1}\)</span> <span id="id3">[<a class="reference internal" href="99Bibliography.html#id4" title="Vincenzo Capuano, Liangchun Xu, and Jose Estrada Benavides. Smartphone mems accelerometer and gyroscope measurement errors: laboratory testing and analysis of the effects on positioning performance. Sensors, 23(17):7609, 2023. URL: https://dx.doi.org/10.3390/s23177609, doi:10.3390/s23177609.">CXEB23</a>]</span>. Accelarometers become less reliable over time, there noise over time is desribed by random walks, hence they need to be corrected for by GPS.</p>
 <p><strong>GPS</strong> A typical GPS accearometer takes readings at a rate of <span class="math notranslate nohighlight">\(1\)</span> Hz and has an error of approximately <span class="math notranslate nohighlight">\(5\)</span> m but this vary changable due to geographical factors. Futhermore in some case GPS is bocked entirely. GPS is relied apon for correcting measurments as the noise is uncorrelated over time.</p>
 <p>Lets look</p>
 </section>
@@ -494,6 +496,15 @@ We need <span class="math notranslate nohighlight">\(A\)</span> to be a <span cl
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">Attitude using a gyroscope and accelarometer</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="99Bibliography.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bibliography</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
