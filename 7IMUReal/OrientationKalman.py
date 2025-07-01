@@ -14,7 +14,7 @@ def set_zero(signal):
     
     return np.column_stack((yaw, pitch, roll))
 
-def run(ws, as_, q = 10**-1.6, r = 10**-1.6, p = 0.1, **kwargs):
+def run(ws, as_, q = 10**-1.6, r = 10**-1.6, p = 0.1, ms = None, **kwargs):
     # Simulation parameters
     Q = np.identity(4) * q
     R = np.identity(4) * r
@@ -24,16 +24,16 @@ def run(ws, as_, q = 10**-1.6, r = 10**-1.6, p = 0.1, **kwargs):
     
     
     # Use the Kalman filter to fuse the gyroscope and accelerometer data
-    filtered_signal, zs = AdvKalman.filter(as_, ws, x_i, p_i, H=H, Q=Q, R=R, correct_mode=True)
+    filtered_signal, zs = AdvKalman.filter(as_, ws, x_i, p_i, H=H, Q=Q, R=R, correct_mode=True, ms=ms, **kwargs)
 
     # Calculate the euler parameters from the accelerometer data
-    eulers_a = AdvKalman.get_attitude_measurment(as_)
+    eulers_a = AdvKalman.get_attitude_measurment(as_, ms=ms)
     
     # Calculate the euler angles using euler integration
-    eulers_g, _ = AdvKalman.filter(as_, ws, x_i, p_i, H=H, Q=Q, R=R, correct_mode=False, **kwargs)
+    eulers_g, _ = AdvKalman.filter(as_, ws, x_i, p_i, H=H, Q=Q, R=R, correct_mode=False, ms=ms, **kwargs)
 
 
-    return set_zero(filtered_signal), set_zero(eulers_a), set_zero(eulers_g), set_zero(zs)
+    return filtered_signal, eulers_a, eulers_g, zs
 
 
 
