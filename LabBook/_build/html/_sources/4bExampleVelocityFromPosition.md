@@ -28,7 +28,7 @@ Where $\Delta t = t_{k+1} - t_k$. We now need to write our update equations in a
 Q is a bit more complicated to work out and is going to be a $2 \times 2$ matrix of the form below:
 
 ```{math}
-Q = E[w_kw_k^T] =  \begin{bmatrix} VAR(s) & COV(s,\nu) \\ COV(\nu,s) & VAR(\nu) \end{bmatrix} = \sigma_a^2 \begin{bmatrix} \frac{\Delta t^4}{4} & \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} & \Delta t^2 \end{bmatrix}
+Q = E[w_kw_k^T] =  \begin{bmatrix} VAR(s) & COV(s,\nu) \\ COV(\nu,s) & VAR(\nu) \end{bmatrix} = \sigma_a^2 \begin{bmatrix} \frac{\Delta t^4}{4} & \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} & \Delta t^2 \end{bmatrix} 
 ```
 {cite}`Barreto2021,chapter=2.3` {cite}`Barreto2021,chapter=10.2`
 where $\sigma_a^2$ is the variance in the true accelaration, which is the model assumes is zero. $\sigma^2$ will be used as a tuning parameter.

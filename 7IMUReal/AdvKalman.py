@@ -4,6 +4,15 @@ from scipy.spatial.transform import Rotation as R
 import matplotlib.pyplot as plt
 
 def difference(z, H, x_p):
+    """
+    - Compute z - H @ x_p considering the cyclic nature of quanternions.
+    Args:
+        z (np.ndarray): The measurement vector (shape: (4,)).
+        H (np.ndarray): The measurement to state matrix (shape: (4, 4)).
+        x_p (np.ndarray): The predicted state vector (shape: (4,)).
+    Returns:
+        np.ndarray: The difference vector (shape: (4,)).
+    """
     # Compute predicted measurement
     z_pred = H @ x_p
     
@@ -19,6 +28,21 @@ def difference(z, H, x_p):
     return diff
 
 def calcualte(x, p, z, A, H, Q, R, correct_mode = True):
+    """
+    Kalman filter algorithm for predicting and correcting the state.
+    Args:
+        x (np.ndarray): Current estimate state vector (shape: (4,)).
+        p (np.ndarray): Current error covariance matrix (shape: (4, 4)).
+        z (np.ndarray): Measurement vector (shape: (4,)).
+        A (np.ndarray): State transition matrix (shape: (4, 4)).
+        H (np.ndarray): Measurement to state matrix (shape: (4, 4)).
+        Q (np.ndarray): Process noise covariance matrix (shape: (4, 4)).
+        R (np.ndarray): Measurement noise covariance matrix (shape: (4, 4)).
+        correct_mode (bool): If True, perform correction step; if False, only predict.
+    Returns:
+        x_e (np.ndarray): Estimated state vector after correction (shape: (4,)).
+        P_e (np.ndarray): Estimated error covariance matrix after correction (shape: (4,
+    """
     # Predict state error
     x_p = A@x
     P_p = A@p@A.T + Q
@@ -26,6 +50,7 @@ def calcualte(x, p, z, A, H, Q, R, correct_mode = True):
     if correct_mode:
         # Predict kalman gain
         K_k = P_p@H.T@np.linalg.inv((H@P_p@H.T+R))
+        # Correct state and error covariance
         x_e = x_p + K_k @ difference(z, H, x_p)
         P_e = P_p - K_k@H@P_p
         return x_e, P_e
@@ -34,9 +59,20 @@ def calcualte(x, p, z, A, H, Q, R, correct_mode = True):
         return x_p, P_p
 
 def quat2EP(beta):
-    """Convert quaternion to Euler parameters (EP)"""
+    """
+    Convert quaternion to Euler parameters (EP).
+    Args:
+        beta (np.ndarray): Quaternion vector (shape: (4,))
+                    q0 is the scalar part, q1, q2, q3 are the vector parts x, y, z.
+    Returns:
+        np.ndarray: Euler angles in the order [psi, theta, phi] (shape: (3,)) where:
+                    - psi: Yaw angle
+                    - theta: Pitch angle
+                    - phi: Roll angle
+    """
+    
     q0, q1, q2, q3 = beta
-    psi = np.arctan2(2*(q1*q2+q0*q3),q0*q0+q1*q1-q2*q2-q3*q3)
+    psi = np.arctan2(2*(q1*q2+q0*q3),q0*q0+q1*q1-q2*q2-q3*q3) 
     phi = np.arctan2(2*(q2*q3+q0*q1),q0*q0-q1*q1-q2*q2+q3*q3)
     sin_theta = -2 * (q1 * q3 - q0 * q2)  # sin(theta) = -2*(q1*q3 - q0*q2)
     if abs(sin_theta) <= 1:
@@ -55,14 +91,35 @@ def quat2EP(beta):
     
     
 def EP2quat(euler_angles):
-    """Convert Euler parameters (EP) to quaternion"""
+    """
+    - Convert Euler parameters (EP) to quaternion
+    Args:
+        euler_angles (np.ndarray): Euler angles in the order [psi, theta, phi]/[yaw, pitch, roll]
+    Returns:
+        np.ndarray: Quaternion vector (shape: (4,))
+                    q0: scalar part
+                    q1, q2, q3: vector part x,y,z
+    """
     r = R.from_euler('zyx', euler_angles) 
     quat = r.as_quat()  
     q0, q1, q2, q3 = quat[3], quat[0], quat[1], quat[2]
     return np.array([q0, q1, q2, q3])
 
 def get_attitude_measurment(as_, ms = None):
-    """Calculate the attitude measurement from accelerometer and magnetometer data."""
+    """
+    - Calculate the attitude measurement from accelerometer and magnetometer data if not none.
+    - Uses accelerometer data to compute pitch and roll angles, and magnetometer data to compute yaw angle.
+    - If magnetometer data is not provided, yaw angle is set to zero.
+    Args:
+        as_ (np.ndarray): Accelerometer data (shape: (n, 3))
+                        a1 is the x-axis, a2 is the y-axis, a3 is the z-axis.
+        ms (np.ndarray, optional): Magnetometer data (shape: (n, 3)). Defaults to None.
+    Returns:
+        np.ndarray: Euler angles in the order [psi, theta, phi] (shape: (n, 3)) where:
+                    - psi: Yaw angle
+                    - theta: Pitch angle
+                    - phi: Roll angle
+    """
     a1 = as_[:, 0]
     a2 = as_[:, 1]
     # a3 = as_[:, 2]  # Not used for theta/phi here
@@ -77,7 +134,7 @@ def get_attitude_measurment(as_, ms = None):
         mag_x = ms[:, 0] 
         mag_y = ms[:, 1]
         mag_z = ms[:, 2]
-        #adjust magnetometer measurments to the horizontal
+        #adjust magnetometer measurments to the x y plane to correct for the tilt
         Xh = mag_x * np.cos(theta) + mag_y * np.sin(theta) * np.sin(phi) + mag_z * np.sin(theta) * np.cos(phi)
         Yh = mag_y * np.cos(phi) - mag_z * np.sin(phi)
 
@@ -86,7 +143,19 @@ def get_attitude_measurment(as_, ms = None):
         return np.array([-psi, -theta, phi])
 
 def filter(as_, ws, x_i, p_i, dt = 0.05, ms = None, **kwargs):
-    """Main loop for the kalman fitler"""
+    """Main loop for the kalman fitler which calls the other functions to calcualte the filtered signal.
+    Args:
+        as_ (np.ndarray): Accelerometer data (shape: (n, 3)).
+                        a1 is the x-axis, a2 is the y-axis, a3 is the z-axis.
+        ws (np.ndarray): Gyroscope data (shape: (n, 3)).
+                        w1 is the x-axis, w2 is the y-axis, w3 is the z-axis.
+        x_i (np.ndarray): Initial state vector (shape: (4,)).
+                        Should be a unit quaternion [q0, q1, q2, q3].
+        p_i (np.ndarray): Initial error covariance matrix (shape: (4, 4)).
+        dt (float, optional): Time step in seconds. Defaults to 0.05.
+        ms (np.ndarray, optional): Magnetometer data (shape: (n, 3))
+        **kwargs: contains the parameters for the kalman filter algorithm
+        """
     n = len(ws)
     filtered_signal = np.zeros((n, 3))
     x = x_i.copy()

@@ -232,7 +232,7 @@ $Q$ also appears here as this is how much the true state is expected to vary fro
 $A$ and $Q$ are only used in the prediction step.
 ```
 
-## Summary
+## Summary 
 
 ```{figure} BasicKalman.jpg
 :name: fig-kalman-block-diagram

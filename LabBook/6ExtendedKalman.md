@@ -57,7 +57,7 @@ Velocity and position as a functon of time plotted for the extended kalman filte
 ```
 
 Compared to {numref}`fig-increased-R-and-increased-Q` the externded kalman fitler with acceleration measurments gives a better fit for position and a significantly better fit for velocity, helped by the significantly better model. Even without measurment corrections the accelarometer gives a supprisingly good fit although there is a tiny bit of drift visible at the end. However the drift is significantly larger when integrated twice. 
-
+ 
 ## Smartphone example
 Now we will consider a more realistic example of predicting 1D motion simulating sensors found in mobile phones. Mobile phones are equipt with low performance micro electrical mechanical systems (MEMS) from which we can implement IMU combined with correcting GPS data can form an intertial measurment system (INS).
 

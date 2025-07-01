@@ -32,7 +32,7 @@ class AnalyseMPU:
         Returns:
             None
         """
-        ax_off, ay_off, az_off, gx_off, gy_off, gz_off = self.offsets(f"MPUData/{folder_name}/calibration.csv")
+        ax_off, ay_off, az_off, gx_off, gy_off, gz_off = self._background(f"MPUData/{folder_name}/calibration.csv")
         self.q = q  # Process noise covariance
         self.r = r  # Measurement noise covariance
         
@@ -52,7 +52,7 @@ class AnalyseMPU:
         # Kalman filtered attitude, acclearometer attitude, gyroscope attitude
         self.theta, self.theta_a, self.theta_g, self.zs = OrientationKalman.run(self.w, self.a, dt=self.dt, q=self.q, r=self.r)
         
-    def setup_sliders(self, fig, length = 0.725, height = 0.03):
+    def _setup_sliders(self, fig, length = 0.725, height = 0.03):
         """
         - Creates sliders for adjusting q and r values in the Kalman filter, Allowing for real time adjustment.
         - Adds the sliders to the figure.
@@ -73,8 +73,14 @@ class AnalyseMPU:
         self.s_logq = Slider(axq, '$\log(q)$', -3, 5, valinit=np.log10(self.q), valstep=0.1)
         self.s_logr = Slider(axr, '$\log(r)$', -3, 5, valinit=np.log10(self.r), valstep=0.1)
         
-    def update(self):
-        
+    def _update(self):
+        """
+        - Updates the kalman filter based on the new values in the sliders.
+        Args:
+            None
+        Returns:
+            None
+        """
         # Handles the sliders logarithmic effects
         self.q = 10**self.s_logq.val
         self.r = 10**self.s_logr.val
@@ -88,8 +94,15 @@ class AnalyseMPU:
         self.line_roll.set_offsets(np.column_stack((self.t, self.theta[:, 2])))
         fig.canvas.draw_idle()
         
-    def offsets(self, filename):
-        """Calculates the offsets for the accelerometer and gyroscope data. So the data can be zeroed"""
+    def _background(self, filename):
+        """"
+        - Calculates the offsets for the accelerometer and gyroscope data.
+        - zeroes the measurments
+        Args:
+            filename (str): The name of the file with in the specified folder containing calibration data.
+        Returns:
+            offsets (tuple): A tuple containing the offsets for ax, ay, az, gx, gy, gz.
+        """
         df = pd.read_csv(filename, header = 0)
         df.set_index("t", inplace=True)
         df = df.apply(pd.to_numeric, errors='coerce') 
@@ -106,7 +119,14 @@ class AnalyseMPU:
         
         
     def plot_raw_data(self):
-        """Plots the raw data of the IMU."""
+        """
+        - Plots the data directly from the sensors
+        - Creates a 3x2 grid of subplots for accelerometer and gyroscope data.
+        Args:
+            None
+        Returns:
+            None
+        """
         fig, axs = plt.subplots(3, 2, figsize=(12, 8), sharex=True)
         axs[0, 0].plot(self.a[:, 0], label='ax')
         axs[0, 0].set_title('Accelerometer X-axis')
@@ -129,8 +149,16 @@ class AnalyseMPU:
         fig.tight_layout()
         fig.canvas.setWindowTitle('Raw IMU Data')
         
-    def setup_plot(self):
-        """Adds cuttoff lines to plot and creates a figure and axes for plotting."""
+    def _setup_plot(self):
+        """
+        - Adds cuttoff lines to plot and creates a figure and axes for plotting.
+        - Sets up a 3x1 grid of subplots for yaw, pitch, and roll.
+        Args:
+            None
+        Returns:
+            fig (matplotlib.figure.Figure): The figure object for the plot.
+            axs (numpy.ndarray): An array of axes objects for the subplots.
+        """
         fig, axs = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
         axs[0].set_ylabel('Yaw, $\psi$ (rad)')
         axs[0].hlines(y=-np.pi, xmin=0, xmax=max(self.t), colors = 'k', linestyle = 'dashed')
@@ -145,9 +173,18 @@ class AnalyseMPU:
         return fig, axs
     
     def plot_orientation_from_gyro(self, fig = None, axs = None, alpha = 0.8):
-        """"Plots the orientation from just gyroscope data. """
+        """
+        - Plots the orientation from gyroscope data alone i.e. using integration
+        Args:
+            fig (matplotlib.figure.Figure, optional): The figure to plot on. If None, a new figure will be created.
+            axs (numpy.ndarray, optional): The axes to plot on. If None, new axes will be created.
+            alpha (float, optional): Transparency of the points in the scatter plot. Default is 0.8.
+        Returns:
+            fig (matplotlib.figure.Figure): The figure object for the plot.
+            axs (numpy.ndarray): An array of axes objects for the subplots.
+        """
         if fig == None and axs == None:
-            fig, axs = self.setup_plot()
+            fig, axs = self._setup_plot()
         index = np.arange(len(self.theta_g[:, 0]))
         axs[0].scatter(self.t, self.theta_g[:, 0], label='Gyro (only)', alpha = alpha, color='orange', marker='x', s = 2)
         axs[1].scatter(self.t, self.theta_g[:, 1], label='Gyro (only)', alpha = alpha, color='orange', marker='x', s = 2)
@@ -156,32 +193,60 @@ class AnalyseMPU:
         return fig, axs
             
     def plot_orientation_from_accelerometer(self, fig = None, axs = None, alpha = 0.8):
-        """Plots the orientation from just accelerometer data. """
+        """
+        - Plots the orientation from accelerometer data alone
+        - Only plots on the yaw and pitch axes, the accelerometer cannot measure roll.
+        Args:
+            fig (matplotlib.figure.Figure, optional): The figure to plot on. If None, a new figure will be created.
+            axs (numpy.ndarray, optional): The axes to plot on. If None, new axes will be created.
+            alpha (float, optional): Transparency of the points in the scatter plot. Default is 0.8.
+        Returns:
+            fig (matplotlib.figure.Figure): The figure object for the plot.
+            axs (numpy.ndarray): An array of axes objects for the subplots.
+        """
         if fig == None and axs == None:
-            fig, axs = self.setup_plot()
+            fig, axs = self._setup_plot()
         axs[1].scatter(self.t, self.theta_a[0, :], label='accelarometer', alpha = alpha, color='green', marker='x', s = 2)
         axs[2].scatter(self.t, self.theta_a[1, :], label='accelarometer', alpha = alpha, color='green', marker='x', s = 2)
         return fig, axs
         
     def plot_orientation_fused(self, fig = None, axs = None, alpha = 0.8):
-        """Plots the orientation from the Kalman filter. By fusing gyroscope and velocity data as explained in the jupyter book"""
+        """
+        - Plots the orientation from the Kalman filter
+        Args:
+            fig (matplotlib.figure.Figure, optional): The figure to plot on. If None, a new figure will be created.
+            axs (numpy.ndarray, optional): The axes to plot on. If None, new axes will be created.
+            alpha (float, optional): Transparency of the points in the scatter plot. Default is 0.8.
+        Returns:
+            fig (matplotlib.figure.Figure): The figure object for the plot.
+            axs (numpy.ndarray): An array of axes objects for the subplots.
+        """
         if fig == None and axs == None:
-            fig, axs = self.setup_plot()
+            fig, axs = self._setup_plot()
             # Adds space to the figure so sliders can be added at the bottom
             fig.subplots_adjust(left=0.1, bottom=0.4)
         
-        self.setup_sliders(fig)
+        self._setup_sliders(fig)
         self.line_yaw = axs[0].scatter(self.t, self.theta[:, 0], label='Kalman (Fused)', alpha = alpha, color='blue', marker='x', s = 2)
         self.line_pitch = axs[1].scatter(self.t, self.theta[:, 1], label='Kalman (Fused)', alpha = alpha, color='blue', marker='x', s = 2)
         self.line_roll = axs[2].scatter(self.t, self.theta[:, 2], label='Kalman (Fused)', alpha = alpha, color='blue', marker='x', s = 2)
-        self.s_logq.on_changed(lambda val: self.update())
-        self.s_logr.on_changed(lambda val: self.update())
+        self.s_logq.on_changed(lambda val: self._update())
+        self.s_logr.on_changed(lambda val: self._update())
         return fig, axs
     
     def plot_measurment(self, fig = None, axs = None, alpha = 0.8):
-        """Plots the orientation measurment used to update the model from sensors."""
+        """
+        Plots the orientation measurment used to update the model from sensors.
+        Args:
+            fig (matplotlib.figure.Figure, optional): The figure to plot on. If None, a new figure will be created.
+            axs (numpy.ndarray, optional): The axes to plot on. If None, new axes will be created.
+            alpha (float, optional): Transparency of the points in the scatter plot. Default is 0.8.
+        Returns:
+            fig (matplotlib.figure.Figure): The figure object for the plot.
+            axs (numpy.ndarray): An array of axes objects for the subplots.
+        """
         if fig == None and axs == None:
-            fig, axs = self.setup_plot()
+            fig, axs = self._setup_plot()
         axs[0].scatter(self.t, self.zs[:, 0], label='Acc (only)', alpha = alpha, color='red', marker='x', s = 2)
         axs[1].scatter(self.t, self.zs[:, 1], label='Acc (only)', alpha = alpha, color='red', marker='x', s = 2)
         axs[2].scatter(self.t, self.zs[:, 2], label='Acc (only)', alpha = alpha, color='red', marker='x', s = 2)
@@ -189,7 +254,14 @@ class AnalyseMPU:
         
         
     def plot_attitude(self, data = "kalman", pause = 0.02):
-        """Plots a 3D animation of the orientation."""
+        """
+        Plots a 3D animation of the orientation.
+        Args:
+            data (str): The type of data to plot. Can be "kalman" or "gyro".
+            pause (float): Pause duration between frames in seconds. Default is 0.02.
+        Returns:
+            None
+        """
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
         ax.set_xlim([-1, 1])
@@ -244,12 +316,21 @@ class AnalyseMPU:
         
 class AnalysePhone(AnalyseMPU): #
     """
-    Reads and analysed data from the sensorlogger app on a phone.
-    Inherits from AnalyseMPU i.e. all methods of AnalyseMPU are available in this class some are overidden
+    - Reads and analyses data from the sensorlogger app on a phone.
+    - Inherits from AnalyseMPU
     """
     def __init__(self, FolderName, q = 10**-1.6, r = 10**-1.6):
-        """Reads Gravity, Gyroscope, Magnetometer and Orientation data from a folder and merges them into a single dataframe.
-        The data is then saved as attributes of the object."""
+        """
+        - Reads Gravity, Gyroscope, Magnetometer and Orientation data from a files
+        - Puts this data into a single pandas dataframe
+        - saves the data as attributes of the object.
+        Args:
+            FolderName (str): Name of the folder containing the sensor data files.
+            q (float): Process noise covariance for the Kalman filter. Default is 10**-1.6.
+            r (float): Measurement noise covariance for the Kalman filter. Default is 10**-1.6.
+        Returns:
+            None
+        """
         self.q = q
         self.r = r  
         
@@ -282,6 +363,7 @@ class AnalysePhone(AnalyseMPU): #
         df_merged.dropna(inplace=True)
         
         # Retrieves the time, angular velocity, acceleration and magnetometer data from the merged dataframe
+        # Saves data as attributes of the object
         self.t = df_merged['seconds_elapsed'].values
         self.dt = np.diff(self.t).mean()
         self.w = np.column_stack([df_merged['w_x'], df_merged['w_y'], df_merged['w_z']]) 
@@ -293,7 +375,15 @@ class AnalysePhone(AnalyseMPU): #
         
         self.theta, self.theta_a, self.theta_g, self.zs = OrientationKalman.run(self.w, self.a, dt=self.dt, q=self.q, r=self.r, ms=self.m)
     
-    def update(self):
+    def _update(self):
+        """
+        - Overides the _update method from AnalyseMPU since the kalman filter also requires this data
+        - Updates the Kalman filter based on the new values in the sliders.
+        Args:
+            None
+        Returns:
+            None
+        """
         # Handles the sliders logarithmic effects
         self.q = 10**self.s_logq.val
         self.r = 10**self.s_logr.val
@@ -308,7 +398,16 @@ class AnalysePhone(AnalyseMPU): #
         fig.canvas.draw_idle()
     
     def plot_true(self, fig = None, axs = None, alpha = 0.8):
-        """Plots the true orientation according to the sensor logger programme"""
+        """
+        Plots the true orientation according to the sensor logger programme
+        Args:
+            fig (matplotlib.figure.Figure, optional): The figure to plot on. 
+            axs (numpy.ndarray, optional): The axes to plot on. If None either fig or axs is None, a new figure and axes will be created.
+            alpha (float, optional): Transparency of the points in the scatter plot. Default is 0.8.
+        Returns:
+            fig (matplotlib.figure.Figure): The figure object for the plot.
+            axs (numpy.ndarray): An array of axes objects for the subplots, to be reused.
+        """
         if fig == None and axs == None:
             fig, axs = self.setup_plot()
         axs[0].scatter(self.t, self.ot[:, 0], label='Actual', alpha = alpha, color='black', marker='x', s = 2)
@@ -317,7 +416,16 @@ class AnalysePhone(AnalyseMPU): #
         return fig, axs
     
     def plot_magnetometer(self, fig = None, axs = None, alpha = 0.8):
-        """Plots the magnetometer data."""
+        """
+        Plots the magnetometer data, specific to AnalysePhone as AnalyseMPU does not process magnetometer data.
+        Args:
+            fig (matplotlib.figure.Figure, optional): The figure to plot on. 
+            axs (numpy.ndarray, optional): The axes to plot on. If None either fig or axs is None, a new figure and axes will be created.
+            alpha (float, optional): Transparency of the points in the scatter plot. Default is 0.8.
+        Returns:
+            fig (matplotlib.figure.Figure): The figure object for the plot.
+            axs (numpy.ndarray): An array of axes objects for the subplots, to be reused.
+        """
         fig, axs = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
         axs[0].scatter(self.t, self.m[:, 0], label='Magnetometer Only', alpha = alpha, color='purple', marker='x', s = 2)
         axs[0].set_ylabel('Magnetometer X')
@@ -331,16 +439,20 @@ class AnalysePhone(AnalyseMPU): #
         axs[2].legend()
         fig.tight_layout()
     
-    def plot_orientation_from_magnetometer(self, fig = None, axs = None, alpha = 0.8):
-        """Plots the orientation from the magnetometer data."""
-        if fig == None and axs == None:
-            fig, axs = self.setup_plot()
-        m = np.arctan2(self.m[:, 1], self.m[:, 0])
-        axs[0].scatter(self.t, m, label='Magnetometer', alpha = alpha, color='purple', marker='x', s = 2)
-        return fig, axs
-    
 class AnalyseTestData(AnalyseMPU):
+    """
+    Class to read and analyse test data from the ArsGyro and ArsAccel JSON files. From 5IMU example. Inherits from AnalyseMPU.
+    """
     def __init__(self):
+        """
+        - Reads in gyroscope and accelerometer data from JSON files.
+        - Converts the data to standard units (m/s^2 for accelerometer and rad/s for gyroscope).
+        - Applies a Kalman filter to estimate the orientation based on the gyroscope and accelerometer data.
+        Args:
+            None
+        Returns:
+            None
+        """
         self.q = 10**-1.6  # Process noise covariance
         self.r = 10**0.7  # Measurement noise covariance
         
@@ -369,17 +481,19 @@ class AnalyseTestData(AnalyseMPU):
         
         self.theta, self.theta_a, self.theta_g, self.zs = OrientationKalman.run(self.w, self.a, dt=self.dt, q=self.q, r=self.r)
         
-        
-        
-    
-        
 def renormalise(x):
-        """Renormalises the orientation data to be in the range [-pi, pi] for yaw and roll, and [-pi/2, pi/2] for pitch.
-        The "true" data from the phone gives yaw [-pi, pi], pitch [-pi, pi] and roll [-pi/2, pi/2] This needs to be converted."""
+        """
+        - Renormalises the orientation data to be in the range [-pi, pi] for yaw and roll, and [-pi/2, pi/2] for pitch.
+        - The "true" data from the phone gives yaw [-pi, pi], pitch [-pi, pi] and roll [-pi/2, pi/2] This needs to be converted.
+        Args:
+            x (numpy.ndarray): The input array of shape (n, 3) the first column is yaw, second is pitch, third is roll.
+        Returns:
+            numpy.ndarray: The renormalised array of shape (n, 3) with yaw, pitch, and roll in the correct ranges.
+        """
         yaws, pitchs, rolls = x[:, 0], x[:, 1], x[:, 2]
         new_thetas = []
         for pitch, yaw, roll in zip(pitchs, yaws, rolls):
-            if pitch > (np.pi / 2):
+            if pitch > (np.pi / 2): # 
                 pitch = np.pi - pitch
                 yaw += np.pi
                 roll += np.pi
@@ -396,18 +510,17 @@ def wrap_pi(x):
     """Wraps the input x to be in the range [-pi, pi]."""
     return (x + np.pi) % (2 * np.pi) - np.pi
 
-# Example for plotting data from PitchRollCalibration
-# Ensure python is being run from /SummerInternship/7IMUReal/SensorLoggerData
+# Example
+# Ensure python is being run from /SummerInternship/7IMUReal using the terminal
+# or the IDE is set to use this as the working directory.
+
 test = AnalyseMPU("YawPitchRoll")
 alpha = 0.6
 fig, axs = test.plot_orientation_from_gyro(alpha = alpha)
 fig, axs = test.plot_measurment(fig, axs, alpha = alpha)
 fig, axs = test.plot_orientation_fused(fig, axs, alpha = alpha)
-#fig, axs = test.plot_true(fig, axs, alpha = alpha)
 
-# fig, axs = test.plot_orientation_from_magnetometer(fig, axs)
-# fig, axs = test.plot_true(fig, axs)
-
+# adds legend and x-axis
 ax1, ax2, ax3 = axs
 ax3.legend(loc = "upper left")
 ax3.set_xlabel("Time (s)")

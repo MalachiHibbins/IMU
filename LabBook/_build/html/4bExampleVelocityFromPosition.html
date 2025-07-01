@@ -190,6 +190,7 @@
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Velocity from position</a></li>
 <li class="toctree-l1"><a class="reference internal" href="5IMU.html">Attitude using a gyroscope and accelarometer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Position using GPS and Accelarometer data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7RealData.html">Attitude Using Real Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -426,7 +427,7 @@ document.write(`
 <span class="eqno">(33)<a class="headerlink" href="#equation-velocity" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} s \\ \nu \end{bmatrix}^-_{k+1} = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix} \begin{bmatrix} s \\ \nu \end{bmatrix}_k\end{split}\]</div>
 <p>Q is a bit more complicated to work out and is going to be a <span class="math notranslate nohighlight">\(2 \times 2\)</span> matrix of the form below:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}Q = E[w_kw_k^T] =  \begin{bmatrix} VAR(s) &amp; COV(s,\nu) \\ COV(\nu,s) &amp; VAR(\nu) \end{bmatrix} = \sigma_a^2 \begin{bmatrix} \frac{\Delta t^4}{4} &amp; \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} &amp; \Delta t^2 \end{bmatrix}\end{split}\]</div>
+\[\begin{split}Q = E[w_kw_k^T] =  \begin{bmatrix} VAR(s) &amp; COV(s,\nu) \\ COV(\nu,s) &amp; VAR(\nu) \end{bmatrix} = \sigma_a^2 \begin{bmatrix} \frac{\Delta t^4}{4} &amp; \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} &amp; \Delta t^2 \end{bmatrix} \end{split}\]</div>
 <p><span id="id1">[<a class="reference internal" href="99Bibliography.html#id3" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> <span id="id2">[<a class="reference internal" href="99Bibliography.html#id3" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span>
 where <span class="math notranslate nohighlight">\(\sigma_a^2\)</span> is the variance in the true accelaration, which is the model assumes is zero. <span class="math notranslate nohighlight">\(\sigma^2\)</span> will be used as a tuning parameter.
 <span class="math notranslate nohighlight">\(R = VAR(z_k)\)</span> is going to be the variance in the measurments of the position which we will denote as <span class="math notranslate nohighlight">\(\sigma_s\)</span> <span id="id3">[<a class="reference internal" href="99Bibliography.html#id3" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span>.</p>

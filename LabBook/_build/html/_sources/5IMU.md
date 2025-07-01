@@ -1,4 +1,4 @@
-# Attitude using a gyroscope and accelarometer
+# Attitude using a gyroscope and accelarometer 
 This section involves calculating the attitude of an object (yaw-pitch-roll), using real world sensor data. Firstly using the gyroscope to measure the angular velocitiy and then using Eulers method for integration to obtain a prediction for the attitude, then improving this using a kalman filter, however this estimate drifts and becomes less accurate over time. To improve it we implement sensor fusion using our kalman filter, which combines gyroscope data with accelarometer data.
 
 
