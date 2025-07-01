@@ -27,7 +27,7 @@ Due to the restriction on alpha larger $n$ means greater weighting on $\hat{x}_n
 :name: fig-lowpass-vs-moving-average
 Figure 3.1: On the left is the moving average filter from {numref}`fig-moving-average-k25`, on the right is the low pass filter with optimized $\alpha = 0.9$ (by eye).
 ```
-The low pass filter has a smaller delay compared to the moving average filter. However the low pass filter didn't remove as much noise as the moving average filter did.
+The low pass filter has a smaller delay compared to the moving average filter. However the low pass filter didn't remove as much noise as the moving average filter did. 
 
 ```{figure} image-13.png
 :name: fig-lowpass-alpha-08

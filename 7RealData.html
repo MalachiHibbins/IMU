@@ -416,13 +416,13 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="attitude-using-real-data">
 <h1>Attitude Using Real Data<a class="headerlink" href="#attitude-using-real-data" title="Link to this heading">#</a></h1>
-<p>This section explores examples similar to <a class="reference internal" href="5IMU.html"><span class="std std-doc">section 5</span></a> but using real data. Initially useing a gyroscope and an accelarometer, a 6 axis IMU, and later useing a magnetometer aswell, a 9 axis IMU. The 6 axis example uses the MPU6050 with an arduino controller and the 9 axis example used the mobile phone sensors with the <a class="reference external" href="https://play.google.com/store/apps/details?id=com.kelvin.sensorapp&amp;amp;hl=en-US&amp;amp;pli=1">sensor logger</a> app.</p>
+<p>This section explores examples similar to <a class="reference internal" href="5IMU.html"><span class="std std-doc">section 5</span></a> but using real data. Initially using a gyroscope and an accelerometer, a 6 axis IMU, and later using a magnetometer as well, a 9 axis IMU. The 6 axis example uses the MPU6050 with an arduino controller and the 9 axis example used the mobile phone sensors with the <a class="reference external" href="https://play.google.com/store/apps/details?id=com.kelvin.sensorapp&amp;amp;hl=en-US&amp;amp;pli=1">sensor logger</a> app.</p>
 <section id="implementation">
 <h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading">#</a></h2>
 <p>The code for this section can be found <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/7IMUReal">here</a>. The main file is <code class="docutils literal notranslate"><span class="pre">Analysis.py</span></code> which contains <code class="docutils literal notranslate"><span class="pre">AnalyseMPU</span></code> class which is the parent class for <code class="docutils literal notranslate"><span class="pre">AnalysePhone</span></code> and <code class="docutils literal notranslate"><span class="pre">AnalyseTest</span></code>, these read data from the MPU6050, sensor logger and test data (from <a class="reference internal" href="5IMU.html"><span class="std std-doc">section 5</span></a>) respectively.</p>
 <section id="raw-data-from-mpu6050">
 <h3>Raw Data from MPU6050<a class="headerlink" href="#raw-data-from-mpu6050" title="Link to this heading">#</a></h3>
-<p>Each file with measurments came with its own calibration file, which was used to determine the offset in each direction. Different tests were performed with the MPU6050, the data for these are contained in the folders:</p>
+<p>Each file with measurements came with its own calibration file, which was used to determine the offset in each direction. Different tests were performed with the MPU6050, the data for these are contained in the folders:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">YawPitchRoll</span></code>: Involves fast oscillations in the yaw direction followed by a short break, then oscillations in the roll direction followed by a short break, then oscillations in the pitch direction.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">FullYaw</span></code>: Contains data where the MPU6050 was rotated in a full circle in the yaw direction and then rotated back in the opposite direction.</p></li>
@@ -430,15 +430,15 @@ document.write(`
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Currently the kalman filter will only correctly fit <code class="docutils literal notranslate"><span class="pre">YawPitchRoll</span></code> data. When the sensor was rotated beyond <span class="math notranslate nohighlight">\(180^o\)</span> in the yaw and roll directions or beyond <span class="math notranslate nohighlight">\(90^o\)</span> in the pitch direction the kalman filter will need to renormalise the attitude, which made it difficult to fit the kalman filter. This wasn’t a problem with <code class="docutils literal notranslate"><span class="pre">YawPitchRoll</span></code> data as no full rotations were performed.</p>
+<p>Currently the Kalman filter will only correctly fit <code class="docutils literal notranslate"><span class="pre">YawPitchRoll</span></code> data. When the sensor was rotated beyond <span class="math notranslate nohighlight">\(180^o\)</span> in the yaw and roll directions or beyond <span class="math notranslate nohighlight">\(90^o\)</span> in the pitch direction the Kalman filter will need to re-normalize the attitude, which made it difficult to fit the Kalman filter. This wasn’t a problem with <code class="docutils literal notranslate"><span class="pre">YawPitchRoll</span></code> data as no full rotations were performed.</p>
 </div>
 </section>
 <section id="raw-data-from-sensor-logger">
 <h3>Raw Data From Sensor Logger<a class="headerlink" href="#raw-data-from-sensor-logger" title="Link to this heading">#</a></h3>
-<p>The data collected can be found <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/7IMUReal/SensorLoggerData">here</a>. Each folder contains a different test and contains the folowing files:</p>
+<p>The data collected can be found <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/7IMUReal/SensorLoggerData">here</a>. Each folder contains a different test and contains the following files:</p>
 <ul class="simple">
 <li><p><em>In all cases time was measured in seconds.</em></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Gravity.csv</span></code>: Contains the accelaration readings without the accelaration due to gravity removed. <em>The x, y and z components are measured in ms<span class="math notranslate nohighlight">\(^{-2}\)</span></em>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Gravity.csv</span></code>: Contains the acceleration readings without the acceleration due to gravity removed. <em>The x, y and z components are measured in ms<span class="math notranslate nohighlight">\(^{-2}\)</span></em>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Magnetometer.csv</span></code>: Contains the magnetometer readings in the phone’s frame of reference. <em>The x, y and z components are measured in <span class="math notranslate nohighlight">\(\mu\)</span>T.</em></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Gyroscope.csv</span></code>: Contains the gyroscope readings in the phone’s frame of reference. <em>x, y and z are measured in radians rads<span class="math notranslate nohighlight">\(^{-1}\)</span></em></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Orientation.csv</span></code>: Contains the orientation of the phone in yaw-pitch-roll measured in radians. We will refer to this as the true orientation as its the orientation calculated by the phone.
@@ -456,23 +456,23 @@ All other files are not used in this analysis.</p></li>
 <h3>Programme structure<a class="headerlink" href="#programme-structure" title="Link to this heading">#</a></h3>
 <p>The programme is structured with three files:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">AdvKalman.py</span></code>: Contains the kalman filter implementation and handles the conversion between quaternions and Euler angles.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">OrientationKalman.py</span></code>: Contains the <code class="docutils literal notranslate"><span class="pre">run</span></code> function which runs the kalman filter on the data and returns the filtered signal, Euler angles from the accelarometer and gyroscope, and the magnetometer readings. It acts as an interface between <a class="reference external" href="http://Analysis.py">Analysis.py</a> and <a class="reference external" href="http://AdvKalman.py">AdvKalman.py</a>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Analysis.py</span></code>: Contains the <code class="docutils literal notranslate"><span class="pre">AnalysePhone</span></code> class which is used to read in the data, run the kalman filter and plot the results.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AdvKalman.py</span></code>: Contains the Kalman filter implementation and handles the conversion between quaternions and Euler angles.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OrientationKalman.py</span></code>: Contains the <code class="docutils literal notranslate"><span class="pre">run</span></code> function which runs the Kalman filter on the data and returns the filtered signal, Euler angles from the accelerometer and gyroscope, and the magnetometer readings. It acts as an interface between <a class="reference external" href="http://Analysis.py">Analysis.py</a> and <a class="reference external" href="http://AdvKalman.py">AdvKalman.py</a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Analysis.py</span></code>: Contains the <code class="docutils literal notranslate"><span class="pre">AnalysePhone</span></code> class which is used to read in the data, run the Kalman filter and plot the results.</p></li>
 </ul>
 </section>
 </section>
 <section id="theory-9-axis">
 <h2>Theory, 9 axis<a class="headerlink" href="#theory-9-axis" title="Link to this heading">#</a></h2>
-<p>In <a class="reference internal" href="5IMU.html"><span class="std std-doc">section 5</span></a> gyroscope data and accelarometer data were fused to determine the attitude of the phone. However the accelarometer on its own was undabe to measure the yaw direction. When phone is lying flat in the xy plane we can determine, our update measurment, <span class="math notranslate nohighlight">\(\psi^z\)</span>, accurately using the magnetometer.</p>
+<p>In <a class="reference internal" href="5IMU.html"><span class="std std-doc">section 5</span></a> gyroscope data and accelerometer data were fused to determine the attitude of the phone. However the accelerometer on its own was unable to measure the yaw direction. When phone is lying flat in the xy plane we can determine, our update measurement, <span class="math notranslate nohighlight">\(\psi^z\)</span>, accurately using the magnetometer.</p>
 <div class="math notranslate nohighlight" id="equation-eq-magnetometer">
 <span class="eqno">(50)<a class="headerlink" href="#equation-eq-magnetometer" title="Link to this equation">#</a></span>\[\psi^z = \arctan\left(\frac{m_y}{m_x}\right)\]</div>
-<p>Where <span class="math notranslate nohighlight">\(m_x\)</span> and <span class="math notranslate nohighlight">\(m_y\)</span> are the x and y components of the magnetometer reading. The magnetometer reading is in the phone’s frame of reference this is normally not the xy plane so the accelarometer data to is required to write the corrected magnetometer readings <span class="math notranslate nohighlight">\(m_x'\)</span> and <span class="math notranslate nohighlight">\(m_y'\)</span>.</p>
+<p>Where <span class="math notranslate nohighlight">\(m_x\)</span> and <span class="math notranslate nohighlight">\(m_y\)</span> are the x and y components of the magnetometer reading. The magnetometer reading is in the phone’s frame of reference this is normally not the xy plane so the accelerometer data to is required to write the corrected magnetometer readings <span class="math notranslate nohighlight">\(m_x'\)</span> and <span class="math notranslate nohighlight">\(m_y'\)</span>.</p>
 <div class="math notranslate nohighlight" id="equation-eq-gyro-correction">
 <span class="eqno">(51)<a class="headerlink" href="#equation-eq-gyro-correction" title="Link to this equation">#</a></span>\[\begin{split}m_x^{'} = m_x \cos(\theta^z) + m_y \sin(\theta^z) \sin(\phi^z) + m_z \sin(\theta^z) \cos(\phi^z)\\
 m_y^{'} = m_y \cos(\theta^z) - m_x \sin(\theta^z) \sin(\phi^z) + m_z \sin(\theta^z) \cos(\phi^z)\\\end{split}\]</div>
-<p>Where <span class="math notranslate nohighlight">\(\phi^z\)</span> and <span class="math notranslate nohighlight">\(\theta^z\)</span> are the roll and pitch angles calculated using the accelarometer.</p>
-<p>Then as before we can use our corrected values to determine <span class="math notranslate nohighlight">\(\psi^z\)</span> when the magnetometer isn’t lying flat in the xy plane. To summarise the update measurment will be formed from the accelarometer, for pitch and roll and the magnetometer for yaw. The prediction step will use measurments from the gyroscope in the same way as <a class="reference internal" href="5IMU.html"><span class="std std-doc">section 5</span></a>.</p>
+<p>Where <span class="math notranslate nohighlight">\(\phi^z\)</span> and <span class="math notranslate nohighlight">\(\theta^z\)</span> are the roll and pitch angles calculated using the accelerometer.</p>
+<p>Then as before we can use our corrected values to determine <span class="math notranslate nohighlight">\(\psi^z\)</span> when the magnetometer isn’t lying flat in the xy plane. To summarize the update measurement will be formed from the accelerometer, for pitch and roll and the magnetometer for yaw. The prediction step will use measurements from the gyroscope in the same way as <a class="reference internal" href="5IMU.html"><span class="std std-doc">section 5</span></a>.</p>
 </section>
 <section id="results">
 <h2>Results<a class="headerlink" href="#results" title="Link to this heading">#</a></h2>
@@ -481,65 +481,65 @@ m_y^{'} = m_y \cos(\theta^z) - m_x \sin(\theta^z) \sin(\phi^z) + m_z \sin(\theta
 <p>These examples involved fast oscillations in the yaw directions followed by a short break, then oscillations in the roll direction followed by a short break, then oscillations in the pitch direction.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Here yaw-pitch-roll is normalised as follows: yaw is in the range <span class="math notranslate nohighlight">\([-\pi, \pi]\)</span>, pitch is in the range <span class="math notranslate nohighlight">\([-\pi/2, \pi/2]\)</span> and roll is in the range <span class="math notranslate nohighlight">\([-\pi, \pi]\)</span>.</p>
+<p>Here yaw-pitch-roll is normalized as follows: yaw is in the range <span class="math notranslate nohighlight">\([-\pi, \pi]\)</span>, pitch is in the range <span class="math notranslate nohighlight">\([-\pi/2, \pi/2]\)</span> and roll is in the range <span class="math notranslate nohighlight">\([-\pi, \pi]\)</span>.</p>
 </div>
 <section id="mpu6050-6-axis-imu">
 <h4>MPU6050 6-axis IMU<a class="headerlink" href="#mpu6050-6-axis-imu" title="Link to this heading">#</a></h4>
-<p>So that the correction was normalised the correction in the yaw direction was set to always be zero, the pitch and roll directions came from acelarometer measurments. The prediction came from gyroscope measurments.</p>
+<p>So that the correction was normalized the correction in the yaw direction was set to always be zero, the pitch and roll directions came from accelerometer measurements. The prediction came from gyroscope measurements.</p>
 <figure class="align-default" id="fig-fast-yaw-roll-pitch-6-axis">
 <img alt="_images/image-39.png" src="_images/image-39.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 28 </span><span class="caption-text">Fast oscillations in the yaw, roll and pitch directions. The orange line is the measurments from integrating the angular velocities from the gyro and red line is the measurements from the accelarometer. The blue line is the kalman filtered attitude which fuses data from the gyroscope and accelarometer/magnetometer.</span><a class="headerlink" href="#fig-fast-yaw-roll-pitch-6-axis" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 28 </span><span class="caption-text">Fast oscillations in the yaw, roll and pitch directions. The orange line is the measurements from integrating the angular velocities from the gyro and red line is the measurements from the accelerometer. The blue line is the Kalman filtered attitude which fuses data from the gyroscope and accelerometer/magnetometer.</span><a class="headerlink" href="#fig-fast-yaw-roll-pitch-6-axis" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>The drift is clearly visible from the gyro. But the accelarometer measurments seem to be much more accurate. However it is unclear if kalman filter improves on the accelaroeter measurments with the current <span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span>.</p>
+<p>The drift is clearly visible from the gyro. But the accelerometer measurements seem to be much more accurate. However it is unclear if Kalman filter improves on the accelerometer measurements with the current <span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span>.</p>
 <figure class="align-default" id="fig-fast-yaw-roll-pitch-6-axis-tuned">
 <img alt="_images/image-40.png" src="_images/image-40.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 29 </span><span class="caption-text">The same data as <a class="reference internal" href="#fig-fast-yaw-roll-pitch-6-axis"><span class="std std-numref">Fig. 28</span></a> but with the kalman filter tuned, with larger <span class="math notranslate nohighlight">\(R\)</span> and smaller <span class="math notranslate nohighlight">\(Q\)</span>, increasing the weighting on the prediction, the gyro data.</span><a class="headerlink" href="#fig-fast-yaw-roll-pitch-6-axis-tuned" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 29 </span><span class="caption-text">The same data as <a class="reference internal" href="#fig-fast-yaw-roll-pitch-6-axis"><span class="std std-numref">Fig. 28</span></a> but with the Kalman filter tuned, with larger <span class="math notranslate nohighlight">\(R\)</span> and smaller <span class="math notranslate nohighlight">\(Q\)</span>, increasing the weighting on the prediction, the gyro data.</span><a class="headerlink" href="#fig-fast-yaw-roll-pitch-6-axis-tuned" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Here the kalman filter has a much better shape for the yaw direction since there is a greater weighting on the prediction meaning oscilaltions from the gyro are much more pronounced in the kalman filter. The kalman filter also still filters out the drift from the gyro data making it a very accurate fit.</p>
+<p>Here the Kalman filter has a much better shape for the yaw direction since there is a greater weighting on the prediction meaning oscillations from the gyro are much more pronounced in the Kalman filter. The Kalman filter also still filters out the drift from the gyro data making it a very accurate fit.</p>
 <figure class="align-default" id="fig-fast-yaw-roll-pitch-6-axis-zoomed">
 <img alt="_images/image-43.png" src="_images/image-43.png" />
 <figcaption>
 <p><span class="caption-number">Fig. 30 </span><span class="caption-text">Zoomed in on the pitch oscillations in <a class="reference internal" href="#fig-fast-yaw-roll-pitch-6-axis"><span class="std std-numref">Fig. 28</span></a>.</span><a class="headerlink" href="#fig-fast-yaw-roll-pitch-6-axis-zoomed" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>There is a problem in the oscillations in all directions are now delayed as the gyroscope is slower to to changes than the accelearometer, hence by putting more faith in the prediction although the fit more accurately resembles the shape of the true data it is slightly delayed.</p>
-<p>The kalman filter is able to filter out some of the noise from the accelarometer data. The accelarometer data is typically noisier than the gyroscope data, so putting more emphasis on the gryoscope will help to filter out noise.</p>
+<p>There is a problem in the oscillations in all directions are now delayed as the gyroscope is slower to to changes than the accelerometer, hence by putting more faith in the prediction although the fit more accurately resembles the shape of the true data it is slightly delayed.</p>
+<p>The Kalman filter is able to filter out some of the noise from the accelerometer data. The accelerometer data is typically noisier than the gyroscope data, so putting more emphasis on the gyroscope will help to filter out noise.</p>
 </section>
 <section id="phone-9-axis-imu">
 <h4>Phone, 9-axis IMU<a class="headerlink" href="#phone-9-axis-imu" title="Link to this heading">#</a></h4>
-<p>Introducing magnetometer measurments means there is 2 measurments for each axis, reducing the total drift.</p>
+<p>Introducing magnetometer measurements means there is 2 measurements for each axis, reducing the total drift.</p>
 <figure class="align-default" id="fig-fast-yaw-roll-pitch">
 <img alt="_images/image-32.png" src="_images/image-32.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 31 </span><span class="caption-text">Fast oscillations in the yaw, roll and pitch directions. The orange line is the measurments from integrating the angular velocities from the gyro and red line is the measuremnts from the magnetometer and accelarometer. The blue line is the kalman filtered attitude which fuses data from the gyroscope and accelarometer/magnetometer.  The black line is the phones own attitude measurments.</span><a class="headerlink" href="#fig-fast-yaw-roll-pitch" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 31 </span><span class="caption-text">Fast oscillations in the yaw, roll and pitch directions. The orange line is the measurements from integrating the angular velocities from the gyro and red line is the measurements from the magnetometer and accelerometer. The blue line is the Kalman filtered attitude which fuses data from the gyroscope and accelerometer/magnetometer.  The black line is the phones own attitude measurements.</span><a class="headerlink" href="#fig-fast-yaw-roll-pitch" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>There is significant drift in the meausmrents from the gyro alone the end measurments from the gyro alone has drifted by approximately <span class="math notranslate nohighlight">\(60^o\)</span> from the true value where as the kalman filter and the magnetometer/accelarometer data are much better fits. Also the amplitude of the measurments oscillations in the roll direction is much smaller than the yaw and pitch directions. This was because its because of the way the phone had to be held.</p>
+<p>There is significant drift in the measurements from the gyro alone the end measurements from the gyro alone has drifted by approximately <span class="math notranslate nohighlight">\(60^o\)</span> from the true value where as the Kalman filter and the magnetometer/accelerometer data are much better fits. Also the amplitude of the measurements oscillations in the roll direction is much smaller than the yaw and pitch directions. This was because its because of the way the phone had to be held.</p>
 <figure class="align-default" id="fig-fast-yaw-roll-pitch-2">
 <img alt="_images/image-34.png" src="_images/image-34.png" />
 <figcaption>
 <p><span class="caption-number">Fig. 32 </span><span class="caption-text">Zoomed in on the yaw oscillations in <a class="reference internal" href="#fig-fast-yaw-roll-pitch"><span class="std std-numref">Fig. 31</span></a>.</span><a class="headerlink" href="#fig-fast-yaw-roll-pitch-2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Here the kalman filter is able to corret for both the drift from the gyro and noise from the magnetometer making it a very good fit for yaw. The is interference with the gyroscope in the pitch direction but the kalman filter sucessfully filters this out.</p>
+<p>Here the Kalman filter is able to correct for both the drift from the gyro and noise from the magnetometer making it a very good fit for yaw. The is interference with the gyroscope in the pitch direction but the Kalman filter successfully filters this out.</p>
 <figure class="align-default" id="id1">
 <img alt="_images/image-35.png" src="_images/image-35.png" />
 <figcaption>
 <p><span class="caption-number">Fig. 33 </span><span class="caption-text">Zoomed in on the pitch oscillations in <a class="reference internal" href="#fig-fast-yaw-roll-pitch"><span class="std std-numref">Fig. 31</span></a>.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>There is interference in the magnetometer/gyroscope measurments but the kalman filter filters this out sucessfully but this does cause drift in the kalman filter measurments. The gyroscope measurments for Pitch are incredably noisy possibly due to oversensitivty of the gyroscope in the phone, but the kalman filter remains a good fit. The Roll direction remains fairly stable.</p>
+<p>There is interference in the magnetometer/gyroscope measurements but the Kalman filter filters this out successfully but this does cause drift in the Kalman filter measurements. The gyroscope measurements for Pitch are incredibly noisy possibly due to oversensitivity of the gyroscope in the phone, but the Kalman filter remains a good fit. The Roll direction remains fairly stable.</p>
 <figure class="align-default" id="id2">
 <img alt="_images/image-36.png" src="_images/image-36.png" />
 <figcaption>
 <p><span class="caption-number">Fig. 34 </span><span class="caption-text">Zoomed in on the roll oscillations in <a class="reference internal" href="#fig-fast-yaw-roll-pitch"><span class="std std-numref">Fig. 31</span></a>.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>For the yaw direction both sets of instruments are indicating the correct shape but there is drift especially in the gyro. There is interference in the pitch direction, again the kalman filter does a good job of filtering this out. Its unclear if the kalman filter has benefitte</p>
+<p>For the yaw direction both sets of instruments are indicating the correct shape but there is drift especially in the gyro. There is interference in the pitch direction, again the Kalman filter does a good job of filtering this out.</p>
 </section>
 </section>
 <section id="full-rotation-yaw">
@@ -547,13 +547,13 @@ m_y^{'} = m_y \cos(\theta^z) - m_x \sin(\theta^z) \sin(\phi^z) + m_z \sin(\theta
 <figure class="align-default" id="fig-full-yaw">
 <img alt="_images/image-37.png" src="_images/image-37.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 35 </span><span class="caption-text">The phone was rotated in a full circle in the yaw direction and then rotated back in the opposite direction. The orange line is the measurments from integrating the angular velocities from the gyro and red line is the measuremnts from the magnetometer and accelarometer. The blue line is the kalman filtered attitude which fuses data from the gyroscope and accelarometer/magnetometer.  The black line is the phones own attitude measurments.</span><a class="headerlink" href="#fig-full-yaw" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 35 </span><span class="caption-text">The phone was rotated in a full circle in the yaw direction and then rotated back in the opposite direction. The orange line is the measurements from integrating the angular velocities from the gyro and red line is the measurements from the magnetometer and accelerometer. The blue line is the Kalman filtered attitude which fuses data from the gyroscope and accelerometer/magnetometer.  The black line is the phones own attitude measurements.</span><a class="headerlink" href="#fig-full-yaw" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>The kalman filter is able to reduce noise in the magnetometer measurments but the gyroscope seems to provide the best fit here. This could be because the magnetometer is overly sensetive. However it is likely that the phone reies more on its gyroscope for measurments of orientation since magnetometer data isn’t as reliable and is sometimes calibrated poorly. Whereas a gyroscope with a small amount of drift will always work.</p>
+<p>The Kalman filter is able to reduce noise in the magnetometer measurements but the gyroscope seems to provide the best fit here. This could be because the magnetometer is overly sensitive. However it’s plausible that the phone reliable more on its gyroscope for measurements of orientation since magnetometer data isn’t as reliable due to additional magnetic fields meaning it can be poorly calibrated. Whereas a gyroscope with a small amount of drift will always work.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>I didn’t have enough time during the placement to test the kalman filter for full rotations.</p>
+<p>I didn’t have enough time during the placement to test the Kalman filter for full rotations.</p>
 </div>
 </section>
 </section>

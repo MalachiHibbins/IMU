@@ -7,7 +7,7 @@ The moving average $\hat{x}_n$ is used to remove noise over a constantly varying
 \hat{x}_n = \frac{z_{n-k+1} + z_{n-k+2}+...+z_n}{k}
 ```
 
-$\hat{x}_n$ can be written recursively as:
+$\hat{x}_n$ can be written recursively as: 
 
 ```{math}
 :label: eq-moving-average-rec

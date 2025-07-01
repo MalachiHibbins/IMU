@@ -8,7 +8,7 @@ The estimated state (the mean om this example) is evaluated as:
 ```
 
 Which can be written recursively as:
-
+ 
 ```{math}
 :label: eq-recursive
 \hat{x}_k = \left(\frac{k-1}{k}\right)\hat{x}_{k-1} + \frac{z_k}{k}
