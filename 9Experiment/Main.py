@@ -61,6 +61,8 @@ def EMAHighPass(signal, alpha): # Exponential Moving Average High Pass
     Args:
         signal (list): The signal to be filtered.
         alpha (float): The smoothing factor determines how quickly weightings of previous terms decay (exponentially)
+    Returns:
+        filtered_signal (list): The high pass filtered signal.
     """
     m_prev = signal[0]
     filtered_signal = [m_prev]
@@ -72,6 +74,12 @@ def EMAHighPass(signal, alpha): # Exponential Moving Average High Pass
     return filtered_signal      
      
 def calculate_magnetometer_angle(m, c=20):
+    """
+    Calculates the magnetometer reading and "zeroes" it by subtracting the offset
+    args:
+    m (np.ndarray): Magnetometer readings in the form of a 2D array with shape (n_samples, 3).
+    c (int): Number of samples to use for offset calculation, default is 20. The mean of these is used as the offset.
+    """
     mx, my, mz = m[:, 0], m[:, 1], m[:, 2]
     theta = -np.arctan2(my, mx)
     offset = theta[:c].mean()
@@ -80,7 +88,7 @@ def calculate_magnetometer_angle(m, c=20):
 
 def diff(x, y):
     """
-    Calculates the difference between two arrays using the cyclic nature of angles between -pi and pi.
+    Calculates the difference true between two arrays considering the cyclic nature of angles between -pi and pi.
     arg:
     - x (float): First array of angles.
     - y (float): Second array of angles.
@@ -97,8 +105,27 @@ def diff(x, y):
     return difference
 
 def kalman_filter(zs, us, x_e, A, B, P, H, Q, R, R_u):
+    """
+    The kalman filter algorithm when zs and x_e are both scalars.
+    Args:
+        zs (list): Measurements (This case: magnetometer angles).
+        us (list): Control inputs (This case: angular velocities).
+        x_e (float): Initial state estimate.
+        A (float): State transition matrix (This case: 1).
+        B (float): Control input matrix (This case: dt).
+        P (float): Initial error covariance.
+        H (float): Measurement matrix (This case: 1).
+        Q (float): Process noise covariance.
+        R (float): Measurement noise covariance, for the correction measurment (this case: magnetometer reading).
+        R_u (float): Measurement noise covariance, for the prediction measurment (this case: angular velocity).
+    returns:
+        x_es (list): List of estimated states after each measurement.
+        P_es (list): List of error covariances after each measurement.
+    
+    """
     x_es = []
     P_es = []
+    
     for z, u in zip(zs, us):
         x = x_e
         # Predict state error
@@ -126,12 +153,14 @@ class AnalysePhone(): #
         - saves the data as attributes of the object.
         Args:
             FolderName (str): Name of the folder containing the sensor data files.
-            q (float): Process noise covariance for the Kalman filter. Default is 10**-1.6.
-            r (float): Measurement noise covariance for the Kalman filter. Default is 10**-1.6.
+            Saved_Params (str): Path to a file containing saved parameters for the filters. If none will use the default parameters. This can be updated using the sliders.
         Returns:
             None
         """
+        
+        
         if Saved_Params is None:
+            # Use default paarameters
             self.alpha_EMAHP = 0.5
             self.alpha_EMALP = 0.5
             self.window_length = 21
@@ -141,6 +170,7 @@ class AnalysePhone(): #
             self.R_m = 0.001
             self.c = 20
         else:
+            # Read parameters from file
             df_params = pd.read_csv(Saved_Params, header=None, index_col=0, sep=':')
             self.alpha_EMAHP = df_params.loc['alpha_EMAHP'].values[0]
             self.alpha_EMALP = df_params.loc['alpha_EMALP'].values[0]
@@ -150,18 +180,21 @@ class AnalysePhone(): #
             self.Q = float(df_params.loc['Q'].values[0])
             self.R = float(df_params.loc['R'].values[0])
             self.R_m = float(df_params.loc['R_u'].values[0])
-            
         
         # get accelarometer data in x,y,z directions
+        # Columns are time, x, y, z, seconds_elapsed
         df_a = pd.read_csv("SensorLoggerData/" + FolderName + "/Gravity.csv", header=0)
         # get gyroscope data in x,y,z directions
+        # Columns are time, x, y, z, seconds_elapsed
         df_w = pd.read_csv("SensorLoggerData/" + FolderName + "/Gyroscope.csv", header=0)
         # Get magnetometer data in x,y,z directions
+        # Columns are time, x, y, z, seconds_elapsed
         df_m = pd.read_csv("SensorLoggerData/" + FolderName + "/Magnetometer.csv", header=0)
         # Get true orientation data in yaw pitch, roll.
+        # Columns are time, yaw, pitch, roll, seconds_elapsed
         df_o = pd.read_csv("SensorLoggerData/" + FolderName + "/Orientation.csv", header=0)
         
-        # drop real time
+        # drop time use seconds_elapsed instead
         df_a.drop(columns=['time'], inplace=True)
         # rename columns to a_x, a_y, a_z for accelerometer data
         df_a = df_a.rename(columns={'x': 'a_x', 'y': 'a_y', 'z': 'a_z'})
@@ -174,7 +207,10 @@ class AnalysePhone(): #
         
         df_o.drop(columns=['time'], inplace=True)
         
-        # Merge dataframes based on nearest seconds_elapsed value, since they exactly aren't the same in each dataframe
+        # Merge dataframes based on nearest seconds_elapsed value, since seconds elapsed isn't the same for each sensor
+        # This is done using pd.merge_asof which merges on the nearest key rather than exact matches.
+        # Done so that when saved the index of each array will match a specific time.
+        # Only merged if within 0.01 seconds
         df_merged = pd.merge_asof(df_w, df_m, on='seconds_elapsed', tolerance=0.01)
         df_merged = pd.merge_asof(df_merged, df_o, on='seconds_elapsed', tolerance=0.01)
         df_merged.dropna(inplace=True)
@@ -199,10 +235,10 @@ class AnalysePhone(): #
         self.theta_integrated_HP = EMAHighPass(self.theta_integrated, self.alpha_EMAHP)
         # LowPass filter on magnetometer data
         self.theta_magnetometer_LP = EMALowPass(self.theta_magnetometer, self.alpha_EMALP)
-        # salvgov filter on integrated data
+        # salvgov filter on magnetometer data
         self.theta_magnetometer_sav = savgol_filter(self.theta_magnetometer, window_length=self.window_length, polyorder=self.poly_order)
         
-        
+        # Create a list of filtered data for plotting
         self.filtered_data = [self.theta_phone, self.theta_magnetometer, self.theta_magnetometer_LP,
                               self.theta_integrated, self.theta_integrated_HP, self.theta_kalman, self.theta_magnetometer_sav]
         self.filtered_data_names = ['Phone, Builtin Filter', 'Magnetometer, No Filter', 'Magnetometer, High Pass Filter',
@@ -210,8 +246,11 @@ class AnalysePhone(): #
         
     def calculate_correlation_matrix(self):
         """
-        - Calculates the correlation matrix of the data.
-        - Returns the correlation matrix as a pandas dataframe.
+        Calculates the correlation matrix between each filter method.
+        Args: 
+            None
+        Returns:
+            df.corr() (pd.DataFrame): A DataFrame containing the correlation coefficients between the different filtered data.
         """
         df = pd.DataFrame({
             'Fusion, KF': self.theta_kalman,
@@ -225,6 +264,13 @@ class AnalysePhone(): #
         return df.corr()
     
     def calculate_MSE(self):
+        """
+        Calcualtes the Mean Squared error between each filter method and the phone's builtin filter.
+        Args: 
+            None
+        Returns:
+            mse_values (pd.Series): A Series containing the mean squared error values for each filter method compared to the phone's builtin filter.
+        """
         df = pd.DataFrame({
             'Fusion, KF': self.theta_kalman,
             'Gyro, None': self.theta_integrated,
@@ -239,14 +285,25 @@ class AnalysePhone(): #
         return mse_values[:-1]
     
     def plot_phone_correlations(self, bar_fig = None, bar_ax = None):
+        """
+        Plots the correlation coefficients squared between the phone's builtin filter and the other filters as a bar graph.
+        Args:
+            bar_fig (matplotlib.figure.Figure): The figure to plot the bar graph on containing graph data. If None, a new figure will be created.
+            bar_ax (matplotlib.axes.Axes): The axes to plot the bar graph on containing graph data. If None, a new axes will be created.
+        Returns:
+            None
+        """
         corr_matrix_squared = ((self.calculate_correlation_matrix())**2)
-        corr_phone_squared = corr_matrix_squared.iloc[-1, :-1]
+        corr_phone_squared = corr_matrix_squared.iloc[-1, :-1] 
+        # Excludes data which is comparing the phones builtin filter to itself or filters which aren't the phones builtin filter
         
+        # When being updated bar_fig and bar_ax will be passed in, otherwise at the start the will be created
         if bar_fig is None or bar_ax is None:
             bar_fig, bar_ax = plt.subplots(figsize=(8, 5))
         else:
             bar_ax.clear()
         
+        # plots data and adds labels
         self.bars = sns.barplot(x=corr_phone_squared.index, y=corr_phone_squared.values, ax=bar_ax, palette=colors[1:])
         bar_ax.set_ylabel('Correlation Coefficient Squared')
         bar_ax.set_xlabel('Filter')
@@ -254,6 +311,13 @@ class AnalysePhone(): #
         bar_fig.tight_layout()
         
     def plot_phone_MSEs(self, bar_fig2 = None, bar_ax2 = None):
+        """
+        Plots the Mean Squared Error between the phone's builtin filter and the other filters as a bar graph.
+        Args:
+            bar_fig2 (matplotlib.figure.Figure): The figure to plot the bar graph on containing graph data. If None, a new figure will be created.
+            bar_ax2 (matplotlib.axes.Axes): The axes to plot the bar graph on containing graph data. If None, a new axes will be created.
+        Returns:
+            None"""
         mse_values = self.calculate_MSE()
         if bar_fig2 is None or bar_ax2 is None:
             bar_fig2, bar_ax2 = plt.subplots(figsize=(8, 5))
@@ -270,7 +334,19 @@ class AnalysePhone(): #
         
         
     def plot_all(self, fig = None, ax = None, alpha = 0.5):
-        R = len(self.filtered_data)
+        """ 
+        - Plots all the filtered data on a single figure with subplots. Plots in a 2 column layout.
+        - Plots each filtered data in a separate subplot with the phone's builtin filter to compare.
+        - Plots others faintly.
+        - Adds sliders so the filtered parameters can be adjusted as the plot updates.
+        Args:
+            fig (matplotlib.figure.Figure): The figure to plot the data on. If None, a new figure will be created.
+            ax (matplotlib.axes.Axes): The axes to plot the data on. If None, a new axes will be created.
+            alpha (float): The transparency of the lines in the plot, default is 0.5.
+        Returns:
+            None
+        """
+        R = len(self.filtered_data) 
         N = R // 2
         self.lines = [None] * R
         length = 2 * N
@@ -311,8 +387,15 @@ class AnalysePhone(): #
         """
         - Updates the data based on the slider values.
         - Recalculates the filtered data and updates the plots.
+        - Redraws the graphs with the new data.
+        Args:
+            None
+        Returns:
+            None
         """
-        self.Q = 10**self.s_logQ.val
+        
+        # Values from sliders
+        self.Q = 10**self.s_logQ.val 
         self.R = 10**self.s_logR_g.val
         self.R_m = 10**self.s_logR_m.val
         self.alpha_EMAHP = self.s_alpha_HP.val
@@ -351,6 +434,15 @@ class AnalysePhone(): #
         
         
     def set_up_sliders(self, fig, length = 0.375, height = 0.03):
+        """
+        Positions the sliders on the figure.
+        Args:
+            fig (matplotlib.figure.Figure): The figure to add the sliders to.
+            length (float): The length of the sliders, default is 0.375.
+            height (float): The height of the sliders, default is 0.03.
+        Returns:
+            None
+        """
         # Left column - moved up a bit
         left = 0.1
         right = 0.55
@@ -364,6 +456,7 @@ class AnalysePhone(): #
         ax_window_length = fig.add_axes([right, 0.07, length, height], facecolor=colors[6])
         ax_poly_order = fig.add_axes([right, 0.03, length, height], facecolor=colors[6])
         
+        # Sets up sliders as attriubtes so thre values can be accessed later
         self.s_logQ = Slider(ax_Q, '$\log(Q)$', -3, 5, valinit=np.log10(self.Q), valstep=0.1)
         self.s_logR_g = Slider(ax_R_g, '$\log(R^g)$', -3, 5, valinit=np.log10(self.R), valstep=0.1)
         self.s_logR_m = Slider(ax_R_m, '$\log(R^m)$', -3, 5, valinit=np.log10(self.R_m), valstep=0.1)
