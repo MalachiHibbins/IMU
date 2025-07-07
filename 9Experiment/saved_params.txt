@@ -1,0 +1,8 @@
+alpha_EMAHP: 0.9400000000000001
+alpha_EMALP: 0
+c: 20
+window_length: 23
+poly_order: 4
+Q: 1.0
+R: 125.89254117941688
+R_u: 10000.0
