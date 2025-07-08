@@ -192,6 +192,7 @@
 <li class="toctree-l1"><a class="reference internal" href="5IMU.html">Attitude using a gyroscope and accelarometer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Position using GPS and Accelarometer data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="7RealData.html">Attitude Using Real Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="8TestingFilters.html">Quantitative Comparison of Kalman Filter Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -392,6 +393,9 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="kalman-filters-and-imu">
 <h1>Kalman Filters and IMU<a class="headerlink" href="#kalman-filters-and-imu" title="Link to this heading">#</a></h1>
+<p>Kalman filters are a optimal estimation algorithm used to predict the true state (a description of the system) from a set of noisy measurements. The Kalman filter uses the current state along with a model, that reflects the physics of the system, to predict the next state. This is then compared with measurements to improve on this prediction. The model in the Kalman filter is dependent on how the system behaves, whereas most filters use the same algorithm with a couple of parameters that are tuned.</p>
+<p>This project aims to</p>
+<p>Pages</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="1AverageFilters.html">Average filters</a></li>
@@ -403,6 +407,7 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="5IMU.html">Attitude using a gyroscope and accelarometer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Position using GPS and Accelarometer data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="7RealData.html">Attitude Using Real Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="8TestingFilters.html">Quantitative Comparison of Kalman Filter Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
 </ul>
 </div>

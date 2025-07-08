@@ -241,8 +241,8 @@ class AnalysePhone(): #
         # Create a list of filtered data for plotting
         self.filtered_data = [self.theta_phone, self.theta_magnetometer, self.theta_magnetometer_LP,
                               self.theta_integrated, self.theta_integrated_HP, self.theta_kalman, self.theta_magnetometer_sav]
-        self.filtered_data_names = ['Phone, Builtin Filter', 'Magnetometer, No Filter', 'Magnetometer, High Pass Filter',
-                                    'Gyro, No Filter', 'Gyro, Low Pass Filter', 'Fusion, Kalman Filter', 'Magnetometer, Savitzky-Golay Filter']
+        self.filtered_data_names = ['Built in Filter', 'Magn, None', 'Magn, EMALPF',
+                                    'Gyro, None', 'Gyro, EMAHPF', 'Fusion, KF', 'Magn, SGF']
         
     def calculate_correlation_matrix(self):
         """
@@ -255,10 +255,10 @@ class AnalysePhone(): #
         df = pd.DataFrame({
             'Fusion, KF': self.theta_kalman,
             'Gyro, None': self.theta_integrated,
-            'Gyro, LPF': self.theta_integrated_HP,
+            'Gyro, HPF': self.theta_integrated_HP,
             'Magn, None': self.theta_magnetometer,
-            'Magn, HPF': self.theta_magnetometer_LP,
-            'Magn, GF': self.theta_magnetometer_sav,
+            'Magn, LPF': self.theta_magnetometer_LP,
+            'Magn, SGF': self.theta_magnetometer_sav,
             'Built in Filters': self.theta_phone
         })
         return df.corr()
@@ -274,10 +274,10 @@ class AnalysePhone(): #
         df = pd.DataFrame({
             'Fusion, KF': self.theta_kalman,
             'Gyro, None': self.theta_integrated,
-            'Gyro, LPF': self.theta_integrated_HP,
+            'Gyro, HPF': self.theta_integrated_HP,
             'Magn, None': self.theta_magnetometer,
-            'Magn, HPF': self.theta_magnetometer_LP,
-            'Magn, GF': self.theta_magnetometer_sav,
+            'Magn, LPF': self.theta_magnetometer_LP,
+            'Magn, SGF': self.theta_magnetometer_sav,
             'Built in Filters': self.theta_phone
         })
         # Calculate MSE between each column and self.theta_phone
@@ -305,6 +305,16 @@ class AnalysePhone(): #
         
         # plots data and adds labels
         self.bars = sns.barplot(x=corr_phone_squared.index, y=corr_phone_squared.values, ax=bar_ax, palette=colors[1:])
+        bar_ax.set_ylim(0, 1.1)
+        
+        for i, p in enumerate(bar_ax.patches):
+            value = corr_phone_squared.values[i]
+            bar_ax.annotate(f'{value:.3f}', 
+                        (p.get_x() + p.get_width() / 2., p.get_height()),
+                        ha = 'center', va = 'bottom',
+                        xytext = (0, 5), textcoords = 'offset points',
+                        fontweight='bold')
+        
         bar_ax.set_ylabel('Correlation Coefficient Squared')
         bar_ax.set_xlabel('Filter')
         plt.setp(bar_ax.get_xticklabels(), rotation=15, ha='right')
@@ -330,6 +340,14 @@ class AnalysePhone(): #
         plt.setp(bar_ax2.get_xticklabels(), rotation=15, ha='right')
         bar_fig2.tight_layout()
         
+        # Adds labels to each of the 
+        for i, p in enumerate(bar_ax2.patches):
+            value = mse_values.values[i]
+            bar_ax2.annotate(f'{value:.5f}', 
+                        (p.get_x() + p.get_width() / 2., p.get_height()),
+                        ha = 'center', va = 'bottom',
+                        xytext = (0, 5), textcoords = 'offset points',
+                        fontweight='bold')
         
         
         
@@ -460,8 +478,8 @@ class AnalysePhone(): #
         self.s_logQ = Slider(ax_Q, '$\log(Q)$', -3, 5, valinit=np.log10(self.Q), valstep=0.1)
         self.s_logR_g = Slider(ax_R_g, '$\log(R^g)$', -3, 5, valinit=np.log10(self.R), valstep=0.1)
         self.s_logR_m = Slider(ax_R_m, '$\log(R^m)$', -3, 5, valinit=np.log10(self.R_m), valstep=0.1)
-        self.s_alpha_HP = Slider(ax_Alpha_HP, '$\\alpha^{LP}$', 0, 1, valinit=self.alpha_EMAHP, valstep=0.02)
-        self.s_alpha_LP = Slider(ax_Alpha_LP, '$\\alpha^{HP}$', 0, 1, valinit=self.alpha_EMALP, valstep=0.02)
+        self.s_alpha_HP = Slider(ax_Alpha_HP, '$\\alpha^{HP}$', 0, 1, valinit=self.alpha_EMAHP, valstep=0.02)
+        self.s_alpha_LP = Slider(ax_Alpha_LP, '$\\alpha^{LP}$', 0, 1, valinit=self.alpha_EMALP, valstep=0.02)
         self.s_window_length = Slider(ax_window_length, '$W$', 3, 51, valinit=self.window_length, valstep=2)
         self.s_poly_order = Slider(ax_poly_order, '$\mathbb{O}$', 1, 5, valinit=self.poly_order, valstep=1)
         

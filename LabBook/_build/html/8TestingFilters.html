@@ -1,0 +1,651 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Quantitative Comparison of Kalman Filter Performance &#8212; Kalman Filters and IMU</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '8TestingFilters';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Bibliography" href="99Bibliography.html" />
+    <link rel="prev" title="Attitude Using Real Data" href="7RealData.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="0Intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Kalman Filters and IMU - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Kalman Filters and IMU - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="0Intro.html">
+                    Kalman Filters and IMU
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="1AverageFilters.html">Average filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2MovingAverageFilters.html">Moving Average filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">Attitude using a gyroscope and accelarometer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Position using GPS and Accelarometer data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7RealData.html">Attitude Using Real Data</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Quantitative Comparison of Kalman Filter Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/MalachiHibbins/IMU" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/MalachiHibbins/IMU/issues/new?title=Issue%20on%20page%20%2F8TestingFilters.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/8TestingFilters.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Quantitative Comparison of Kalman Filter Performance</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filters">Filters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#high-frequency-oscillation-test">High frequency oscillation test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#low-frequency-rotations-test">Low frequency rotations test</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="quantitative-comparison-of-kalman-filter-performance">
+<h1>Quantitative Comparison of Kalman Filter Performance<a class="headerlink" href="#quantitative-comparison-of-kalman-filter-performance" title="Link to this heading">#</a></h1>
+<p>Using two sensors (magnetometer and gyroscope), four filters (a high pass, a low pass, a polynomial fitting and the kalman filter) were used to calculate estimates for the yaw angle, <span class="math notranslate nohighlight">\(\psi\)</span>, of a mobile phone. The results were compared to the data from the phones in built filter. The experiment involved two tests designed to see how the filters perform over a single frequency then a range of frequencies. In the first part of the experiment the phone oscillated with high frequency which the parameters were tuned, to test how the filters performed at a single frequency. The second part of the experiment the phone completed a full rotation at a low frequency without the parameters being re-tuned, to see how the filters responded when not tuned to a specific frequency.</p>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading">#</a></h2>
+<p>Data was recorded using the <a class="reference external" href="https://play.google.com/store/apps/details?id=com.kelvin.sensorapp&amp;amp;hl=en-US&amp;amp;pli=1">sensor logger app</a> allowing the phone to function as a 9-axis IMU. Only <span class="math notranslate nohighlight">\(\psi\)</span> was measured so only gyroscope and magnetometer data were necessary. The correction measurement was calculated using the magnetometer data <span class="math notranslate nohighlight">\(m_x\)</span> and <span class="math notranslate nohighlight">\(m_y\)</span>. <span class="math notranslate nohighlight">\(m_z\)</span> wasn’t required as the IMU was assumed to be in the plane perpendicular to the gravity vector, so didn’t need to be corrected. <span class="math notranslate nohighlight">\(\psi\)</span> was determined using <a class="reference internal" href="7RealData.html#equation-eq-magnetometer">(50)</a>.</p>
+<p>The gyroscope data was integrated using the euler method:</p>
+<div class="math notranslate nohighlight" id="eq-gyroscope-integration">
+<span id="equation-eq-gyroscope-integration"></span><span class="eqno">(52)<a class="headerlink" href="#eq-gyroscope-integration" title="Link to this equation">#</a></span>\[\psi_k \approx \psi_{k-1} + \omega_k \Delta t\]</div>
+<p>This time <span class="math notranslate nohighlight">\(\omega_k\)</span> is the gyroscope measurement of angular velocity at time <span class="math notranslate nohighlight">\(k\)</span> in the <span class="math notranslate nohighlight">\(z\)</span> direction. This formed the prediction measurement. The form required by the Kalman filter is <span class="math notranslate nohighlight">\(\hat{x}^-_k = A\hat{x}_{k-1} + Bu_k\)</span>. So <span class="math notranslate nohighlight">\(A = 1\)</span> and <span class="math notranslate nohighlight">\(B = dt\)</span> and <span class="math notranslate nohighlight">\(u_k = \omega_k\)</span>. The state to measurement matrix <span class="math notranslate nohighlight">\(H = 1\)</span> since <span class="math notranslate nohighlight">\(z_k\)</span> and <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> are both the yaw angle.</p>
+<p>The code for this section can be found in <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/7IMUReal">github</a>. The programme comprises of one file <code class="docutils literal notranslate"><span class="pre">Main.py</span></code>. Each of the filters is written as a separate function and can be analyzed using the <code class="docutils literal notranslate"><span class="pre">AnalysePhone</span></code> class, which contains methods to generate interactive plots.</p>
+</section>
+<section id="filters">
+<h2>Filters<a class="headerlink" href="#filters" title="Link to this heading">#</a></h2>
+<p>The following filters were compared as well as unfiltered data from the gyroscope and the magnetometer:</p>
+<p><strong>Kalman Filter</strong> (KF): A standard Kalman filter which <strong>fused</strong> data from the magnetometer with gyroscope data with a constant process noise covariance and measurement noise covariance. The tuning parameters were:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(Q\)</span>: Process noise covariance.</p></li>
+<li><p><span class="math notranslate nohighlight">\(R^m\)</span>: Measurement noise covariance for the magnetometer measurements.</p></li>
+<li><p><span class="math notranslate nohighlight">\(R^g\)</span>: Measurement noise covariance for the gyroscope measurements.</p></li>
+</ul>
+<p><strong><a class="reference internal" href="#EMAHP.md"><span class="xref myst">Exponential Moving Average Low Pass Filter</span></a></strong> (EMAHPF): Was applied to the <strong>magnetometer</strong> data where the Where <span class="math notranslate nohighlight">\(\alpha^{HP}\)</span> is the tuning parameter, to reduce noise.</p>
+<p><strong>Exponential Moving Average High Pass Filter</strong> (EMAHPF): Was applied to <strong>gyroscope data</strong> to cutout integration drift (low frequency). <span class="math notranslate nohighlight">\(\alpha^{LP}\)</span> was the tuning parameter.</p>
+<p><strong>Savitzky-Golay Filter</strong> (SGF): Was applied to the <strong>magnetometer data</strong> to help mitigate random noise. It has the following parameters:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(W\)</span>: The length of the filter window.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbb{O}\)</span>: The order of the polynomial used to fit the samples.
+The SGF works by fitting a polynomial of order <span class="math notranslate nohighlight">\(\mathbb{O}\)</span> to a window of length <span class="math notranslate nohighlight">\(W\)</span>. The center of the window is the fitted value.</p></li>
+</ul>
+</section>
+<section id="results">
+<h2>Results<a class="headerlink" href="#results" title="Link to this heading">#</a></h2>
+<section id="high-frequency-oscillation-test">
+<h3>High frequency oscillation test<a class="headerlink" href="#high-frequency-oscillation-test" title="Link to this heading">#</a></h3>
+<p>The phone was initially held in a fixed position for around 5 seconds then oscillated at a high frequency for around <span class="math notranslate nohighlight">\(20\)</span> s, each of the filters was tuned to optimise the fit.</p>
+<figure class="align-default" id="high-freq-oscillation">
+<img alt="_images/image-44.png" src="_images/image-44.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 36 </span><span class="caption-text">Shows the signal used and gives an overview of the results and compares the phones own filters against the filters described above. Tuning parameters were set below.</span><a class="headerlink" href="#high-freq-oscillation" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#high-freq-oscillation"><span class="std std-numref">Fig. 36</span></a> shows integration drift is visible in the unfiltered gyroscope data. But all other filters seem to be a good fit from a distance.</p>
+<figure class="align-default" id="high-freq-oscillation-zoomed">
+<img alt="_images/image-45.png" src="_images/image-45.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 37 </span><span class="caption-text">Zoomed in view of the final few oscillations of the high frequency oscillation experiment with a visually optimized fit.</span><a class="headerlink" href="#high-freq-oscillation-zoomed" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#high-freq-oscillation-zoomed"><span class="std std-numref">Fig. 37</span></a> shows the there is integration drift from the unfiltered gyroscope data but not with the EMAHPF since the drift is low-frequency. The magnetometer measurments are lagging behind the true signal which also effects the EMALPF and SGF. Surprisingly the Kalman filter isn’t lagged as it relies heavily on the gyroscope measurements. The Kalman filter assumes a large amount of noise in the magnetometer, <span class="math notranslate nohighlight">\(R_m\)</span>, two orders of magnitude larger than <span class="math notranslate nohighlight">\(R_g\)</span>. There is also a small amount of linear process noise.</p>
+<figure class="align-default" id="high-freq-oscillation-zoomed-flat">
+<img alt="_images/image-46.png" src="_images/image-46.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 38 </span><span class="caption-text">Zoomed in view of the flat proportion of the graph, at the beginning.</span><a class="headerlink" href="#high-freq-oscillation-zoomed-flat" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#high-freq-oscillation-zoomed-flat"><span class="std std-numref">Fig. 38</span></a> shows the noisiest sensor is the magnetometer. The SGF reduces some of this noise. The EMALPF actually made the fit worse since the noise from the magnetometer was significantly less significant than its lag, which applying a low-pass filter actually worsened.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><span class="math notranslate nohighlight">\(R^2\)</span> measures the pattern-matching ability of the filter and is sensitive to phase shifts.
+MSE (mean squared error) measures absolute accuracy and heavily penalizes large errors due to squaring.</p>
+</div>
+<figure class="align-default" id="fig-correlation-coefficient">
+<img alt="_images/image-47.png" src="_images/image-47.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 39 </span><span class="caption-text">Correlation coefficient squared, <span class="math notranslate nohighlight">\(R^2\)</span> for each of the filters against the phones built in filter.</span><a class="headerlink" href="#fig-correlation-coefficient" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>None of the measurements using the magnetometer perform well. The best of the magnetometer measurements is the SGF, as it removes a small amount of noise and doesn’t cause significant lag. <a class="reference internal" href="#fig-correlation-coefficient"><span class="std std-numref">Fig. 39</span></a> suggests that the EMALPF fits the shape the best on the gyro data than the fused KF did, likely a result of lagging magnetometer data which wasn’t corrected for.</p>
+<figure class="align-default" id="fig-mean-squared-error">
+<img alt="_images/image-48.png" src="_images/image-48.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 40 </span><span class="caption-text">MSE for each of the filters against the phones builtin filter for the first test.</span><a class="headerlink" href="#fig-mean-squared-error" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Conversely <a class="reference internal" href="#fig-mean-squared-error"><span class="std std-numref">Fig. 40</span></a> suggests that KF has a more accurate fit. This suggests that EMALPF fits the shape of the data better than KF but KF is on average more accurate.</p>
+</section>
+<section id="low-frequency-rotations-test">
+<h3>Low frequency rotations test<a class="headerlink" href="#low-frequency-rotations-test" title="Link to this heading">#</a></h3>
+<p>The phone was held still for around <span class="math notranslate nohighlight">\(8\)</span>s and then was rotated a full circle over the space of the next <span class="math notranslate nohighlight">\(15\)</span>s. The tuning parameters for this experiment are those given in <a class="reference internal" href="#high-freq-oscillation"><span class="std std-numref">Fig. 36</span></a>.</p>
+<figure class="align-default" id="fig-low-frequency-rotations">
+<img alt="_images/image-49.png" src="_images/image-49.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 41 </span><span class="caption-text">Comparison of the phones own filters against the filters described above. With tuning parameters the same as <a class="reference internal" href="#high-freq-oscillation"><span class="std std-numref">Fig. 36</span></a>.</span><a class="headerlink" href="#fig-low-frequency-rotations" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#fig-low-frequency-rotations"><span class="std std-numref">Fig. 41</span></a> shows that all filters are a good fit for the data except the EMAHPF which filters out the low frequencies even if they are not related to noise, in this case the slow rotation.</p>
+<figure class="align-default" id="fig-low-frequency-rotations-zoom">
+<img alt="_images/image-50.png" src="_images/image-50.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 42 </span><span class="caption-text">Zooming in on the last couple of seconds of <a class="reference internal" href="#fig-low-frequency-rotations"><span class="std std-numref">Fig. 41</span></a>.</span><a class="headerlink" href="#fig-low-frequency-rotations-zoom" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#fig-low-frequency-rotations-zoom"><span class="std std-numref">Fig. 42</span></a> shows that there has been some drift from all the filters away from the true yaw. But the Kalman filter is closest to the true value. As expected the gyro produces a much smoother fit compared to the magnetometer. Applying a low pass filter to the magnetometer data would make the fit for gyro data better but this would result in some of the higher frequencies being lost which will result in a worse fit for the first test.</p>
+<figure class="align-default" id="r-squared-test2">
+<img alt="_images/image-51.png" src="_images/image-51.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 43 </span><span class="caption-text"><span class="math notranslate nohighlight">\(R^2\)</span> for each of the filters against the phones built in filter.</span><a class="headerlink" href="#r-squared-test2" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#r-squared-test2"><span class="std std-numref">Fig. 43</span></a> shows the Kalman filter produced the best fit as did all the other filters except the EMAHPF which had a very poor fit. The magnetometer data gave a much better fit in these examples compared to the previous test as the oscillations are significantly slower, the lag is less significant. In general the second signal is much easier to fit than the first.</p>
+<figure class="align-default" id="mse-test-2">
+<img alt="_images/image-52.png" src="_images/image-52.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 44 </span><span class="caption-text">MSE for each of the filters against the phones builtin filter for the second test.</span><a class="headerlink" href="#mse-test-2" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#mse-test-2"><span class="std std-numref">Fig. 44</span></a> indicates the same as <a class="reference internal" href="#r-squared-test2"><span class="std std-numref">Fig. 43</span></a>, the Kalman filter still provides a marginally better fit than the other filters. The EMAHPF, which had the best fit in the first test now has by far the worst fit as discussed earlier.</p>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>Frequency based filters, like the EMAHPF and EMALPF work well for signals which are oscillating at a constant or near constant frequency, especially when there is only one sensor available. However they work less well for a signal made up from a range of different frequencies, like real world motion. Kalman filters work well in this situation as the combination of measurements minimizes noise from both sensors (which are subject to different types of noise) to achieve a reasonably accurate state estimate, without ignoring any specific frequency data. The parameters of the KF are independent of frequency whereas the EMAHPF and EMALPF have frequency dependent tuning parameters.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="7RealData.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Attitude Using Real Data</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="99Bibliography.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bibliography</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filters">Filters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#high-frequency-oscillation-test">High frequency oscillation test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#low-frequency-rotations-test">Low frequency rotations test</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Malachi Hibbins
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

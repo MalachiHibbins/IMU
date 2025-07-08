@@ -13,4 +13,5 @@ chapters:
 - file: 5IMU
 - file: 6ExtendedKalman
 - file: 7RealData
+- file: 8TestingFilters
 - file: 99Bibliography
