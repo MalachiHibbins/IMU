@@ -1,8 +1,8 @@
-# Attitude using a gyroscope and accelarometer 
-This section involves calculating the attitude of an object (yaw-pitch-roll), using real world sensor data. Firstly using the gyroscope to measure the angular velocitiy and then using Eulers method for integration to obtain a prediction for the attitude, then improving this using a kalman filter, however this estimate drifts and becomes less accurate over time. To improve it we implement sensor fusion using our kalman filter, which combines gyroscope data with accelarometer data.
+# 5 Example: Attitude using a gyroscope and accelerometer  
+This section involves calculating the attitude of an object (yaw-pitch-roll), using real world sensor data. Firstly using the gyroscope to measure the angular velocity and then using Euler's method for integration to obtain a prediction for the attitude, then improving this using a kalman filter, however this estimate drifts and becomes less accurate over time. To improve it we implement sensor fusion using our kalman filter, which combines gyroscope data with accelerometer data.
 
 
-## Eulers method
+## 5.1 Euler's method
 Using gyroscope (measures angular velocity, $\boldsymbol{\omega}$) and knowing the attitude at $t_0$ it is possible to determine the attitude of a craft at $t_k$. The relationship between the body angular velocity $\boldsymbol{\omega} = (\omega_1, \omega_2, \omega_3)$ and the time derivatives of the Euler angles $\boldsymbol{\alpha} = (\psi, \theta, \phi)$ in the 3-2-1 (yaw-pitch-roll) sequence is given by the kinematic differential equation (KDE) below:
 
 ```{margin}
@@ -84,7 +84,7 @@ Overall the attitude $\boldsymbol{\alpha}_k$ follows the generic shape of the tr
 
 Drift is caused by the error associated with the numerical integration accumulating over time. The unexpected oscillations are likely from the gyroscope being sensetive to noise. Furthermore the oscillations could be coupled meaning small oscillations in one direction can be amplified in another.
 
-## Kalman filters
+## 5.2 Kalman filters
 
 To improve our model we could use a kalman filter. However there is a problem as its not possible to put our update equation {eq}`euler-method2` into the form required for the kalman filter {eq}`projection`. To fix this we will need to write $\phi$, $\theta$ and $\phi$ in terms of euler parameters.
 
@@ -163,7 +163,7 @@ The euler method for calcualting attitude alongside the kalman filtered example 
 
 This kalman filter example hasn't improved the fit. The integration drift hasn't been corrected for. This is because the measurment in this case didn't contain any corrective information so didn't correct for drift. **The only difference the kalman filter makes in this case is it puts a greater emphasis on previous measurments**. To improve on this fit we could use a sensor which is less suceptible to drift and combine the set of measurments using sensor fusion.
 
-## Kalman filters with sensor fusion
+## 5.3 Kalman filters with sensor fusion
 Sensor fusion involves combining different sensors to get a better estimate. A typical six axis IMU will contain a gyroscope and a accelarometer. Accelarometer data is generally much noisier than gyroscope data but is not suceptible to drift as it gives a direct measurment of the accelaration as it is a direct measurment. By combining these we hope to produce a filtered signal with less noise than the accelarometer and no drift. 
 
 ### Accelarometer Data
@@ -258,7 +258,7 @@ Zoomed in {numref}`Tuning`. $\phi_a$ represents $\phi$ measured from accelaromet
 {numref}`Tuning` and {numref}`TuningZoomed` show the kalman filter has produced a very good fit. The filtered signal appears both noise, drift and delay free.
 
 
-## Summary
+## 5.4 Summary
 Lets compare all three filters side by side.
 ```{figure} Comparison3.png
 :name: fig-comparison3

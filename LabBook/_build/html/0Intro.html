@@ -62,7 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '0Intro';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Average filters" href="1AverageFilters.html" />
+    <link rel="next" title="1 Basics Of Filtering" href="1FilterBasics.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -183,16 +183,14 @@
             </li>
         </ul>
         <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="1AverageFilters.html">Average filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2MovingAverageFilters.html">Moving Average filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Battery output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="5IMU.html">Attitude using a gyroscope and accelarometer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Position using GPS and Accelarometer data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="7RealData.html">Attitude Using Real Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="8TestingFilters.html">Quantitative Comparison of Kalman Filter Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1FilterBasics.html">1 Basics Of Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">2 Kalman filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">3 Example: Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">4 Example: Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">5 Example: Attitude using a gyroscope and accelerometer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">6 Example : Position using GPS and accelerometer data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7RealData.html">7 Experiment: Attitude Using a 6/9 axis IMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="8TestingFilters.html">8 Experiment: Quantitative Comparison of Kalman Filter Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -409,16 +407,14 @@ document.write(`
 <h2>Contents<a class="headerlink" href="#contents" title="Link to this heading">#</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="1AverageFilters.html">Average filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2MovingAverageFilters.html">Moving Average filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Battery output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="5IMU.html">Attitude using a gyroscope and accelarometer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Position using GPS and Accelarometer data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="7RealData.html">Attitude Using Real Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="8TestingFilters.html">Quantitative Comparison of Kalman Filter Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1FilterBasics.html">1 Basics Of Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">2 Kalman filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">3 Example: Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">4 Example: Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">5 Example: Attitude using a gyroscope and accelerometer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">6 Example : Position using GPS and accelerometer data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7RealData.html">7 Experiment: Attitude Using a 6/9 axis IMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="8TestingFilters.html">8 Experiment: Quantitative Comparison of Kalman Filter Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
 </ul>
 </div>
@@ -456,11 +452,11 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="right-next"
-       href="1AverageFilters.html"
+       href="1FilterBasics.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Average filters</p>
+        <p class="prev-next-title">1 Basics Of Filtering</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

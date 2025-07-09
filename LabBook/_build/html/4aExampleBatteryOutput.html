@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Battery output &#8212; Kalman Filters and IMU</title>
+    <title>3 Example: Battery output &#8212; Kalman Filters and IMU</title>
   
   
   
@@ -62,8 +62,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '4aExampleBatteryOutput';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Velocity from position" href="4bExampleVelocityFromPosition.html" />
-    <link rel="prev" title="Kalman filters" href="4KalmanFilters.html" />
+    <link rel="next" title="4 Example: Velocity from position" href="4bExampleVelocityFromPosition.html" />
+    <link rel="prev" title="2 Kalman filters" href="4KalmanFilters.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -177,20 +177,19 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="0Intro.html">
-                    Kalman Filters and IMU
+                    Intro
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="1AverageFilters.html">Average filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2MovingAverageFilters.html">Moving Average filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Battery output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="5IMU.html">Attitude using a gyroscope and accelarometer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Position using GPS and Accelarometer data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="7RealData.html">Attitude Using Real Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1FilterBasics.html">1 Basics Of Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">2 Kalman filters</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">3 Example: Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">4 Example: Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">5 Example: Attitude using a gyroscope and accelerometer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">6 Example : Position using GPS and accelerometer data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7RealData.html">7 Experiment: Attitude Using a 6/9 axis IMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="8TestingFilters.html">8 Experiment: Quantitative Comparison of Kalman Filter Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -377,7 +376,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Battery output</h1>
+    <h1>3 Example: Battery output</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -387,8 +386,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">3.1 Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">3.2 Testing</a></li>
 </ul>
             </nav>
         </div>
@@ -400,39 +399,40 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="battery-output">
-<h1>Battery output<a class="headerlink" href="#battery-output" title="Link to this heading">#</a></h1>
-<p>This example looks at how a kalman filter can be used to fit a constant signal in this case the output from a battery. The aim of this simple example is to experiment with changing the kalman parameters <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(H\)</span>, <span class="math notranslate nohighlight">\(Q\)</span>, <span class="math notranslate nohighlight">\(R\)</span>, <span class="math notranslate nohighlight">\(\hat{x}_0\)</span> and <span class="math notranslate nohighlight">\(P_0\)</span>.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="example-battery-output">
+<h1>3 Example: Battery output<a class="headerlink" href="#example-battery-output" title="Link to this heading">#</a></h1>
+<p>This example looks at how a Kalman filter can be used to fit a constant signal in this case the output from a battery. The aim of this simple example is to experiment with changing the Kalman parameters <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(H\)</span>, <span class="math notranslate nohighlight">\(Q\)</span>, <span class="math notranslate nohighlight">\(R\)</span>, <span class="math notranslate nohighlight">\(\hat{x}_0\)</span> and <span class="math notranslate nohighlight">\(P_0\)</span>.</p>
 <section id="model">
-<h2>Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h2>
+<h2>3.1 Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(\hat{x}\)</span> is the voltage since thats what we are estimating, <span class="math notranslate nohighlight">\(n = 1\)</span>,</p></li>
 <li><p><span class="math notranslate nohighlight">\(z\)</span> is the voltage which is what we are measuring, <span class="math notranslate nohighlight">\(m=1\)</span>
 In this very simple example <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(H\)</span>, <span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span> are all scalars since <span class="math notranslate nohighlight">\(m=n=1\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(A=1\)</span> the battery output is constant which means <span class="math notranslate nohighlight">\(x_{k+1}\)</span> = <span class="math notranslate nohighlight">\(x_k\)</span> comparing with <a class="reference internal" href="4KalmanFilters.html#equation-projection">(29)</a> shows <span class="math notranslate nohighlight">\(A = 1\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(Q = 0\)</span> In this case the noisy signal is generated by just adding gaussian noise to a fixed value hence we would expect <span class="math notranslate nohighlight">\(w_k=0\)</span> which means <span class="math notranslate nohighlight">\(Q=0\)</span> from <a class="reference internal" href="4KalmanFilters.html#equation-eq-process-noise-cov">(12)</a> i.e. the model is perfect. In reality the battery voltage may vary for reasons other than random variation.</p></li>
-<li><p><span class="math notranslate nohighlight">\(H = 1\)</span> since estimate corresponds directly to measurment from <a class="reference internal" href="4KalmanFilters.html#equation-eq-h-calculate">(11)</a> we can evaluate <span class="math notranslate nohighlight">\(H\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(A=1\)</span> the battery output is constant which means <span class="math notranslate nohighlight">\(x_{k+1}\)</span> = <span class="math notranslate nohighlight">\(x_k\)</span> comparing with <a class="reference internal" href="4KalmanFilters.html#equation-projection">(32)</a> shows <span class="math notranslate nohighlight">\(A = 1\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(Q = 0\)</span> In this case the noisy signal is generated by just adding gaussian noise to a fixed value hence we would expect <span class="math notranslate nohighlight">\(w_k=0\)</span> which means <span class="math notranslate nohighlight">\(Q=0\)</span> from <a class="reference internal" href="4KalmanFilters.html#equation-eq-process-noise-cov">(15)</a> i.e. the model is perfect. In reality the battery voltage may vary for reasons other than random variation.</p></li>
+<li><p><span class="math notranslate nohighlight">\(H = 1\)</span> since estimate corresponds directly to measurement from <a class="reference internal" href="4KalmanFilters.html#equation-eq-h-calculate">(14)</a> we can evaluate <span class="math notranslate nohighlight">\(H\)</span>.</p></li>
 <li><p><span class="math notranslate nohighlight">\(R = 4\)</span> initially but was determined through tuning.</p></li>
 <li><p><span class="math notranslate nohighlight">\(x_0\)</span> was set to 5</p></li>
 <li><p><span class="math notranslate nohighlight">\(P_0\)</span> was set to 1</p></li>
 </ul>
 </section>
 <section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
+<h2>3.2 Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
+<p>The code for this example can be found <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/4aSimpleKalman">here</a>. The code is broken up into 3 files: <code class="docutils literal notranslate"><span class="pre">GenTestSig.py</span></code> which generates the true signal (a constant value) and adds gaussian noise to it; <code class="docutils literal notranslate"><span class="pre">SimpleKalman.py</span></code> contains the algorithm for the kalman filter for the 1D case; and <code class="docutils literal notranslate"><span class="pre">TestWidget.py</span></code> which plots the results, with a widget so you can edit the Kalman Parameters.</p>
 <figure class="align-default" id="fig-kalman-constant">
 <img alt="_images/image-2.png" src="_images/image-2.png" />
 <figcaption>
 <p><span class="caption-number">Fig. 8 </span><span class="caption-text">Kalman filter used to fit a non-varying signal with a large amount of noise.</span><a class="headerlink" href="#fig-kalman-constant" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#fig-kalman-constant"><span class="std std-numref">Fig. 8</span></a> shows the rate of convergence is exponentially fast and much more smooth than the average filter. This makes sence as the prediction phase means of the kalman filter makes it less suceptible to noise.</p>
+<p><a class="reference internal" href="#fig-kalman-constant"><span class="std std-numref">Fig. 8</span></a> shows the rate of convergence is exponentially fast and much more smooth than the average filter. This makes sence as the prediction phase means of the Kalman filter makes it less susceptible to noise.</p>
 <figure class="align-default" id="fig-small-r">
 <img alt="_images/image-3.png" src="_images/image-3.png" />
 <figcaption>
 <p><span class="caption-number">Fig. 9 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant"><span class="std std-numref">Fig. 8</span></a> but with smaller <span class="math notranslate nohighlight">\(R\)</span>.</span><a class="headerlink" href="#fig-small-r" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#fig-small-r"><span class="std std-numref">Fig. 9</span></a> shows smaller <span class="math notranslate nohighlight">\(R\)</span> makes the rate of convergence faster but after 500 samples it is further from the mean than when <span class="math notranslate nohighlight">\(R=4\)</span>. This is because smaller <span class="math notranslate nohighlight">\(R\)</span> means the kalman filter trusts measurments over the prediction.</p>
+<p><a class="reference internal" href="#fig-small-r"><span class="std std-numref">Fig. 9</span></a> shows smaller <span class="math notranslate nohighlight">\(R\)</span> makes the rate of convergence faster but after 500 samples it is further from the mean than when <span class="math notranslate nohighlight">\(R=4\)</span>. This is because smaller <span class="math notranslate nohighlight">\(R\)</span> means the Kalman filter trusts measurements over the prediction.</p>
 <figure class="align-default" id="fig-larger-r">
 <img alt="_images/image-4.png" src="_images/image-4.png" />
 <figcaption>
@@ -446,14 +446,14 @@ In this very simple example <span class="math notranslate nohighlight">\(A\)</sp
 <p><span class="caption-number">Fig. 11 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant"><span class="std std-numref">Fig. 8</span></a> with H set to <span class="math notranslate nohighlight">\(1.115\)</span> rather than <span class="math notranslate nohighlight">\(1\)</span></span><a class="headerlink" href="#figu-kalman-wrong-h" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Varying H will lead to the kalman filter converging to the wrong value since the measurement directly measures the state only satisfied by <span class="math notranslate nohighlight">\(H = 1\)</span>.</p>
+<p>Varying H will lead to the Kalman filter converging to the wrong value since the measurement directly measures the state only satisfied by <span class="math notranslate nohighlight">\(H = 1\)</span>.</p>
 <figure class="align-default" id="fig-kalman-a-1004">
 <img alt="_images/image-6.png" src="_images/image-6.png" />
 <figcaption>
 <p><span class="caption-number">Fig. 12 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant"><span class="std std-numref">Fig. 8</span></a> with <span class="math notranslate nohighlight">\(A\)</span> set to 1.004 rather than 1.</span><a class="headerlink" href="#fig-kalman-a-1004" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>This causes the kalman filter to diverge since only <span class="math notranslate nohighlight">\(A=1\)</span> describes a straight line. It diverges quickly since <span class="math notranslate nohighlight">\(Q=0\)</span> puts more weighting on <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> compared to <span class="math notranslate nohighlight">\(\hat{z_k}\)</span>.</p>
+<p>This causes the Kalman filter to diverge since only <span class="math notranslate nohighlight">\(A=1\)</span> describes a straight line. It diverges quickly since <span class="math notranslate nohighlight">\(Q=0\)</span> puts more weighting on <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> compared to <span class="math notranslate nohighlight">\(\hat{z_k}\)</span>.</p>
 <figure class="align-default" id="fig-kalman-q-0817">
 <img alt="_images/image-7.png" src="_images/image-7.png" />
 <figcaption>
@@ -504,7 +504,7 @@ In this very simple example <span class="math notranslate nohighlight">\(A\)</sp
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Kalman filters</p>
+        <p class="prev-next-title">2 Kalman filters</p>
       </div>
     </a>
     <a class="right-next"
@@ -512,7 +512,7 @@ In this very simple example <span class="math notranslate nohighlight">\(A\)</sp
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Velocity from position</p>
+        <p class="prev-next-title">4 Example: Velocity from position</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -532,8 +532,8 @@ In this very simple example <span class="math notranslate nohighlight">\(A\)</sp
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">3.1 Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">3.2 Testing</a></li>
 </ul>
   </nav></div>
 

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Quantitative Comparison of Kalman Filter Performance &#8212; Kalman Filters and IMU</title>
+    <title>8 Experiment: Quantitative Comparison of Kalman Filter Performance &#8212; Kalman Filters and IMU</title>
   
   
   
@@ -63,7 +63,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Bibliography" href="99Bibliography.html" />
-    <link rel="prev" title="Attitude Using Real Data" href="7RealData.html" />
+    <link rel="prev" title="7 Experiment: Attitude Using a 6/9 axis IMU" href="7RealData.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -177,21 +177,19 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="0Intro.html">
-                    Kalman Filters and IMU
+                    Intro
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="1AverageFilters.html">Average filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2MovingAverageFilters.html">Moving Average filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="3LowPassFilters.html">Low Pass filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Battery output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="5IMU.html">Attitude using a gyroscope and accelarometer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Position using GPS and Accelarometer data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="7RealData.html">Attitude Using Real Data</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Quantitative Comparison of Kalman Filter Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1FilterBasics.html">1 Basics Of Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">2 Kalman filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">3 Example: Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">4 Example: Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">5 Example: Attitude using a gyroscope and accelerometer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Example 6: Position using GPS and accelerometer data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7RealData.html">7 Experiment: Attitude Using a 6/9 axis IMU</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">8 Experiment: Quantitative Comparison of Kalman Filter Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -378,7 +376,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Quantitative Comparison of Kalman Filter Performance</h1>
+    <h1>8 Experiment: Quantitative Comparison of Kalman Filter Performance</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -407,15 +405,15 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="quantitative-comparison-of-kalman-filter-performance">
-<h1>Quantitative Comparison of Kalman Filter Performance<a class="headerlink" href="#quantitative-comparison-of-kalman-filter-performance" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="experiment-quantitative-comparison-of-kalman-filter-performance">
+<h1>8 Experiment: Quantitative Comparison of Kalman Filter Performance<a class="headerlink" href="#experiment-quantitative-comparison-of-kalman-filter-performance" title="Link to this heading">#</a></h1>
 <p>Using two sensors (magnetometer and gyroscope), four filters (a high pass, a low pass, a polynomial fitting and the kalman filter) were used to calculate estimates for the yaw angle, <span class="math notranslate nohighlight">\(\psi\)</span>, of a mobile phone. The results were compared to the data from the phones in built filter. The experiment involved two tests designed to see how the filters perform over a single frequency then a range of frequencies. In the first part of the experiment the phone oscillated with high frequency which the parameters were tuned, to test how the filters performed at a single frequency. The second part of the experiment the phone completed a full rotation at a low frequency without the parameters being re-tuned, to see how the filters responded when not tuned to a specific frequency.</p>
 <section id="implementation">
 <h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading">#</a></h2>
-<p>Data was recorded using the <a class="reference external" href="https://play.google.com/store/apps/details?id=com.kelvin.sensorapp&amp;amp;hl=en-US&amp;amp;pli=1">sensor logger app</a> allowing the phone to function as a 9-axis IMU. Only <span class="math notranslate nohighlight">\(\psi\)</span> was measured so only gyroscope and magnetometer data were necessary. The correction measurement was calculated using the magnetometer data <span class="math notranslate nohighlight">\(m_x\)</span> and <span class="math notranslate nohighlight">\(m_y\)</span>. <span class="math notranslate nohighlight">\(m_z\)</span> wasn’t required as the IMU was assumed to be in the plane perpendicular to the gravity vector, so didn’t need to be corrected. <span class="math notranslate nohighlight">\(\psi\)</span> was determined using <a class="reference internal" href="7RealData.html#equation-eq-magnetometer">(50)</a>.</p>
+<p>Data was recorded using the <a class="reference external" href="https://play.google.com/store/apps/details?id=com.kelvin.sensorapp&amp;amp;hl=en-US&amp;amp;pli=1">sensor logger app</a> allowing the phone to function as a 9-axis IMU. Only <span class="math notranslate nohighlight">\(\psi\)</span> was measured so only gyroscope and magnetometer data were necessary. The correction measurement was calculated using the magnetometer data <span class="math notranslate nohighlight">\(m_x\)</span> and <span class="math notranslate nohighlight">\(m_y\)</span>. <span class="math notranslate nohighlight">\(m_z\)</span> wasn’t required as the IMU was assumed to be in the plane perpendicular to the gravity vector, so didn’t need to be corrected. <span class="math notranslate nohighlight">\(\psi\)</span> was determined using <a class="reference internal" href="7RealData.html#equation-eq-magnetometer">(53)</a>.</p>
 <p>The gyroscope data was integrated using the euler method:</p>
 <div class="math notranslate nohighlight" id="eq-gyroscope-integration">
-<span id="equation-eq-gyroscope-integration"></span><span class="eqno">(52)<a class="headerlink" href="#eq-gyroscope-integration" title="Link to this equation">#</a></span>\[\psi_k \approx \psi_{k-1} + \omega_k \Delta t\]</div>
+<span id="equation-eq-gyroscope-integration"></span><span class="eqno">(55)<a class="headerlink" href="#eq-gyroscope-integration" title="Link to this equation">#</a></span>\[\psi_k \approx \psi_{k-1} + \omega_k \Delta t\]</div>
 <p>This time <span class="math notranslate nohighlight">\(\omega_k\)</span> is the gyroscope measurement of angular velocity at time <span class="math notranslate nohighlight">\(k\)</span> in the <span class="math notranslate nohighlight">\(z\)</span> direction. This formed the prediction measurement. The form required by the Kalman filter is <span class="math notranslate nohighlight">\(\hat{x}^-_k = A\hat{x}_{k-1} + Bu_k\)</span>. So <span class="math notranslate nohighlight">\(A = 1\)</span> and <span class="math notranslate nohighlight">\(B = dt\)</span> and <span class="math notranslate nohighlight">\(u_k = \omega_k\)</span>. The state to measurement matrix <span class="math notranslate nohighlight">\(H = 1\)</span> since <span class="math notranslate nohighlight">\(z_k\)</span> and <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> are both the yaw angle.</p>
 <p>The code for this section can be found in <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/7IMUReal">github</a>. The programme comprises of one file <code class="docutils literal notranslate"><span class="pre">Main.py</span></code>. Each of the filters is written as a separate function and can be analyzed using the <code class="docutils literal notranslate"><span class="pre">AnalysePhone</span></code> class, which contains methods to generate interactive plots.</p>
 </section>
@@ -558,7 +556,7 @@ MSE (mean squared error) measures absolute accuracy and heavily penalizes large 
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Attitude Using Real Data</p>
+        <p class="prev-next-title">7 Experiment: Attitude Using a 6/9 axis IMU</p>
       </div>
     </a>
     <a class="right-next"

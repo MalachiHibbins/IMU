@@ -15,7 +15,7 @@ speed3 = 16
 A1 = 1
 A2 = 0.4
 A3 = 0.2
-alpha = 0.95
+alpha = 0.8
 
 # Generate a test signal with noise
 signal_noisy, signal_true = GenTestSig.generate_test_signal(length, noise, rng, frequency_of_points=frequency_of_points,
@@ -26,7 +26,7 @@ moving_avg = LowPassFilter.filter(signal_noisy, alpha)
 fig, ax = plt.subplots()
 ax.scatter(np.arange(length), signal_noisy, label='Noisy Signal', color='blue', alpha=0.1)
 ax.plot(signal_true, label='True Signal', color='green', linestyle='--')
-ax.plot(moving_avg, label='Moving Average', color='orange')
+ax.plot(moving_avg, label='Low Pass Filter', color='orange')
 ax.legend()
 ax.set_xlabel('Sample Index')
 ax.set_ylabel('Value')

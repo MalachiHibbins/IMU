@@ -20,12 +20,14 @@ x_e = 6.0
 P_0 = 2.0
 
 def run_kalman(A, H, Q, R, x_e, P_0):
+    # Obtains the test signal and the kalman filtered signal
     test_signal = GenTestSig.get(value, rng, std=std, size=length)
     filtered_signal = SimpleKalman.filter(test_signal, x_i=x_e, p_i=P_0, A=A, H=H, Q=Q, R=R)
     return test_signal, filtered_signal
 
 test_signal, filtered_signal = run_kalman(A, H, Q, R, x_e, P_0)
 
+# Plots the results both kalman and the signal
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
 plt.subplots_adjust(left=0.1, bottom=0.35)
 l1 = ax1.scatter(np.arange(length), test_signal, label='Noisy Signal', color='blue', alpha=0.1)
@@ -43,7 +45,7 @@ ax2.set_title('Difference from True Value')
 ax2.axhline(0, color='red', linestyle='--', label='Zero Line')
 ax2.legend()
 
-# Slider axes
+# Adds sliders
 axcolor = 'lightgoldenrodyellow'
 ax_A = plt.axes([0.1, 0.25, 0.8, 0.03], facecolor=axcolor) # x and y position, width, height
 ax_H = plt.axes([0.1, 0.21, 0.8, 0.03], facecolor=axcolor)
@@ -59,7 +61,8 @@ s_R = Slider(ax_R, 'R', 0, 10.0, valinit=R)
 s_xe = Slider(ax_xe, 'x_e', 0.0, 50, valinit=x_e)
 s_P0 = Slider(ax_P0, 'P_0', 0.0, 10.0, valinit=P_0)
 
-def update(val):
+def update():
+    # updates graphs based on slider values
     A = s_A.val
     H = s_H.val
     Q = s_Q.val
