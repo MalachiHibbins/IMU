@@ -5,9 +5,9 @@ format: jb-book
 root: 0Intro
 chapters:
 - file: 1FilterBasics
-- file: 4KalmanFilters
-- file: 4aExampleBatteryOutput
-- file: 4bExampleVelocityFromPosition
+- file: 2KalmanFilters
+- file: 3ExampleBatteryOutput
+- file: 4ExampleVelocityFromPosition
 - file: 5IMU
 - file: 6ExtendedKalman
 - file: 7RealData
