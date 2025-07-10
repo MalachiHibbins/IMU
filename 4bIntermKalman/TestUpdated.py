@@ -14,7 +14,7 @@ q = np.array([[(dt**4)/4, (dt**3)/2], [(dt**3)/2, dt**2]])
 # Fixed Kalman Filter Parameters
 A = np.array([[1, dt], [0, 1]]) 
 H = np.array([[1, 0]])
-plot_residuels = False
+plot_residuels = False # These can be changed to add residuals graphs underneath the main graphs
 plot_differentiated_filtered = False
 alpha_scatter = 0.1
 
@@ -149,19 +149,6 @@ s_P0_s = Slider(ax_P0_s, '$P_0^s$', 0, 10, valinit=P_0_s, color = filter_color)
 s_P0_v = Slider(ax_P0_v, '$P_0^v$', 0, 10, valinit=P_0_v, color = filter_color)
 s_s_e = Slider(ax_s_e, '$s_0$', 0, 50, valinit=s_e, color = filter_color)
 s_v_e = Slider(ax_v_e, '$v_0$', 0, 10, valinit=v_e, color = filter_color)
-
-
-# Graph sliders
-data_colour = 'red'  
-# ax_max = plt.axes([0.55, 0.25, 0.35, 0.03])  # x and y position, width, height
-# ax_std = plt.axes([0.55, 0.21, 0.35, 0.03]) 
-# ax_dt = plt.axes([0.55, 0.17, 0.35, 0.03])
-
-
-# s_max = Slider(ax_max, 'Max Value', 0, 50, valinit=maximum, color = data_colour)
-# s_std = Slider(ax_std, 'std', 0, 1, valinit=std, color = data_colour)
-# s_log_dt = Slider(ax_dt, 'log(dt)', -4, -1, valinit=np.log10(dt), color = data_colour)  
-
 
 # Update function for sliders
 def update(val):

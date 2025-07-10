@@ -63,7 +63,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="8 Experiment: Quantitative Comparison of Kalman Filter Performance" href="8TestingFilters.html" />
-    <link rel="prev" title="Example 6: Position using GPS and accelerometer data" href="6ExtendedKalman.html" />
+    <link rel="prev" title="6 Example : Position using GPS and accelerometer data" href="6ExtendedKalman.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -187,7 +187,7 @@
 <li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">3 Example: Battery output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">4 Example: Velocity from position</a></li>
 <li class="toctree-l1"><a class="reference internal" href="5IMU.html">5 Example: Attitude using a gyroscope and accelerometer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Example 6: Position using GPS and accelerometer data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">6 Example : Position using GPS and accelerometer data</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">7 Experiment: Attitude Using a 6/9 axis IMU</a></li>
 <li class="toctree-l1"><a class="reference internal" href="8TestingFilters.html">8 Experiment: Quantitative Comparison of Kalman Filter Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
@@ -465,10 +465,10 @@ All other files are not used in this analysis.</p></li>
 <h2>Theory, 9 axis<a class="headerlink" href="#theory-9-axis" title="Link to this heading">#</a></h2>
 <p>In <a class="reference internal" href="5IMU.html"><span class="std std-doc">section 5</span></a> gyroscope data and accelerometer data were fused to determine the attitude of the phone. However the accelerometer on its own was unable to measure the yaw direction. When phone is lying flat in the xy plane we can determine, our update measurement, <span class="math notranslate nohighlight">\(\psi^z\)</span>, accurately using the magnetometer.</p>
 <div class="math notranslate nohighlight" id="equation-eq-magnetometer">
-<span class="eqno">(53)<a class="headerlink" href="#equation-eq-magnetometer" title="Link to this equation">#</a></span>\[\psi^z = \arctan\left(\frac{m_y}{m_x}\right)\]</div>
+<span class="eqno">(52)<a class="headerlink" href="#equation-eq-magnetometer" title="Link to this equation">#</a></span>\[\psi^z = \arctan\left(\frac{m_y}{m_x}\right)\]</div>
 <p>Where <span class="math notranslate nohighlight">\(m_x\)</span> and <span class="math notranslate nohighlight">\(m_y\)</span> are the x and y components of the magnetometer reading. The magnetometer reading is in the phone’s frame of reference this is normally not the xy plane so the accelerometer data to is required to write the corrected magnetometer readings <span class="math notranslate nohighlight">\(m_x'\)</span> and <span class="math notranslate nohighlight">\(m_y'\)</span>.</p>
 <div class="math notranslate nohighlight" id="equation-eq-gyro-correction">
-<span class="eqno">(54)<a class="headerlink" href="#equation-eq-gyro-correction" title="Link to this equation">#</a></span>\[\begin{split}m_x^{'} = m_x \cos(\theta^z) + m_y \sin(\theta^z) \sin(\phi^z) + m_z \sin(\theta^z) \cos(\phi^z)\\
+<span class="eqno">(53)<a class="headerlink" href="#equation-eq-gyro-correction" title="Link to this equation">#</a></span>\[\begin{split}m_x^{'} = m_x \cos(\theta^z) + m_y \sin(\theta^z) \sin(\phi^z) + m_z \sin(\theta^z) \cos(\phi^z)\\
 m_y^{'} = m_y \cos(\theta^z) - m_x \sin(\theta^z) \sin(\phi^z) + m_z \sin(\theta^z) \cos(\phi^z)\\\end{split}\]</div>
 <p>Where <span class="math notranslate nohighlight">\(\phi^z\)</span> and <span class="math notranslate nohighlight">\(\theta^z\)</span> are the roll and pitch angles calculated using the accelerometer.</p>
 <p>Then as before we can use our corrected values to determine <span class="math notranslate nohighlight">\(\psi^z\)</span> when the magnetometer isn’t lying flat in the xy plane. To summarize the update measurement will be formed from the accelerometer, for pitch and roll and the magnetometer for yaw. The prediction step will use measurements from the gyroscope in the same way as <a class="reference internal" href="5IMU.html"><span class="std std-doc">section 5</span></a>.</p>
@@ -594,7 +594,7 @@ m_y^{'} = m_y \cos(\theta^z) - m_x \sin(\theta^z) \sin(\phi^z) + m_z \sin(\theta
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Example 6: Position using GPS and accelerometer data</p>
+        <p class="prev-next-title">6 Example : Position using GPS and accelerometer data</p>
       </div>
     </a>
     <a class="right-next"

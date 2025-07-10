@@ -62,7 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '5IMU';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Example 6: Position using GPS and accelerometer data" href="6ExtendedKalman.html" />
+    <link rel="next" title="6 Example : Position using GPS and accelerometer data" href="6ExtendedKalman.html" />
     <link rel="prev" title="4 Example: Velocity from position" href="4bExampleVelocityFromPosition.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -187,7 +187,7 @@
 <li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">3 Example: Battery output</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">4 Example: Velocity from position</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">5 Example: Attitude using a gyroscope and accelerometer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Example 6: Position using GPS and accelerometer data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">6 Example : Position using GPS and accelerometer data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="7RealData.html">7 Experiment: Attitude Using a 6/9 axis IMU</a></li>
 <li class="toctree-l1"><a class="reference internal" href="8TestingFilters.html">8 Experiment: Quantitative Comparison of Kalman Filter Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
@@ -420,7 +420,7 @@ document.write(`
 <p>The Euler angle rates <span class="math notranslate nohighlight">\(\dot{\phi}\)</span>, <span class="math notranslate nohighlight">\(\dot{\theta}\)</span>, <span class="math notranslate nohighlight">\(\dot{\psi}\)</span> are not the same as body angular rates because the orientation of the body axes changes as the object rotates.</p>
 </aside>
 <div class="math notranslate nohighlight" id="equation-h">
-<span class="eqno">(37)<a class="headerlink" href="#equation-h" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix}
+<span class="eqno">(36)<a class="headerlink" href="#equation-h" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix}
 \dot{\psi} \\
 \dot{\theta} \\
 \dot{\phi}
@@ -437,7 +437,7 @@ document.write(`
 \end{bmatrix}\end{split}\]</div>
 <p>Or more simply :</p>
 <div class="math notranslate nohighlight" id="equation-eq-simple">
-<span class="eqno">(38)<a class="headerlink" href="#equation-eq-simple" title="Link to this equation">#</a></span>\[\dot{\boldsymbol{\alpha}} = \Phi(\boldsymbol{\alpha}) {\boldsymbol{\omega}}\]</div>
+<span class="eqno">(37)<a class="headerlink" href="#equation-eq-simple" title="Link to this equation">#</a></span>\[\dot{\boldsymbol{\alpha}} = \Phi(\boldsymbol{\alpha}) {\boldsymbol{\omega}}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\Phi(\boldsymbol{\alpha}) = \frac{1}{\cos{\boldsymbol{\theta}}}\begin{bmatrix}
 0 &amp; \sin\phi  &amp; \cos\phi  \\
 0 &amp; \cos\phi\cos\theta &amp; -\sin\phi\cos\theta \\
@@ -445,10 +445,10 @@ document.write(`
 \end{bmatrix}\)</span></p>
 <p>The rates of rotation (provided by the gyroscope) are integrated step by step so we can predict the craft’s alttitude at any later tome <span class="math notranslate nohighlight">\(t_k\)</span>:</p>
 <div class="math notranslate nohighlight" id="equation-eq-euler">
-<span class="eqno">(39)<a class="headerlink" href="#equation-eq-euler" title="Link to this equation">#</a></span>\[\boldsymbol{\alpha}_{k+1} \approx \boldsymbol{\alpha}_k + \dot{\boldsymbol{\alpha}}_k \Delta t\]</div>
-<p>Subbing the relationship between <span class="math notranslate nohighlight">\(\dot{\alpha}_k\)</span> and <span class="math notranslate nohighlight">\(\omega\)</span> <a class="reference internal" href="#equation-eq-simple">(38)</a> into the update rule <a class="reference internal" href="#equation-eq-euler">(39)</a> we get:</p>
+<span class="eqno">(38)<a class="headerlink" href="#equation-eq-euler" title="Link to this equation">#</a></span>\[\boldsymbol{\alpha}_{k+1} \approx \boldsymbol{\alpha}_k + \dot{\boldsymbol{\alpha}}_k \Delta t\]</div>
+<p>Subbing the relationship between <span class="math notranslate nohighlight">\(\dot{\alpha}_k\)</span> and <span class="math notranslate nohighlight">\(\omega\)</span> <a class="reference internal" href="#equation-eq-simple">(37)</a> into the update rule <a class="reference internal" href="#equation-eq-euler">(38)</a> we get:</p>
 <div class="math notranslate nohighlight" id="equation-euler-method2">
-<span class="eqno">(40)<a class="headerlink" href="#equation-euler-method2" title="Link to this equation">#</a></span>\[\boldsymbol{\alpha}_{k+1} \approx \boldsymbol{\alpha}_{k} + \Phi(\boldsymbol{\alpha}_k) \boldsymbol{\omega}_k \Delta t\]</div>
+<span class="eqno">(39)<a class="headerlink" href="#equation-euler-method2" title="Link to this equation">#</a></span>\[\boldsymbol{\alpha}_{k+1} \approx \boldsymbol{\alpha}_{k} + \Phi(\boldsymbol{\alpha}_k) \boldsymbol{\omega}_k \Delta t\]</div>
 <p>where <span class="math notranslate nohighlight">\(\Delta t = t_k - t_{k-1}\)</span>.</p>
 <div class="admonition-why-use-approx-not admonition">
 <p class="admonition-title">why use <span class="math notranslate nohighlight">\(\approx\)</span> not <span class="math notranslate nohighlight">\(=\)</span></p>
@@ -460,7 +460,7 @@ document.write(`
 <p><span class="caption-number">Fig. 16 </span><span class="caption-text">Calibration signal involved shaking the device in just the <span class="math notranslate nohighlight">\(\omega_1\)</span> direction then pausing and shaking the device in the <span class="math notranslate nohighlight">\(\omega_1\)</span> and <span class="math notranslate nohighlight">\(\omega_2\)</span> directions before pausing again and shaking the deivce in the <span class="math notranslate nohighlight">\(\omega_3\)</span>. The observed motion in the <span class="math notranslate nohighlight">\(\omega_3\)</span> direction was erroneous. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#cal1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Using the calibration data in <a class="reference internal" href="#cal1"><span class="std std-numref">Fig. 16</span></a> and knowing the initial attitude we can use <a class="reference internal" href="#equation-euler-method2">(40)</a> to estimate the attitude over time</p>
+<p>Using the calibration data in <a class="reference internal" href="#cal1"><span class="std std-numref">Fig. 16</span></a> and knowing the initial attitude we can use <a class="reference internal" href="#equation-euler-method2">(39)</a> to estimate the attitude over time</p>
 <figure class="align-default" id="roll-pitch-yaw-drift-real">
 <img alt="_images/image-26.png" src="_images/image-26.png" />
 <figcaption>
@@ -472,34 +472,34 @@ document.write(`
 </section>
 <section id="kalman-filters">
 <h2>5.2 Kalman filters<a class="headerlink" href="#kalman-filters" title="Link to this heading">#</a></h2>
-<p>To improve our model we could use a kalman filter. However there is a problem as its not possible to put our update equation <a class="reference internal" href="#equation-euler-method2">(40)</a> into the form required for the kalman filter <a class="reference internal" href="4KalmanFilters.html#equation-projection">(32)</a>. To fix this we will need to write <span class="math notranslate nohighlight">\(\phi\)</span>, <span class="math notranslate nohighlight">\(\theta\)</span> and <span class="math notranslate nohighlight">\(\phi\)</span> in terms of euler parameters.</p>
+<p>To improve our model we could use a kalman filter. However there is a problem as its not possible to put our update equation <a class="reference internal" href="#equation-euler-method2">(39)</a> into the form required for the kalman filter <a class="reference internal" href="4KalmanFilters.html#equation-projection">(31)</a>. To fix this we will need to write <span class="math notranslate nohighlight">\(\phi\)</span>, <span class="math notranslate nohighlight">\(\theta\)</span> and <span class="math notranslate nohighlight">\(\phi\)</span> in terms of euler parameters.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>Use Euler parameters:</p>
 <div class="math notranslate nohighlight" id="equation-eq-eps">
-<span class="eqno">(41)<a class="headerlink" href="#equation-eq-eps" title="Link to this equation">#</a></span>\[ \begin{align}\begin{aligned}\beta_0 = \sin\frac{\phi}{2}\sin\frac{\theta}{2}\sin\frac{\psi}{2} + \cos\frac{\phi}{2}\cos\frac{\theta}{2}\cos\frac{\psi}{2}\\\beta_1 = \sin\frac{\phi}{2}\cos\frac{\theta}{2}\cos\frac{\psi}{2} + \cos\frac{\phi}{2}\sin\frac{\theta}{2}\sin\frac{\psi}{2}\\\beta_2 = \cos\frac{\phi}{2}\sin\frac{\theta}{2}\cos\frac{\psi}{2} + \sin\frac{\phi}{2}\cos\frac{\theta}{2}\sin\frac{\psi}{2}\\\beta_3 = \cos\frac{\phi}{2}\cos\frac{\theta}{2}\sin\frac{\psi}{2} + \sin\frac{\phi}{2}\sin\frac{\theta}{2}\cos\frac{\psi}{2}\end{aligned}\end{align} \]</div>
+<span class="eqno">(40)<a class="headerlink" href="#equation-eq-eps" title="Link to this equation">#</a></span>\[ \begin{align}\begin{aligned}\beta_0 = \sin\frac{\phi}{2}\sin\frac{\theta}{2}\sin\frac{\psi}{2} + \cos\frac{\phi}{2}\cos\frac{\theta}{2}\cos\frac{\psi}{2}\\\beta_1 = \sin\frac{\phi}{2}\cos\frac{\theta}{2}\cos\frac{\psi}{2} + \cos\frac{\phi}{2}\sin\frac{\theta}{2}\sin\frac{\psi}{2}\\\beta_2 = \cos\frac{\phi}{2}\sin\frac{\theta}{2}\cos\frac{\psi}{2} + \sin\frac{\phi}{2}\cos\frac{\theta}{2}\sin\frac{\psi}{2}\\\beta_3 = \cos\frac{\phi}{2}\cos\frac{\theta}{2}\sin\frac{\psi}{2} + \sin\frac{\phi}{2}\sin\frac{\theta}{2}\cos\frac{\psi}{2}\end{aligned}\end{align} \]</div>
 </div>
 <p>Below is the corresponding Euler parameters KDE:</p>
 <div class="math notranslate nohighlight" id="equation-ep-kde">
-<span class="eqno">(42)<a class="headerlink" href="#equation-ep-kde" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} \dot{\beta_0} \\ \dot{\beta_1} \\ \dot{\beta_2} \\ \dot{\beta_3} \end{bmatrix} = \frac{1}{2} \begin{bmatrix} 0 &amp; -\omega_1 &amp; -\omega_2 &amp; -\omega_3 \\ \omega_1 &amp; 0 &amp; \omega_3 &amp; -\omega_2 \\ \omega_2 &amp; -\omega_3 &amp; 0 &amp; \omega_1 \\ \omega_3 &amp; \omega_2 &amp; -\omega_1 &amp; 0\end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix}\end{split}\]</div>
+<span class="eqno">(41)<a class="headerlink" href="#equation-ep-kde" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} \dot{\beta_0} \\ \dot{\beta_1} \\ \dot{\beta_2} \\ \dot{\beta_3} \end{bmatrix} = \frac{1}{2} \begin{bmatrix} 0 &amp; -\omega_1 &amp; -\omega_2 &amp; -\omega_3 \\ \omega_1 &amp; 0 &amp; \omega_3 &amp; -\omega_2 \\ \omega_2 &amp; -\omega_3 &amp; 0 &amp; \omega_1 \\ \omega_3 &amp; \omega_2 &amp; -\omega_1 &amp; 0\end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix}\end{split}\]</div>
 <p><span id="id1">[<a class="reference internal" href="99Bibliography.html#id3" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> or more simply:</p>
 <aside class="margin sidebar">
 <p class="sidebar-title"></p>
 <p>Where: <span class="math notranslate nohighlight">\(\Psi(\omega) = \frac{1}{2} \begin{bmatrix} 0 &amp; -\omega_1 &amp; -\omega_2 &amp; -\omega_3 \\ \omega_1 &amp; 0 &amp; \omega_3 &amp; -\omega_2 \\ \omega_2 &amp; -\omega_3 &amp; 0 &amp; \omega_1 \\ \omega_3 &amp; \omega_2 &amp; -\omega_1 &amp; 0\end{bmatrix}\)</span></p>
 </aside>
 <div class="math notranslate nohighlight" id="equation-eq-kde-simp">
-<span class="eqno">(43)<a class="headerlink" href="#equation-eq-kde-simp" title="Link to this equation">#</a></span>\[\boldsymbol{\dot{\beta}} = \Psi(\boldsymbol{\omega}) \boldsymbol{\beta}\]</div>
-<p>Now we need to integrate <span class="math notranslate nohighlight">\(\boldsymbol{\dot{\beta}}\)</span> we do this using the euler method as we did in <a class="reference internal" href="#equation-eq-euler">(39)</a>.</p>
+<span class="eqno">(42)<a class="headerlink" href="#equation-eq-kde-simp" title="Link to this equation">#</a></span>\[\boldsymbol{\dot{\beta}} = \Psi(\boldsymbol{\omega}) \boldsymbol{\beta}\]</div>
+<p>Now we need to integrate <span class="math notranslate nohighlight">\(\boldsymbol{\dot{\beta}}\)</span> we do this using the euler method as we did in <a class="reference internal" href="#equation-eq-euler">(38)</a>.</p>
 <div class="math notranslate nohighlight" id="equation-eq-euler3">
-<span class="eqno">(44)<a class="headerlink" href="#equation-eq-euler3" title="Link to this equation">#</a></span>\[\boldsymbol{\beta_{k+1}} \approx \boldsymbol{\beta}_k + \dot{\boldsymbol{\beta}}_k\Delta t\]</div>
-<p>This time we use <span class="math notranslate nohighlight">\(\approx\)</span> instead of <span class="math notranslate nohighlight">\(=\)</span> as we know from the previous example the numerical integration will mean <span class="math notranslate nohighlight">\(\beta_{k}\)</span> drifts further away from its true value as <span class="math notranslate nohighlight">\(k\)</span> increases. Now sub in <a class="reference internal" href="#equation-eq-kde-simp">(43)</a></p>
+<span class="eqno">(43)<a class="headerlink" href="#equation-eq-euler3" title="Link to this equation">#</a></span>\[\boldsymbol{\beta_{k+1}} \approx \boldsymbol{\beta}_k + \dot{\boldsymbol{\beta}}_k\Delta t\]</div>
+<p>This time we use <span class="math notranslate nohighlight">\(\approx\)</span> instead of <span class="math notranslate nohighlight">\(=\)</span> as we know from the previous example the numerical integration will mean <span class="math notranslate nohighlight">\(\beta_{k}\)</span> drifts further away from its true value as <span class="math notranslate nohighlight">\(k\)</span> increases. Now sub in <a class="reference internal" href="#equation-eq-kde-simp">(42)</a></p>
 <div class="math notranslate nohighlight" id="equation-eq-euler4">
-<span class="eqno">(45)<a class="headerlink" href="#equation-eq-euler4" title="Link to this equation">#</a></span>\[\boldsymbol{\beta}_{k+1} \approx (\mathbb{I} + \Delta t \Psi(\boldsymbol{\omega}))\boldsymbol{\beta}_k\]</div>
+<span class="eqno">(44)<a class="headerlink" href="#equation-eq-euler4" title="Link to this equation">#</a></span>\[\boldsymbol{\beta}_{k+1} \approx (\mathbb{I} + \Delta t \Psi(\boldsymbol{\omega}))\boldsymbol{\beta}_k\]</div>
 <p>Lets rewrite this with <span class="math notranslate nohighlight">\(\beta\)</span> on the right hand side side being our estimate of the state and beta on the right hand side becoming the prediction of our state, this means we can change the <span class="math notranslate nohighlight">\(\approx\)</span> for an <span class="math notranslate nohighlight">\(=\)</span>:</p>
 <div class="math notranslate nohighlight" id="equation-eq-proj-att">
-<span class="eqno">(46)<a class="headerlink" href="#equation-eq-proj-att" title="Link to this equation">#</a></span>\[\hat{\boldsymbol{x}}^-_{k+1} \approx (I + \Delta t \Psi(\boldsymbol{\omega}))\hat{\boldsymbol{x}}_k\]</div>
-<p>Which is in the form required by <a class="reference internal" href="4KalmanFilters.html#equation-projection">(32)</a> with <span class="math notranslate nohighlight">\(A = (I + \Delta t \Psi(\omega))\)</span>
-It follows from the euler parameters <a class="reference internal" href="#equation-eq-eps">(41)</a> and <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}_0 = \boldsymbol{0}\)</span> that <span class="math notranslate nohighlight">\(\hat{x}_0 = \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}\)</span>.</p>
+<span class="eqno">(45)<a class="headerlink" href="#equation-eq-proj-att" title="Link to this equation">#</a></span>\[\hat{\boldsymbol{x}}^-_{k+1} \approx (I + \Delta t \Psi(\boldsymbol{\omega}))\hat{\boldsymbol{x}}_k\]</div>
+<p>Which is in the form required by <a class="reference internal" href="4KalmanFilters.html#equation-projection">(31)</a> with <span class="math notranslate nohighlight">\(A = (I + \Delta t \Psi(\omega))\)</span>
+It follows from the euler parameters <a class="reference internal" href="#equation-eq-eps">(40)</a> and <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}_0 = \boldsymbol{0}\)</span> that <span class="math notranslate nohighlight">\(\hat{x}_0 = \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}\)</span>.</p>
 <p>So we have now defined <span class="math notranslate nohighlight">\(\hat{\boldsymbol{x}}_k\)</span>, <span class="math notranslate nohighlight">\(\hat{\boldsymbol{x}}^-_k\)</span> and <span class="math notranslate nohighlight">\(A\)</span>. Defining <span class="math notranslate nohighlight">\(\boldsymbol{z}_k\)</span> is a little more complicated since although the gyroscope measures <span class="math notranslate nohighlight">\(\boldsymbol{\omega}_k\)</span> which we use to calculate <span class="math notranslate nohighlight">\(\boldsymbol{z}_k\)</span>, this isn’t a measurment of the state since we need to use approximations as explained below. Instead we will use a ‘pseudo-measurment’ instead of introducing a new sensor we will let our ‘pseudo-measurment’ be the previous state <span class="math notranslate nohighlight">\(\boldsymbol{z}_k = \hat{\boldsymbol{x}}_{k-1}\)</span>, this should help provide some corrective information to counteract noisy gyroscope data, similar to the low pass filter. A better ‘pseudo-measurment’ could be to implement a kalman filter which uses a different integration method to the one above, but even the best integration methods are suceptible to drift so will deviate further from the true signal voer time.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
@@ -536,7 +536,7 @@ It follows from the euler parameters <a class="reference internal" href="#equati
 <p>Where <span class="math notranslate nohighlight">\(\boldsymbol{g} = \begin{bmatrix} 0 \\ 0 \\ g \end{bmatrix}\)</span></p>
 </aside>
 <div class="math notranslate nohighlight" id="equation-accelarometer2">
-<span class="eqno">(47)<a class="headerlink" href="#equation-accelarometer2" title="Link to this equation">#</a></span>\[[\boldsymbol{a}]_B = [\dot{\boldsymbol{v}}]_B - [\boldsymbol{g}]_B\]</div>
+<span class="eqno">(46)<a class="headerlink" href="#equation-accelarometer2" title="Link to this equation">#</a></span>\[[\boldsymbol{a}]_B = [\dot{\boldsymbol{v}}]_B - [\boldsymbol{g}]_B\]</div>
 <p>Where <span class="math notranslate nohighlight">\(\dot{\boldsymbol{v}}\)</span> is the translational acceleration and <span class="math notranslate nohighlight">\(\boldsymbol{g}\)</span> is the accelaration due to gravity. <strong>Assumption: the translational accelaration of the body is zero and the accelarometer is located at the center of rotation for this example.</strong></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -554,10 +554,10 @@ It follows from the euler parameters <a class="reference internal" href="#equati
 </div>
 <p>The accelaration in the frame of the body can be calculated from its position relative to the earth:</p>
 <div class="math notranslate nohighlight" id="equation-eq-accelarometer2">
-<span class="eqno">(48)<a class="headerlink" href="#equation-eq-accelarometer2" title="Link to this equation">#</a></span>\[\begin{split}[\boldsymbol{a}]_B = - B\boldsymbol{g}  = - g \hat{\boldsymbol{n}}_z = g \begin{bmatrix} \sin{\theta} \\ -\cos{\theta}\sin{\phi} \\ -\cos{\theta}\cos{\phi} \end{bmatrix}\end{split}\]</div>
-<p>In component form <span class="math notranslate nohighlight">\(\boldsymbol{a} = \begin{bmatrix} a_1 \\ a_2 \\ a_3 \end{bmatrix}\)</span> rearranging <a class="reference internal" href="#equation-eq-accelarometer2">(48)</a> gets:</p>
+<span class="eqno">(47)<a class="headerlink" href="#equation-eq-accelarometer2" title="Link to this equation">#</a></span>\[\begin{split}[\boldsymbol{a}]_B = - B\boldsymbol{g}  = - g \hat{\boldsymbol{n}}_z = g \begin{bmatrix} \sin{\theta} \\ -\cos{\theta}\sin{\phi} \\ -\cos{\theta}\cos{\phi} \end{bmatrix}\end{split}\]</div>
+<p>In component form <span class="math notranslate nohighlight">\(\boldsymbol{a} = \begin{bmatrix} a_1 \\ a_2 \\ a_3 \end{bmatrix}\)</span> rearranging <a class="reference internal" href="#equation-eq-accelarometer2">(47)</a> gets:</p>
 <div class="math notranslate nohighlight" id="equation-accelarometer3">
-<span class="eqno">(49)<a class="headerlink" href="#equation-accelarometer3" title="Link to this equation">#</a></span>\[\theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})\]</div>
+<span class="eqno">(48)<a class="headerlink" href="#equation-accelarometer3" title="Link to this equation">#</a></span>\[\theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})\]</div>
 <p>From the accelarometer data alone it is possible to directly calculate <span class="math notranslate nohighlight">\(\theta\)</span> and <span class="math notranslate nohighlight">\(\phi\)</span> but not <span class="math notranslate nohighlight">\(\psi\)</span>. In this example we let <span class="math notranslate nohighlight">\(\psi = 0\)</span> since no oscillations were performed in the <span class="math notranslate nohighlight">\(\omega_3\)</span> direction.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -673,7 +673,7 @@ It follows from the euler parameters <a class="reference internal" href="#equati
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Example 6: Position using GPS and accelerometer data</p>
+        <p class="prev-next-title">6 Example : Position using GPS and accelerometer data</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

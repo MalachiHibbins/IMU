@@ -2,78 +2,75 @@
 This example looks at applying a Kalman filter to estimate the true position and velocity from noisy position data. 
 
 ## 4.1 Model
-In this case $\hat{\boldsymbol{x}}_k = \begin{bmatrix} s_k \\ \nu_k \end{bmatrix}$ where $s_k$ and $\nu_k$ are the position and velocity (in the same direction) respectively at time $t_k$.  The measurement of the state only measures position therefore $z_k = s_k$. The measurement and the state are related by {eq}`eq-h-calculate` from this we can calculate $H$.
+In this case $\hat{\boldsymbol{x}}_k = \begin{bmatrix} s_k \\ \nu_k \end{bmatrix}$ where $s_k$ and $\nu_k$ are the position and velocity (in the same direction) respectively at time $t_k$.  The correction measurement is position therefore $z_k = s_k$. The measurement and the state are related by {eq}`eq-h-calculate` from this $H$ can be calculated.
 ```{math}
 :label: H
 z_k &= H \begin{bmatrix} s_k \\ \nu_k \end{bmatrix} \\
 \implies H &= \begin{bmatrix} 1 & 0 \end{bmatrix}
 ```
-For our model we will assume that there is no forcing function hence acceleration will be constant. This allows us to use equations of constant motion:
+For simplicity and to avoid needing to use a forcing function the model assumes no acceleration. The equations of motion are:
 ```{math}
 :label: eq-motion-equations
 s_{k+1} &\approx s_k + \nu_k\Delta t \\
 \nu_{k+1} &\approx \nu_k
 ```
 ```{admonition} why use $\approx$ not $=$
-Although the error from numerical integration is negligible term to term over a large number of terms such as in this example the error accumulates. 
+There is a small error associated with discretizing $dt$ since $\Delta t$ isn't infinitesimally small. This is negligible term to term but over a large number of terms such as in this example the error accumulates and causes drift. 
 ```
-Where $\Delta t = t_{k+1} - t_k$. We now need to write our update equations in a form which can be used by the Kalman filter {eq}`projection`:
+Where $\Delta t = t_{k+1} - t_k$. Now writing the update equations in matrix form the following are obtained:
 ```{math}
 :label: velocity
 \begin{bmatrix} s \\ \nu \end{bmatrix}^-_{k+1} = \begin{bmatrix} 1 & \Delta t \\ 0 & 1 \end{bmatrix} \begin{bmatrix} s \\ \nu \end{bmatrix}_k
 ```
 
-Q is a bit more complicated to work out and is going to be a $2 \times 2$ matrix of the form below:
+Q is more complicated to calculate and is going to be a $2 \times 2$ matrix of the form below:
 
 ```{math}
-Q = E[w_kw_k^T] =  \begin{bmatrix} VAR(s) & COV(s,\nu) \\ COV(\nu,s) & VAR(\nu) \end{bmatrix} = \sigma_a^2 \begin{bmatrix} \frac{\Delta t^4}{4} & \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} & \Delta t^2 \end{bmatrix} 
+Q = E[w_kw_k^T] =  \begin{bmatrix} VAR(s) & COV(s,\nu) \\ COV(\nu,s) & VAR(\nu) \end{bmatrix} = \sigma_Q^2 \begin{bmatrix} \frac{\Delta t^4}{4} & \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} & \Delta t^2 \end{bmatrix} 
 ```
 {cite}`Barreto2021,chapter=2.3` {cite}`Barreto2021,chapter=10.2`
-where $\sigma_a^2$ is the variance in the true acceleration, which is the model assumes is zero. $\sigma^2$ will be used as a tuning parameter.
-$R = VAR(z_k)$ is going to be the variance in the measurements of the position which we will denote as $\sigma_s$ {cite}`Barreto2021,chapter=10.2`.
+where $\sigma_Q^2$ is the variance in the true acceleration, which is the model assumes is zero. $\sigma_Q^2$ will be used as a tuning parameter.
+$R = VAR(z_k)$ is going to be the variance in the measurements of the position which will be denoted as $\sigma_R$ {cite}`Barreto2021,chapter=10.2`.
 
-We will use the following parameters for the Kalman filter.
+The following parameters will be used for the Kalman filter.
 - $\hat{\boldsymbol{x}}_k = \begin{bmatrix} s_k \\ \nu_k \end{bmatrix}$
 - $z_k = s_k$
 - $A = \begin{bmatrix} 1 & \Delta t \\ 0 & 1 \end{bmatrix}$
 - $H = \begin{bmatrix} 1 & 0 \end{bmatrix}$ 
 - $Q$ and $R$ will are tuned using the parameters $\sigma_a$ and $\sigma_s$.
-- $\boldsymbol{\hat{x}}_0 = \boldsymbol{0}$ initially and $P_0 \approx \begin{bmatrix} P_s & 0 \\ 0 & P_v\end{bmatrix}$ initially, these don't matter so much as the Kalman filter will eventually find the correct values as $k$ increases.
+- $\boldsymbol{\hat{x}}_0 = \boldsymbol{0}$ and $P_0 \approx \begin{bmatrix} P_s & 0 \\ 0 & P_v\end{bmatrix}$ initially, these don't matter so much as the Kalman filter will eventually find the correct values as $k$ increases.
 
 ```{note}
-While optimal $P_0$ isn't necessarily a diagonal matrix its good enough for an initial approximation and tuned easily using the two parameters.
+While optimal $P_0$ isn't necessarily always diagonal matrix this is a good enough initial approximation as the kalman filter will converge if $A$ and $H$ are correct.
 ```
 
-### Implementation
+## 4.2 Implementation
 
+The code for this example can be found [here](https://github.com/MalachiHibbins/IMU/tree/main/4bExampleVelocityFromPosition). The code is broken up into 3 files: `GenTestSig.py` which generates the true signal (a combination of sine waves of different frequencies) and adds gaussian noise to it; `AdvKalman.py` contains the algorithm for the Kalman filter for the multidimensional case; and `TestUpdated.py` calls functions from the other files and plots the results, with a widget so the effects of the Kalman parameters can be easily visualized.
 
-The true signal in the graphs below is generated using a combination of $\sin$ waves of varying amplitudes and speeds, the velocity version is the analytical derivative of this. The signal we are trying to use the Kalman filter to fit is generated by adding random noise to the signal we generated and its analytical derivative. The Kalman filter is applied to the noisy position data and outputs the filtered position data and filtered velocity data. Which are graphed below.
-The $r^2$ value mean squared error (MSE) and mean absolute error (MAE) are given for both velocity and position.
+The true signal in the graphs below is generated using a combination of $\sin$ waves of varying amplitudes and speeds, the velocity version is the analytical derivative of this. The signal the Kalman filter is being used to fit is generated by adding random noise to the true signal and its analytical derivative. The Kalman filter is applied to the noisy position data and outputs the filtered position data and filtered velocity data. Which are graphed below.
+The $r^2$ value, mean squared error (MSE) and mean absolute error (MAE) are given for both velocity and position.
 
 
 ```{figure} image-23.png
 :name: fig-original
-The measured noisy $s_k$, noise free $s_k$ and Kalman filtered $s_k$ plotted against index and Kalman filtered $\nu_k$ noise free $\nu_k$ and the differentiated Kalman filtered $s_k$ against index. [View on GitHub](https://github.com/MalachiHibbins/IMU/tree/main/4bIntermKalman)
+Filtered, unfiltered and true position and velocity plotted against index.
 ```
 
-The fit is bad for both graphs is very bad and the filtered signal is lagging behind the true signal. This is because too much emphasis is being put on the measured values compared to the predicted values. Specifically Kalman filter is relying too much on the model for velocity, which suggests velocity remains the same from one time step to the next which is erroneous. This means the velocity is consistently delayed so the position will also be delayed. Lets fix this by reducing the amount we trust the model, increase $Q$ (by increasing $\sigma_a$), and increasing the amount we trust the measurements, reduce $R$ (by decreasing $\sigma_s$).
+In both cases the kalman filtered fit is lagging behind the true and noisy signal. This is because too much emphasis is being put on the predicted values which assumes that velocity stays the same. The true signal shows this clearly this isn't the case. This means the velocity prediction is consistently delayed so the position will also be delayed. Since the model is erroneous it was assumed that $w_k$ was larger and therefore $\sigma_Q$ should be increased. A similar effect can be achieved by assuming smaller measurement noise (smaller $v_k$) therefore $\sigma_R$ should be decreased. 
+
 
 ```{figure} image-24.png
 :name: fig-increased-R-and-increased-Q
-See {numref}`fig-original` with increased $Q$ and decreased $R$. [View on GitHub](https://github.com/MalachiHibbins/IMU/tree/main/4bIntermKalman)
+See {numref}`fig-original` with increased $\sigma_Q$ and decreased $\sigma_R$.
 ```
 
-Figure {numref}`fig-increased-R-and-increased-Q` shows a slightly improved fit with position and a significantly improved fit with velocity. This makes sense for the position data since decreasing $R$ increases the weighting for the measurement. However the velocity fit is now significantly less smooth since more emphasis is being put on the measured positions which is always nosier than the prediction. There is a clear tradeoff between having a a smooth fit and having an accurate fit. Smoother fits more accurately represent the true shape of the data, but will often cause there may be a delay or drift. Both filtered sets have random residuals, indicating they are ga good fit.
+Figure {numref}`fig-increased-R-and-increased-Q` shows a slightly improved fit with position and a significantly improved fit with velocity. This makes sense for the position data since decreasing $R$ increases the weighting for the measurement. However the velocity fit is now significantly less smooth since more emphasis is being put on the measured positions which is always nosier than the prediction. There is a clear tradeoff between having a a smooth fit and having an accurate fit. Smoother fits more accurately represent the true shape of the data, but will often cause there may be a delay or drift.
 
 ```{important}
- If the Kalman filter fit is too noisy, due to an over emphasis on $\hat{z}_k$ being used to calculate $\hat{x}_{k+1}$ increasing $R$ or decreasing $Q$ will make the fit smoother. If the Kalman filter fit is delayed increasing $Q$ or decreasing $R$ will reduce the delay. Increasing $Q$ has essentially the same effect as decreasing $R$ and increasing $R$ has the same effect as decreasing $Q$. 
+ If the Kalman filter fit is too noisy, due to an over emphasis on $\hat{z}_k$ compared to $\hat{x}^-_k$ to calculate $\hat{x}_{k}$ increasing $R$ or decreasing $Q$ will make the fit smoother. If the Kalman filter fit is delayed increasing $Q$ or decreasing $R$ will reduce the delay. Increasing $Q$ has a similar effect to decreasing $R$. 
 ``` 
 
-```{admonition} Question
-What happens if we implement a model that instead of relying on constant acceleration relies on constant jerk.
-```
-
-
-
-Here it's clear the differentiated Kalman position is a poor fit as its too noisy, but the Kalman filtered velocity fits like a low pass filter. **A Kalman filter compares predicted values with measurements, which are weighted in a similar fashion to the low pass filter, to create an estimate of the true state measurements**. The fit for $\nu_k$ would be greatly improved using a second Kalman filter which would use the velocity from this Kalman filter as a prediction and compare it with real velocity data.
+## 4.3 Summary
+The kalman filter does a good job of estimating the true position from the data and the model. The velocity fit is less accurate and significantly delayed, but is good considering there are no measurements for the velocity. The fit for velocity would be greatly improved using an additional sensor to easily measure velocity or acceleration to be used in the prediction step.
 
