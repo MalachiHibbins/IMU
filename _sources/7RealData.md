@@ -1,4 +1,4 @@
-# Attitude Using Real Data
+# 7 Experiment: Attitude Using a 6/9 axis IMU
 This section explores examples similar to [section 5](5IMU.md) but using real data. Initially using a gyroscope and an accelerometer, a 6 axis IMU, and later using a magnetometer as well, a 9 axis IMU. The 6 axis example uses the MPU6050 with an arduino controller and the 9 axis example used the mobile phone sensors with the [sensor logger](https://play.google.com/store/apps/details?id=com.kelvin.sensorapp&hl=en-US&pli=1) app. 
 
 ## Implementation
