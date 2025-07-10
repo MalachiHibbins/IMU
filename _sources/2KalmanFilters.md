@@ -23,7 +23,7 @@ z_k = Hx_k + v_k
 ```
 Where $w_k$ and $v_k$ are both distributed normally with mean $0$.
 ```{margin}
-A forcing function is something external that **deliberately** changes how the system behaves. E.g. When modelling a car rolling down a hill the cars motion is determined by gravity. Applying the cars breaks would be an example of a forcing function.
+A forcing function is something external that **deliberately** changes how the system behaves. E.g. When modelling a car rolling down a hill the cars motion is determined by gravity. Applying the cars breaks would be an example of a forcing function.**
 ```
 - $x_k$ is the actual (but unknown) state vector at time $t_k$ e.g. the true position and velocity of a car. $x_k$. **$n\times 1$ column vector**.
 - $z_k$ is the measurement of the state from the sensor at time $t_k$, but contains noise and errors e.g. the GPS position of the car. **$m \times 1$ column vector**.
@@ -44,31 +44,39 @@ $A$ isn't always a constant matrix, it can be dependent on time, or measurements
 - $w_k$ is the linear process noise vector or noise associated with the prediction. $w_k$ is white sequence noise (random noise uncorrelated with time), which makes the models prediction imperfect. E.g. unexpected bumps in the road for a moving car. **$n \times 1$ column vector**.
 - $v_k$ is the linear measurement noise vector, noise associated that corrupts $z_k$. Even if the true state is fixed, our measurements can change due to sensor imperfections. E.g. temperature measurements using a thermometer will be slightly different each time you measure. **$m \times 1$ column vector**.
 - $Q$ is the covariance matrix of $w_k$ i.e. how much the true state is expected to deviate from the predictions made by the state transition model. Large $Q$ assumes the measurements are more reliable than the model and puts a larger weighting on $z_k$ compared to $\hat{x}^-_k$ when computing $\hat{x}_{k+1}$. Smaller Q puts more trust in the model $\hat{x}^-_k$ compared to $z_k$. **$n \times n$ matrix**.
+- 
 ```{math}
 :label: eq-process-noise-cov
 Q_k = \mathbb{E}[w_k w_k^T]
 ``` 
+
 {cite}`brown2012, chapter=4`
-- $R$ is the covariance matrix of $v_k$. i.e. how much the measured state is effected by noise in the state transition model. $R$ tells the Kalman filter how much to "trust" the measurements compared to model predictions.  Large $R$ suggests the model is more reliable than the measurements and puts more emphasis on $\hat{x}^-_k$ compared to $z_k$ when computing $\hat{x}_{k+1}$, small $R$ puts more emphasis on $z_k$ compared to $\hat{x}^-_k$. ** $m \times m$ matrix**.
+- $R$ is the covariance matrix of $v_k$. i.e. how much the measured state is effected by noise in the state transition model. $R$ tells the Kalman filter how much to "trust" the measurements compared to model predictions.  Large $R$ suggests the model is more reliable than the measurements and puts more emphasis on $\hat{x}^-_k$ compared to $z_k$ when computing $\hat{x}_{k+1}$, small $R$ puts more emphasis on $z_k$ compared to $\hat{x}^-_k$. **$m \times m$ matrix**.
+  
 ```{math}
 :label: eq-measurement-noise-cov
 R_k = \mathbb{E}[v_k v_k^T]
 ``` 
+
 {cite}`brown2012, chapter=4`
-- $e_k$ and $e^-_k$ are the error in the estimation and the error in the prediction respectively defined as $e_k = x_k-\hat{x}_k$ and $e^-_k = x_k-\hat{x}^-_k$. **$n \times 1$ column vector**.
-```{math}
-- $P_k$ and $P^-_k$ are the associated error covariance matrices for $e_k$ and $e^-_k$ respectively defined by: **$n \times n$ matrix**.
+- $e_k$ and $e^-_k$ are the error in the estimation and the error in the prediction respectively defined as $e_k = x_k-\hat{x}_k$ and $e^-_k = x_k-\hat{x}^-_k$. **$n \times 1$ column vector.**
+
+- $P_k$ and $P^-_k$ are the associated error covariance matrices for $e_k$ and $e^-_k$ respectively defined by: **$n \times n$** matrix.
+
 ```{math}
 :label: eq-estimation-cov
 P_k = \mathbb{E}[e_k e_k^T]
 ```
+
 and
+
 ```{math}
 :label: eq-prediction-cov
 P^-_k = \mathbb{E}[e^-_k (e^-_k)^T]
 ```
+
 {cite}`brown2012, chapter=4`
-- $K_k$ is the Kalman gain which has similar effects to $\alpha$ in the low pass filter. **$n \times m$ matrix**. It is a blending factor that determines how much of the prediction and measurement goes into the updated estimate $\hat{x}_k$. The Kalman gain is determined by the covariance matrices $P^-_k$, $H$, $R$ and $Q$.
+- $K_k$ is the Kalman gain which has similar effects to $\alpha$ in the [low pass filter](https://github.com/MalachiHibbins/IMU/tree/main/4bExampleVelocityFromPosition/). **$n \times m$ matrix**. It is a blending factor that determines how much of the prediction and measurement goes into the updated estimate $\hat{x}_k$. The Kalman gain is determined by the covariance matrices $P^-_k$, $H$, $R$ and $Q$.
 ```{math}
 - $x_0$ is the initial state estimate. provided at the start of the estimation process.
 ```{note}
@@ -143,7 +151,7 @@ We can group the terms more intuitively by substituting in the definition for th
 :label: eq-E2
 e_k = e^-_k \Omega_k - K_kv_k
 ```
-Where $\Omega_k = I - K_k H_k$ describes how much of the prediction error remains after the update. To better undesrtand how uncertain out new estimate is lets return to the covariance of $e_k$ by subbing {eq}`eq-E2` into {eq}`eq-estimation-cov`:
+Where $\Omega_k = I - K_k H_k$ describes how much of the prediction error remains after the update. Subbing {eq}`eq-E2` into {eq}`eq-estimation-cov` gives:
 
 ```{math}
 :label: eq-E3

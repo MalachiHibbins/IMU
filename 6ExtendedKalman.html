@@ -183,9 +183,9 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="1FilterBasics.html">1 Basics Of Filtering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">2 Kalman filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">3 Example: Battery output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">4 Example: Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2KalmanFilters.html">2 Kalman filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3ExampleBatteryOutput.html">3 Example: Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4ExampleVelocityFromPosition.html">4 Example: Velocity from position</a></li>
 <li class="toctree-l1"><a class="reference internal" href="5IMU.html">5 Example: Attitude using a gyroscope and accelerometer</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">6 Example : Position using GPS and accelerometer data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="7RealData.html">7 Experiment: Attitude Using a 6/9 axis IMU</a></li>
@@ -401,14 +401,14 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="example-position-using-gps-and-accelerometer-data">
 <h1>6 Example : Position using GPS and accelerometer data<a class="headerlink" href="#example-position-using-gps-and-accelerometer-data" title="Link to this heading">#</a></h1>
-<p>Here we will improve on the <a class="reference internal" href="4bExampleVelocityFromPosition.html"><span class="std std-doc">the velocity from position example</span></a> example using sensor fusion. While the system using only position data (which we measure using GPS) works well for predicting the position, its not so good at predicting the velocity. The current model <a class="reference internal" href="4bExampleVelocityFromPosition.html#equation-eq-motion-equations">(35)</a> represents an oversimplification as it assumes no acceleration (the acceleration doesn’t change between steps) which means that the velocity has to be corrected for by the measurements which is what causes lag. We could improve our model using real world accelerometer data which we can integrate to find velocity and position. There are other reasons for including the accelerometer data for example when GPS isn’t available due to some form of blocking e.g. being in a tunnel, the device can still roughly determine its position.</p>
+<p>Here we will improve on the <span class="xref myst">the velocity from position example</span> example using sensor fusion. While the system using only position data (which we measure using GPS) works well for predicting the position, its not so good at predicting the velocity. The current model <a class="reference internal" href="4ExampleVelocityFromPosition.html#equation-eq-motion-equations">(35)</a> represents an oversimplification as it assumes no acceleration (the acceleration doesn’t change between steps) which means that the velocity has to be corrected for by the measurements which is what causes lag. We could improve our model using real world accelerometer data which we can integrate to find velocity and position. There are other reasons for including the accelerometer data for example when GPS isn’t available due to some form of blocking e.g. being in a tunnel, the device can still roughly determine its position.</p>
 <section id="model">
 <h2>6.1 Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h2>
-<p>To begin with we will work with the simple 1D case. Our new model is built on <a class="reference internal" href="4bExampleVelocityFromPosition.html#equation-eq-motion-equations">(35)</a> with an additional 2nd order term:</p>
+<p>To begin with we will work with the simple 1D case. Our new model is built on <a class="reference internal" href="4ExampleVelocityFromPosition.html#equation-eq-motion-equations">(35)</a> with an additional 2nd order term:</p>
 <div class="math notranslate nohighlight" id="equation-eq-motion-equations2">
 <span class="eqno">(50)<a class="headerlink" href="#equation-eq-motion-equations2" title="Link to this equation">#</a></span>\[\begin{split}s_{k+1} &amp;\approx s_k + \nu_k\Delta t + \frac{1}{2}a_k \Delta t^2\\
 \nu_{k+1} &amp;\approx \nu_k + a\Delta t\end{split}\]</div>
-<p>The parameters from <a class="reference internal" href="4bExampleVelocityFromPosition.html#model"><span class="std std-ref">the velocity from position model</span></a> remain the same except for <span class="math notranslate nohighlight">\(A\)</span> which changes because the model changes.</p>
+<p>The parameters from <span class="xref myst">the velocity from position model</span> remain the same except for <span class="math notranslate nohighlight">\(A\)</span> which changes because the model changes.</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(\hat{\boldsymbol{x}}\)</span> is the column vector of position and velocity</p></li>
 <li><p><span class="math notranslate nohighlight">\(z\)</span> is the measurment of position from the GPS</p></li>
@@ -429,11 +429,11 @@ We need <span class="math notranslate nohighlight">\(A\)</span> to be a <span cl
 <p>Where <span class="math notranslate nohighlight">\(u_k\)</span> is the forcing function and <span class="math notranslate nohighlight">\(B\)</span> is its associated control matrix where <span class="math notranslate nohighlight">\(u_k\)</span> is the forcing function and <span class="math notranslate nohighlight">\(B\)</span> is its associated control matrix.</p>
 <div class="math notranslate nohighlight" id="equation-eq-proj-cov-ext">
 <span class="eqno">(52)<a class="headerlink" href="#equation-eq-proj-cov-ext" title="Link to this equation">#</a></span>\[P^-_{k+1} = A_kP_kA_k^T+B_kR^uB_k^T+Q\]</div>
-<p>Where <span class="math notranslate nohighlight">\(R^u\)</span> is the associated error covariance matrix for <span class="math notranslate nohighlight">\(u_k\)</span>. Equation <a class="reference internal" href="#equation-eq-proj-cov-ext">(52)</a> is the updated form of <a class="reference internal" href="4KalmanFilters.html#equation-eq-error-covariance-update">(31)</a> with the final term <span class="math notranslate nohighlight">\(B_kR^uB_k^T\)</span> corresponding to the covariance update for <span class="math notranslate nohighlight">\(R^u\)</span>. <span class="math notranslate nohighlight">\(R^u\)</span> becomes one of our kalman parameters when using the extended kalman filter.</p>
+<p>Where <span class="math notranslate nohighlight">\(R^u\)</span> is the associated error covariance matrix for <span class="math notranslate nohighlight">\(u_k\)</span>. Equation <a class="reference internal" href="#equation-eq-proj-cov-ext">(52)</a> is the updated form of <a class="reference internal" href="2KalmanFilters.html#equation-eq-error-covariance-update">(31)</a> with the final term <span class="math notranslate nohighlight">\(B_kR^uB_k^T\)</span> corresponding to the covariance update for <span class="math notranslate nohighlight">\(R^u\)</span>. <span class="math notranslate nohighlight">\(R^u\)</span> becomes one of our kalman parameters when using the extended kalman filter.</p>
 <figure class="align-default" id="fig-block-kalman">
 <img alt="_images/ExpandedKalman.jpg" src="_images/ExpandedKalman.jpg" />
 <figcaption>
-<p><span class="caption-number">Fig. 26 </span><span class="caption-text">Block diagram for the extended kalman filter. The estimation phase is equivalent to <a class="reference internal" href="4KalmanFilters.html#fig-kalman-block-diagram"><span class="std std-numref">Fig. 7</span></a> but the prediction stage has been updated.</span><a class="headerlink" href="#fig-block-kalman" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 26 </span><span class="caption-text">Block diagram for the extended kalman filter. The estimation phase is equivalent to <a class="reference internal" href="2KalmanFilters.html#fig-kalman-block-diagram"><span class="std std-numref">Fig. 7</span></a> but the prediction stage has been updated.</span><a class="headerlink" href="#fig-block-kalman" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </div>
@@ -444,10 +444,10 @@ We need <span class="math notranslate nohighlight">\(A\)</span> to be a <span cl
 <figure class="align-default" id="fig-improved-vel-pos">
 <img alt="_images/image-31.png" src="_images/image-31.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 27 </span><span class="caption-text">Velocity and position as a function of time plotted for the extended kalman filter using the same parameters in <a class="reference internal" href="4bExampleVelocityFromPosition.html#fig-increased-r-and-increased-q"><span class="std std-numref">Fig. 15</span></a>, tuned by eye. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/6ExtendedKalman">View in Github</a></span><a class="headerlink" href="#fig-improved-vel-pos" title="Link to this image">#</a></p>
+<p><span class="caption-number">Fig. 27 </span><span class="caption-text">Velocity and position as a function of time plotted for the extended kalman filter using the same parameters in <a class="reference internal" href="4ExampleVelocityFromPosition.html#fig-increased-r-and-increased-q"><span class="std std-numref">Fig. 15</span></a>, tuned by eye. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/6ExtendedKalman">View in Github</a></span><a class="headerlink" href="#fig-improved-vel-pos" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Compared to <a class="reference internal" href="4bExampleVelocityFromPosition.html#fig-increased-r-and-increased-q"><span class="std std-numref">Fig. 15</span></a> the extended kalman filter with acceleration measurements gives a better fit for position and a significantly better fit for velocity, helped by the significantly better model. Even without measurement corrections the accelerometer gives a surprisingly good fit although there is a tiny bit of drift visible at the end. However the drift is significantly larger when integrated twice.</p>
+<p>Compared to <a class="reference internal" href="4ExampleVelocityFromPosition.html#fig-increased-r-and-increased-q"><span class="std std-numref">Fig. 15</span></a> the extended kalman filter with acceleration measurements gives a better fit for position and a significantly better fit for velocity, helped by the significantly better model. Even without measurement corrections the accelerometer gives a surprisingly good fit although there is a tiny bit of drift visible at the end. However the drift is significantly larger when integrated twice.</p>
 </section>
 <section id="smartphone-example">
 <h2>Smartphone example<a class="headerlink" href="#smartphone-example" title="Link to this heading">#</a></h2>

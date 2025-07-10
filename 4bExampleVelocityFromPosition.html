@@ -407,11 +407,11 @@ document.write(`
 <h2>4.1 Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h2>
 <p>In this case <span class="math notranslate nohighlight">\(\hat{\boldsymbol{x}}_k = \begin{bmatrix} s_k \\ \nu_k \end{bmatrix}\)</span> where <span class="math notranslate nohighlight">\(s_k\)</span> and <span class="math notranslate nohighlight">\(\nu_k\)</span> are the position and velocity (in the same direction) respectively at time <span class="math notranslate nohighlight">\(t_k\)</span>.  The correction measurement is position therefore <span class="math notranslate nohighlight">\(z_k = s_k\)</span>. The measurement and the state are related by <a class="reference internal" href="4KalmanFilters.html#equation-eq-h-calculate">(14)</a> from this <span class="math notranslate nohighlight">\(H\)</span> can be calculated.</p>
 <div class="math notranslate nohighlight" id="equation-h">
-<span class="eqno">(34)<a class="headerlink" href="#equation-h" title="Link to this equation">#</a></span>\[\begin{split}z_k &amp;= H \begin{bmatrix} s_k \\ \nu_k \end{bmatrix} \\
+<span class="eqno">(33)<a class="headerlink" href="#equation-h" title="Link to this equation">#</a></span>\[\begin{split}z_k &amp;= H \begin{bmatrix} s_k \\ \nu_k \end{bmatrix} \\
 \implies H &amp;= \begin{bmatrix} 1 &amp; 0 \end{bmatrix}\end{split}\]</div>
 <p>For simplicity and to avoid needing to use a forcing function the model assumes no acceleration. The equations of motion are:</p>
 <div class="math notranslate nohighlight" id="equation-eq-motion-equations">
-<span class="eqno">(35)<a class="headerlink" href="#equation-eq-motion-equations" title="Link to this equation">#</a></span>\[\begin{split}s_{k+1} &amp;\approx s_k + \nu_k\Delta t \\
+<span class="eqno">(34)<a class="headerlink" href="#equation-eq-motion-equations" title="Link to this equation">#</a></span>\[\begin{split}s_{k+1} &amp;\approx s_k + \nu_k\Delta t \\
 \nu_{k+1} &amp;\approx \nu_k\end{split}\]</div>
 <div class="admonition-why-use-approx-not admonition">
 <p class="admonition-title">why use <span class="math notranslate nohighlight">\(\approx\)</span> not <span class="math notranslate nohighlight">\(=\)</span></p>
@@ -419,7 +419,7 @@ document.write(`
 </div>
 <p>Where <span class="math notranslate nohighlight">\(\Delta t = t_{k+1} - t_k\)</span>. Now writing the update equations in matrix form the following are obtained:</p>
 <div class="math notranslate nohighlight" id="equation-velocity">
-<span class="eqno">(36)<a class="headerlink" href="#equation-velocity" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} s \\ \nu \end{bmatrix}^-_{k+1} = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix} \begin{bmatrix} s \\ \nu \end{bmatrix}_k\end{split}\]</div>
+<span class="eqno">(35)<a class="headerlink" href="#equation-velocity" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} s \\ \nu \end{bmatrix}^-_{k+1} = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix} \begin{bmatrix} s \\ \nu \end{bmatrix}_k\end{split}\]</div>
 <p>Q is more complicated to calculate and is going to be a <span class="math notranslate nohighlight">\(2 \times 2\)</span> matrix of the form below:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}Q = E[w_kw_k^T] =  \begin{bmatrix} VAR(s) &amp; COV(s,\nu) \\ COV(\nu,s) &amp; VAR(\nu) \end{bmatrix} = \sigma_Q^2 \begin{bmatrix} \frac{\Delta t^4}{4} &amp; \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} &amp; \Delta t^2 \end{bmatrix} \end{split}\]</div>
