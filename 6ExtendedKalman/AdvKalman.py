@@ -1,6 +1,23 @@
 import numpy as np
 
 def calcualte(x, u, p, z, A, B, H, Q, R, R_u):
+    """
+    Mathematics for correcting the state using a Kalman filter.
+    Args:
+        x (np.ndarray): Current estimate state vector (shape: (2,1)).
+        u (float): Control input vector.
+        p (np.ndarray): Current error covariance matrix (shape: (2, 2)).
+        z (float): Measurement vector.
+        A (np.ndarray): State transition matrix (shape: (2, 2)).
+        B (np.ndarray): Control input matrix (shape: (2, 1)).
+        H (np.ndarray): Measurement to state matrix (shape: (1, 2)).
+        Q (np.ndarray): Process noise covariance matrix (shape: (2, 2)).
+        R (np.ndarray): Measurement noise covariance matrix (shape: (1, 1)).
+        R_u (float): Control input noise covariance.
+    Returns:
+        x_e (np.ndarray): Next estimated state vector after correction (shape: (2, 1)).
+        P_e (np.ndarray): Next estimated error covariance matrix after correction (shape: (2, 2)).
+    """
     # Predict state error
     x_p = A@x + B@u
     P_p = A@p@A.T + B*R_u*B.T + Q

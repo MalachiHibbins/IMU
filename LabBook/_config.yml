@@ -25,7 +25,7 @@ latex:
 # Add a bibtex file so that we can create citations
 bibtex_bibfiles:
   - ref.bib
-
+bibtex_reference_style: author_year  # or another style that supports chapters
 
 # Information about where the book exists on the web
 repository:
@@ -46,3 +46,5 @@ launch_buttons:
   slides: true
 
 numbered: true
+
+copyright: ""

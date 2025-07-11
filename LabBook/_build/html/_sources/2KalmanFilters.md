@@ -1,6 +1,6 @@
 # 2 Kalman filters
 
-**A Kalman filter compares the predicted state, $\hat{x}^-_k$, with measurements, $z_k$, to create an estimate of the true state, $\hat{x}_k$**. This section introduces the Kalman filter, its algorithm and why its useful. The state is a vector that contains all the variables required to describe the system at a specific time.
+**A Kalman filter compares the predicted state, $\hat{x}^-_k$, with measurements, $z_k$, to create an estimate of the true state, $\hat{x}_k$**. This section introduces the Kalman filter, its algorithm and why its useful. The state is a vector that contains the variables required to describe the system at a specific time.
 
 ```{important} 
 Predictions and estimates are not interchangeable when talking about Kalman filters. A prediction is a forecast of the next state based on the previous state and the mathematical model. Whereas a estimate is an update of the predicted state once new measurements have been taken.
@@ -33,7 +33,7 @@ $A$ isn't always a constant matrix, it can be dependent on time, or measurements
 ```
 - $\hat{x}_k$ and $\hat{x}^-_k$ represent the best estimate and prediction of $x_k$ respectively. $\hat{x}^-_k$ is a prediction of the next state based on the physics of the system which is modeled using $A$. $\hat{x}_k$ is a updated estimate which blends the model based prediction $\hat{x}^-_k$ and the measurement $z_k$. $\hat{x}_k$ is the end output from the Kalman filter.
 - $H$ is the state to measurement matrix. $H$ is the translator between the system's state and what can be measured. It explains how, if there were no noise or errors, the true state would appear in the sensor. E.g. if the model uses position to predict velocity but the sensor only measures position how $H$ only picks out position. **$m \times n$ matrix**.
-- $\hat{z}^-_k$ and $\hat{z}_k$ is the what the model predicts and estimates our measurements should be respectively:
+- $\hat{z}^-_k$ and $\hat{z}_k$ is the what the model predicts and estimates the measurements should be respectively:
 ```{math}
 :label: eq-h-calculate
 \hat{z}_k &= H\hat{x}_k
@@ -42,15 +42,15 @@ $A$ isn't always a constant matrix, it can be dependent on time, or measurements
 ```
 {eq}`eq-h-calculate` is useful for determining $H$.
 - $w_k$ is the linear process noise vector or noise associated with the prediction. $w_k$ is white sequence noise (random noise uncorrelated with time), which makes the models prediction imperfect. E.g. unexpected bumps in the road for a moving car. **$n \times 1$ column vector**.
-- $v_k$ is the linear measurement noise vector, noise associated that corrupts $z_k$. Even if the true state is fixed, our measurements can change due to sensor imperfections. E.g. temperature measurements using a thermometer will be slightly different each time you measure. **$m \times 1$ column vector**.
-- $Q$ is the covariance matrix of $w_k$ i.e. how much the true state is expected to deviate from the predictions made by the state transition model. Large $Q$ assumes the measurements are more reliable than the model and puts a larger weighting on $z_k$ compared to $\hat{x}^-_k$ when computing $\hat{x}_{k+1}$. Smaller Q puts more trust in the model $\hat{x}^-_k$ compared to $z_k$. **$n \times n$ matrix**.
-- 
+- $v_k$ is the linear measurement noise vector, noise associated that corrupts $z_k$. Even if the true state is fixed, the measurements can change due to sensor imperfections. E.g. temperature measurements using a thermometer will be slightly different each time you measure. **$m \times 1$ column vector**.
+- $Q$ is the covariance matrix of $w_k$ i.e. how much the true state is expected to deviate from the predictions made by the state transition model. Large $Q$ assumes the measurements are more reliable than the model and puts a larger weighting on $z_k$ compared to $\hat{x}^-_k$ when computing $\hat{x}_{k+1}$. Smaller $Q$ puts more trust in the model $\hat{x}^-_k$ compared to $z_k$. **$n \times n$ matrix**.
+
 ```{math}
 :label: eq-process-noise-cov
 Q_k = \mathbb{E}[w_k w_k^T]
 ``` 
 
-{cite}`brown2012, chapter=4`
+{cite}`brown2012` (chapter 4)
 - $R$ is the covariance matrix of $v_k$. i.e. how much the measured state is effected by noise in the state transition model. $R$ tells the Kalman filter how much to "trust" the measurements compared to model predictions.  Large $R$ suggests the model is more reliable than the measurements and puts more emphasis on $\hat{x}^-_k$ compared to $z_k$ when computing $\hat{x}_{k+1}$, small $R$ puts more emphasis on $z_k$ compared to $\hat{x}^-_k$. **$m \times m$ matrix**.
   
 ```{math}
@@ -58,7 +58,7 @@ Q_k = \mathbb{E}[w_k w_k^T]
 R_k = \mathbb{E}[v_k v_k^T]
 ``` 
 
-{cite}`brown2012, chapter=4`
+{cite}`brown2012` (chapter 4)
 - $e_k$ and $e^-_k$ are the error in the estimation and the error in the prediction respectively defined as $e_k = x_k-\hat{x}_k$ and $e^-_k = x_k-\hat{x}^-_k$. **$n \times 1$ column vector.**
 
 - $P_k$ and $P^-_k$ are the associated error covariance matrices for $e_k$ and $e^-_k$ respectively defined by: **$n \times n$** matrix.
@@ -75,12 +75,12 @@ and
 P^-_k = \mathbb{E}[e^-_k (e^-_k)^T]
 ```
 
-{cite}`brown2012, chapter=4`
-- $K_k$ is the Kalman gain which has similar effects to $\alpha$ in the [low pass filter](https://github.com/MalachiHibbins/IMU/tree/main/4bExampleVelocityFromPosition/). **$n \times m$ matrix**. It is a blending factor that determines how much of the prediction and measurement goes into the updated estimate $\hat{x}_k$. The Kalman gain is determined by the covariance matrices $P^-_k$, $H$, $R$ and $Q$.
-```{math}
+{cite}`brown2012` (chapter 4)
+- $K_k$ is the Kalman gain which has similar effects to $\alpha$ in the low pass filter. **$n \times m$ matrix**. It is a blending factor that determines how much of the prediction and measurement goes into the updated estimate $\hat{x}_k$. The Kalman gain is determined by the covariance matrices $P^-_k$, $H$, $R$ and $Q$.
+
 - $x_0$ is the initial state estimate. provided at the start of the estimation process.
-```{note}
 - $P_0$ is the initial error covariance matrix estimate.
+
 ```{important}
 The Kalman filter parameters are the parameters set by the user before fitting the data they are: $A$, $Q$, $H$, $R$, $\hat{x}_0$ and $P_0$. 
 ```
@@ -146,7 +146,7 @@ By comparing {eq}`eq-expectation` and {eq}`eq-estimation-cov` the estimation err
 e_k = (x_k - \hat{x}_k^-) - K_k \left( H_k {x}_k + v_k - H_k \hat{x}_k^- \right)
 ```
 Initially $e_k$ is the error between the true state and the prediction. The Kalman gain adjusts this based on what is actually measured $z_k = H_k {x}_k + v_k$ and what the expected measurment is $\hat{z} = H_k \hat{x}_k^-$ based on the model. 
-We can group the terms more intuitively by substituting in the definition for the prediction error $e^-_k = x_k - \hat{x}_k^-$:
+Grouping the terms more intuitively by substituting in the definition for the prediction error $e^-_k = x_k - \hat{x}_k^-$ gets:
 ```{math}
 :label: eq-E2
 e_k = e^-_k \Omega_k - K_kv_k
@@ -158,7 +158,7 @@ Where $\Omega_k = I - K_k H_k$ describes how much of the prediction error remain
 P_k = \mathbb{E}[(e^-_k \Omega_k - K_kv_k)(e^-_k\Omega_k - K_kv_k)^T]
 ```
 
-When we expand the brackets we get four terms:
+After expanding the brackets 4 terms are obtained:
 
 ```{math}
 :label: eq-E4
@@ -168,7 +168,7 @@ P_k = \mathbb{E}[
 - K_k v (e^-_k)^T \Omega^T 
 + K_k v v^T K_k^T]
 ```
-Then using the identity $\mathbb{E}[Ax + By] \equiv A\mathbb{E}[x] + B \mathbb{E}[y]$ we can rewrite {eq}`eq-E4`
+Then using the useful identity $\mathbb{E}[Ax + By] \equiv A\mathbb{E}[x] + B \mathbb{E}[y]$ {eq}`eq-E4` can be rewritten:
 ```{math}
 :label: eq-E5
 P_k =  
@@ -178,10 +178,10 @@ P_k =
 + K_k \mathbb{E}[v v^T] K_k^T
 ```
 
-The first term represents the uncertainty left from the prediction after the update. The last term represents the uncertainty added by the measurement noise. The two middle terms represent the interaction between the prediction error and the measurement noise they are both zero since $e_k$ and $v_k$ are both have mean of 0 and are independent. Subbing in {eq}`eq-prediction-cov` into the first term, {eq}`eq-measurement-noise-cov` into the last and our definition of $\Omega_k$ term gets {eq}`P_k-minimise`.
+The first term represents the uncertainty left from the prediction after the update. The last term represents the uncertainty added by the measurement noise. The two middle terms represent the interaction between the prediction error and the measurement noise they are both zero since $e_k$ and $v_k$ are both have mean of $0$ and are independent. Subbing in {eq}`eq-prediction-cov` into the first term, {eq}`eq-measurement-noise-cov` into the last and our definition of $\Omega_k$ term gets {eq}`P_k-minimise`.
 ````
 
-After performing the expectation we are left with an equation for $P_k$ in terms of Kalman filter parameters:
+Performing the expectations leaves an equation for $P_k$ in terms of Kalman filter parameters:
 
 
 ```{math}
@@ -189,26 +189,23 @@ After performing the expectation we are left with an equation for $P_k$ in terms
 P_k = (I-K_kH_k)P^-_k(I-K_kH_k)^T+K_kR_kK^T_k
 ```
 
-Which is a general expression for the updated error covariance matrix for suboptimal $K_k$. Now we will optimize $K_k$ by minimizing the MSE corresponding to finding the value of $K_k$ that minimizes the individual terms along the leading diagonal of $P_k$ as these terms represent the estimation error variances for the elements of the state vector elements being selected. This leaves: 
+Which is a general expression for the updated error covariance matrix for suboptimal $K_k$. Now optimize $K_k$ by minimizing the MSE corresponding to finding the value of $K_k$ that minimizes the individual terms along the leading diagonal of $P_k$ as these terms represent the estimation error variances for the elements of the state vector elements being selected. This leaves: 
 
 ```{margin}
-For a more detailed derivation see {cite}`brown2012, chapter=4`.
+For a more detailed derivation see {cite}`brown2012` (chapter 4).
 ```
 
 ```{math}
 :label: eq-kalman-gain
 K_k = P^-_k H^T (H P^-_k H^T + R)^{-1}
 ```
-In this case $K_k$ is the optimum Kalman gain. When considering the optimum Kalman gain {eq}`P_k-minimise` can be simplified to by ignoring the last two terms: 
+In this case $K_k$ is the optimum Kalman gain. When considering the optimum Kalman gain {eq}`P_k-minimise` can be simplified by ignoring the last two terms: 
 
 ```{math}
 :label: eq-error-covariance-update
 P_k = P^-_k - K_k H P^-_k
 ```
-{cite}`brown2012, chapter=4`
-
-
-
+{cite}`brown2012` (chapter 4).
 
 Whereas the low pass filter passes $\hat{x}_{k-1}$ directly between time steps $t_{k-1}$ and $t_{k}$ the Kalman filter predicts the next step before a measurement is carried out and compares this with the measurement to give new estimate.
 
@@ -216,6 +213,8 @@ Whereas the low pass filter passes $\hat{x}_{k-1}$ directly between time steps $
 ```{note}
 $H$ and $R$ are only used in the prediction step.
 ```
+
+The equations {eq}`eq-kalman-update`, {eq}`eq-kalman-gain` and {eq}`eq-error-covariance-update` together describe the estimation step of the Kalman filter. 
 
 ## 2.3 Prediction step
 Unlike the low pass filter Kalman filters also consider the physics of the system, the predictions which are used alongside measurements for state estimation. The system dynamically changes over time and is modelled using $A$, which describes how the state is predicted to change between $t_k$ and $t_{k+1}$:
@@ -228,7 +227,7 @@ Unlike the low pass filter Kalman filters also consider the physics of the syste
 The error covariance matrix associated with this prediction $\hat{x}^-_{k+1}$ is obtained from:
 
 ```{margin}
-If $\mu_x$ is transformed linearly $\mu_y = F\mu_x$ its covariance matrix, $\Sigma_x$, can be transformed using $\Sigma_y = F\Sigma_xF^T$. {cite}`Barreto2021,chapter=2`
+If $\mu_x$ is transformed linearly $\mu_y = F\mu_x$ its covariance matrix, $\Sigma_x$, can be transformed using $\Sigma_y = F\Sigma_xF^T$. {cite}`Barreto2021` (chapter 2)
 ```
 
 ```{math}
@@ -236,7 +235,7 @@ If $\mu_x$ is transformed linearly $\mu_y = F\mu_x$ its covariance matrix, $\Sig
 P^-_k = AP_kA^T+Q
 ```
 
-$Q$ also appears here as this is how much the true state is expected to vary from the predictions. Together these two equations encode the prediction phase of the filter.  If we only had a model we wouldn't need the estimation phase i.e. we had no measurements. 
+$Q$ also appears here as this is how much the true state is expected to vary from the predictions. Together equations {eq}`projection` and {eq}`projection-covariance` equations encode the prediction phase of the filter. 
 
 
 ```{note}

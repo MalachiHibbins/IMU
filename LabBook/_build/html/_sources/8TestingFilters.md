@@ -1,7 +1,7 @@
 # 8 Experiment: Quantitative Comparison of Kalman Filter Performance
 Using two sensors (magnetometer and gyroscope), four filters (a high pass, a low pass, a polynomial fitting and the kalman filter) were used to calculate estimates for the yaw angle, $\psi$, of a mobile phone. The results were compared to the data from the phones in built filter. The experiment involved two tests designed to see how the filters perform over a single frequency then a range of frequencies. In the first part of the experiment the phone oscillated with high frequency which the parameters were tuned, to test how the filters performed at a single frequency. The second part of the experiment the phone completed a full rotation at a low frequency without the parameters being re-tuned, to see how the filters responded when not tuned to a specific frequency. 
 
-## Implementation
+## 8.1 Implementation
 Data was recorded using the [sensor logger app](https://play.google.com/store/apps/details?id=com.kelvin.sensorapp&hl=en-US&pli=1) allowing the phone to function as a 9-axis IMU. Only $\psi$ was measured so only gyroscope and magnetometer data were necessary. The correction measurement was calculated using the magnetometer data $m_x$ and $m_y$. $m_z$ wasn't required as the IMU was assumed to be in the plane perpendicular to the gravity vector, so didn't need to be corrected. $\psi$ was determined using {eq}`eq-Magnetometer`. 
 
 The gyroscope data was integrated using the euler method:
@@ -13,7 +13,7 @@ This time $\omega_k$ is the gyroscope measurement of angular velocity at time $k
 
 The code for this section can be found in [github](https://github.com/MalachiHibbins/IMU/tree/main/7IMUReal). The programme comprises of one file `Main.py`. Each of the filters is written as a separate function and can be analyzed using the `AnalysePhone` class, which contains methods to generate interactive plots. 
 
-## Filters
+## 8.2 Filters
 The following filters were compared as well as unfiltered data from the gyroscope and the magnetometer:
 
 **Kalman Filter** (KF): A standard Kalman filter which **fused** data from the magnetometer with gyroscope data with a constant process noise covariance and measurement noise covariance. The tuning parameters were:
@@ -30,7 +30,7 @@ The following filters were compared as well as unfiltered data from the gyroscop
   - $\mathbb{O}$: The order of the polynomial used to fit the samples.
 The SGF works by fitting a polynomial of order $\mathbb{O}$ to a window of length $W$. The center of the window is the fitted value.
 
-## Results
+## 8.3 Results
 
 ### High frequency oscillation test
 The phone was initially held in a fixed position for around 5 seconds then oscillated at a high frequency for around $20$ s, each of the filters was tuned to optimise the fit.
@@ -105,6 +105,6 @@ MSE for each of the filters against the phones builtin filter for the second tes
 
 {numref}`mse-test-2` indicates the same as {numref}`r-squared-test2`, the Kalman filter still provides a marginally better fit than the other filters. The EMAHPF, which had the best fit in the first test now has by far the worst fit as discussed earlier.
 
-## Conclusion
+## 8.4 Conclusion
 
 Frequency based filters, like the EMAHPF and EMALPF work well for signals which are oscillating at a constant or near constant frequency, especially when there is only one sensor available. However they work less well for a signal made up from a range of different frequencies, like real world motion. Kalman filters work well in this situation as the combination of measurements minimizes noise from both sensors (which are subject to different types of noise) to achieve a reasonably accurate state estimate, without ignoring any specific frequency data. The parameters of the KF are independent of frequency whereas the EMAHPF and EMALPF have frequency dependent tuning parameters.

@@ -62,7 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '1FilterBasics';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Kalman filters" href="4KalmanFilters.html" />
+    <link rel="next" title="2 Kalman filters" href="2KalmanFilters.html" />
     <link rel="prev" title="Intro" href="0Intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -183,13 +183,13 @@
         </ul>
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">1 Basics Of Filtering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4KalmanFilters.html">Kalman filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4aExampleBatteryOutput.html">Battery output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4bExampleVelocityFromPosition.html">Velocity from position</a></li>
-<li class="toctree-l1"><a class="reference internal" href="5IMU.html">Attitude using a gyroscope and accelarometer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">Position using GPS and Accelarometer data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="7RealData.html">Attitude Using Real Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="8TestingFilters.html">Quantitative Comparison of Kalman Filter Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2KalmanFilters.html">2 Kalman filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3ExampleBatteryOutput.html">3 Example: Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4ExampleVelocityFromPosition.html">4 Example: Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">5 Example: Attitude using a gyroscope and accelerometer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">6 Example : Position using GPS and accelerometer data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7RealData.html">7 Experiment: Attitude Using a 6/9 axis IMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="8TestingFilters.html">8 Experiment: Quantitative Comparison of Kalman Filter Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -390,6 +390,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#moving-average-filters">1.2 Moving Average filters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-moving-average-filter-low-pass">1.3 Exponential Moving Average filter (Low Pass)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-moving-average-filter-high-pass">1.4 Exponential Moving Average Filter (High Pass)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">1.5 Summary</a></li>
 </ul>
             </nav>
         </div>
@@ -403,11 +404,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="basics-of-filtering">
 <h1>1 Basics Of Filtering<a class="headerlink" href="#basics-of-filtering" title="Link to this heading">#</a></h1>
-<p>Before looking at how Kalman filters worked a few more simplistic filters were tested. Later the performance between these and the Kalman filter will be compared. The purpose of a filter is to consider measurments and use these to form an estimate of the true state x. Here <span class="math notranslate nohighlight">\(x_k\)</span> is the true state and <span class="math notranslate nohighlight">\(z_k\)</span> are the measurements which are corrupted by noise. The filters output an estimate of the true state <span class="math notranslate nohighlight">\(\hat{x}_k\)</span>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>In this section the state is the same thing being measured. Later sections will have a different definition.</p>
-</div>
+<p>Before looking at how Kalman filters worked basic recursive filters were tested. Later the performance between these and the Kalman filter will be compared. The purpose of a filter is to consider measurments and use these to form an estimate of the true state <span class="math notranslate nohighlight">\(x_k\)</span> which is a column vector describing the system, in these example the state is 1D. Measurements of the true state, <span class="math notranslate nohighlight">\(z_k\)</span> are corrupted by noise. The filters output an estimate of the true state <span class="math notranslate nohighlight">\(\hat{x}_k\)</span>.</p>
 <section id="average-filters">
 <h2>1.1 Average filters<a class="headerlink" href="#average-filters" title="Link to this heading">#</a></h2>
 <p>For a signal where <span class="math notranslate nohighlight">\(x_k\)</span> is constant, e.g. calculating the output from a battery, computing the mean is a reasonable way to determine <span class="math notranslate nohighlight">\(\hat{x}_k\)</span>. The average is computed as:</p>
@@ -431,7 +428,7 @@ The code for this filter can be found in <a class="reference external" href="htt
 </section>
 <section id="moving-average-filters">
 <h2>1.2 Moving Average filters<a class="headerlink" href="#moving-average-filters" title="Link to this heading">#</a></h2>
-<p>The moving average is used to remove noise over a constantly varying signal. Here <span class="math notranslate nohighlight">\(\hat{x_k}\)</span> represents the moving average at time <span class="math notranslate nohighlight">\(t_k\)</span> and <span class="math notranslate nohighlight">\(n\)</span> represents the window size which is a parameter to be tuned. The moving average can be written as:</p>
+<p>The moving average is used to remove noise over a constantly varying signal. Here <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> represents the moving average at time <span class="math notranslate nohighlight">\(t_k\)</span> and <span class="math notranslate nohighlight">\(n\)</span> represents the window size which is a parameter to be tuned. The moving average can be written as:</p>
 <div class="math notranslate nohighlight" id="equation-eq-moving-average">
 <span class="eqno">(4)<a class="headerlink" href="#equation-eq-moving-average" title="Link to this equation">#</a></span>\[\hat{x}_k = \frac{z_{k-n+1} + z_{k-n+2}+...+z_k}{n}\]</div>
 <p><span class="math notranslate nohighlight">\(\hat{x}_k\)</span> can be written recursively using the previous estimate <span class="math notranslate nohighlight">\(\hat{x}_{k-1}\)</span> and the new measurement <span class="math notranslate nohighlight">\(z_k\)</span>:</p>
@@ -464,14 +461,15 @@ The code for this filter can be found in <a class="reference external" href="htt
 <p>Combining these equations helps to overcome some problems associated with the moving average since more distant terms disappear exponentially quickly:</p>
 <div class="math notranslate nohighlight" id="equation-eq-lowpass-3">
 <span class="eqno">(8)<a class="headerlink" href="#equation-eq-lowpass-3" title="Link to this equation">#</a></span>\[\hat{x}_k = \alpha^2 \hat{x}_{k-2} + \alpha(1-\alpha) z_{k-1} + (1-\alpha)z_k \quad 0&lt;\alpha&lt;1\]</div>
-<p>Due to the restriction on alpha larger <span class="math notranslate nohighlight">\(n\)</span> means greater weighting on <span class="math notranslate nohighlight">\(\hat{x}_n\)</span> since <span class="math notranslate nohighlight">\(\alpha(1-\alpha)\leq 1-\alpha\)</span>. Previous data gets weighted exponentially less. The code for this section can be found in <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/2MovingAverageFilter">github</a>. Similarly to the other two examples the code is made up of 3 files: <code class="docutils literal notranslate"><span class="pre">GenTestSig.py</span></code>, <code class="docutils literal notranslate"><span class="pre">LowPassFilter.py</span></code> and <code class="docutils literal notranslate"><span class="pre">Main.py</span></code>. The first file generates a signal (the true signal) which is again a combination of 3 <span class="math notranslate nohighlight">\(\sin\)</span> waves and then adds random gaussian noise to this signal, the noisy signal. The second contains the filter algorithm which will be used to fit the noisy signal and the third runs the filter on the generated signal.</p>
+<p>Due to the restriction on alpha larger <span class="math notranslate nohighlight">\(n\)</span> means greater weighting on <span class="math notranslate nohighlight">\(\hat{x}_n\)</span> since <span class="math notranslate nohighlight">\(\alpha(1-\alpha)\leq 1-\alpha\)</span>. Previous data gets weighted exponentially less.</p>
+<p>The code for this section can be found in <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/2MovingAverageFilter">github</a>. Similarly to the other two examples the code is made up of 3 files: <code class="docutils literal notranslate"><span class="pre">GenTestSig.py</span></code>, <code class="docutils literal notranslate"><span class="pre">LowPassFilter.py</span></code> and <code class="docutils literal notranslate"><span class="pre">Main.py</span></code>. The first file generates a signal (the true signal) which is again a combination of 3 <span class="math notranslate nohighlight">\(\sin\)</span> waves and then adds random gaussian noise to this signal, the noisy signal. The second contains the filter algorithm which will be used to fit the noisy signal and the third runs the filter on the generated signal.</p>
 <figure class="align-default" id="fig-lowpass-vs-moving-average">
 <img alt="_images/image-10.png" src="_images/image-10.png" />
 <figcaption>
 <p><span class="caption-number">Fig. 4 </span><span class="caption-text">Figure 3.1: EMALPF with optimized <span class="math notranslate nohighlight">\(\alpha = 0.93\)</span> (visually).</span><a class="headerlink" href="#fig-lowpass-vs-moving-average" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>The low pass filter has a smaller delay compared to the moving average filter. However the low pass filter although the fit is less smooth.</p>
+<p>The low pass filter has a smaller delay compared to the moving average filter, but was nosier. This makes sense as the moving average filter gives equal weight to all previous estimates, so noisy measurements will have a smaller effect on the fit.</p>
 <figure class="align-default" id="fig-lowpass-alpha-08">
 <img alt="_images/image-13.png" src="_images/image-13.png" />
 <figcaption>
@@ -489,7 +487,7 @@ The code for this filter can be found in <a class="reference external" href="htt
 </section>
 <section id="exponential-moving-average-filter-high-pass">
 <h2>1.4 Exponential Moving Average Filter (High Pass)<a class="headerlink" href="#exponential-moving-average-filter-high-pass" title="Link to this heading">#</a></h2>
-<p>An exponential moving average high pass filter (EMAHPF) works by subtracting the EMALPF signal (here we will call this \hat{x}^{LP}_k) from <span class="math notranslate nohighlight">\(z_k\)</span>. This corresponds to removing the low frequencies from the signal. The high pass filter estimates the state <span class="math notranslate nohighlight">\(\hat{x}^{HP}_k\)</span> as:</p>
+<p>An exponential moving average high pass filter (EMAHPF) works by subtracting the EMALPF <span class="math notranslate nohighlight">\(\hat{x}^{LP}_k\)</span> from <span class="math notranslate nohighlight">\(z_k\)</span>. This corresponds to removing the low frequencies from the signal. The high pass filter estimates the state <span class="math notranslate nohighlight">\(\hat{x}^{HP}_k\)</span> as:</p>
 <div class="math notranslate nohighlight" id="equation-eq-highpass">
 <span class="eqno">(9)<a class="headerlink" href="#equation-eq-highpass" title="Link to this equation">#</a></span>\[\hat{x}_k^{HP} = z_k - \hat{x}^{LP}_k \]</div>
 <p>Subbing in <a class="reference internal" href="#equation-eq-lowpass-1">(6)</a> gives:</p>
@@ -499,6 +497,10 @@ The code for this filter can be found in <a class="reference external" href="htt
 <div class="math notranslate nohighlight" id="equation-eq-highpass-3">
 <span class="eqno">(11)<a class="headerlink" href="#equation-eq-highpass-3" title="Link to this equation">#</a></span>\[\hat{x}_k^{HP} = \hat{x}_{k-1}^{HP} + z_k - z_{k-1}\]</div>
 <p>Which is the recursive formula for the EMAHPF. These are useful for removing low frequency background noise, such as integration drift.</p>
+</section>
+<section id="summary">
+<h2>1.5 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>The above are examples of passive filters as they filter data without using feedback from a physical model. Kalman filters are active filters which compare measurements with feedback to determine an improved estimate of the state.</p>
 </section>
 </section>
 
@@ -542,11 +544,11 @@ The code for this filter can be found in <a class="reference external" href="htt
       </div>
     </a>
     <a class="right-next"
-       href="4KalmanFilters.html"
+       href="2KalmanFilters.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Kalman filters</p>
+        <p class="prev-next-title">2 Kalman filters</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -570,6 +572,7 @@ The code for this filter can be found in <a class="reference external" href="htt
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#moving-average-filters">1.2 Moving Average filters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-moving-average-filter-low-pass">1.3 Exponential Moving Average filter (Low Pass)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exponential-moving-average-filter-high-pass">1.4 Exponential Moving Average Filter (High Pass)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">1.5 Summary</a></li>
 </ul>
   </nav></div>
 
@@ -591,13 +594,6 @@ By Malachi Hibbins
   
   <div class="footer-item">
     
-
-  <p class="copyright">
-    
-      © Copyright 2023.
-      <br/>
-    
-  </p>
 
   </div>
   

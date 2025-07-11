@@ -56,7 +56,29 @@ a_2 = np.array(data_df.loc["fy", "data"])
 a_3 = np.array(data_df.loc["fz", "data"])
 as__ = np.column_stack((a_1, a_2, a_3))
 
-def run(Q, R, p_i, additional_noise_w, additional_noise_a):
+def run(Q, R, p_i, additional_noise_w = 0, additional_noise_a = 0):
+    """
+    - Obtains the attitude from integrating the gyroscope data only
+    - Calculates attitude based on accelerometer data only
+    - Uses a kalman filter on the gyroscope data only
+    - Uses a kalman filter on the gyroscope and accelerometer data
+    
+    args:
+        Q (np.ndarray): Process noise covariance matrix
+        R (np.ndarray): Measurement noise covariance matrix
+        p_i (np.ndarray): Initial covariance matrix
+        additional_noise_w (float): Additional noise to add to the gyroscope data, if required
+        additional_noise_a (float): Additional noise to add to the accelerometer data, if required
+    returns:
+        t_w (np.ndarray): Time vector for gyroscope data
+        t_a (np.ndarray): Time vector for accelerometer data
+        w_1, w_2, w_3 (np.ndarray): Gyroscope data for each axis
+        a_1, a_2, a_3 (np.ndarray): Accelerometer data for each axis
+        phi_g, theta_g, psi_g (np.ndarray): Euler angles from gyroscope integration
+        phi_a, theta_a, psi_a (np.ndarray): Euler angles from accelerometer data
+        phi_f, theta_f, psi_f (np.ndarray): Euler angles from kalman filter with fusion
+        phi_n, theta_n, psi_n (np.ndarray): Euler angles from kalman filter without fusion
+    """
     # Add additional noise to the gyroscope data by default is 0
     ws = ws_ + rng.normal(0, additional_noise_w, (len(w_1), 3))
     t_w = np.arange(0, len(w_1) * dt, dt)
@@ -205,7 +227,7 @@ for ax in axs_:
 axs[2,0].legend(handels, labels, loc='upper center')
 fig8.tight_layout()
 
-# Just  plot the euler angles from integration
+# plot the euler angles from integration
 fig9, (ax10, ax11, ax12) = plt.subplots(3, 1, figsize=figsize, sharex=True)
 alpha = 0.8
 ax10.plot(t_w, phi_g, label='$\phi^-$', color='green', alpha=alpha)
@@ -298,7 +320,15 @@ log_p_slider = Slider(ax_p, 'log(p)', -3, 6, valinit=np.log10(p_i[0, 0]), color=
 n_w_slider = Slider(ax_n_w, 'Noise w', 0, 1, valinit=additional_noise_w, color=filter_color)
 n_a_slider = Slider(ax_n_a, 'Noise a', 0, 1, valinit=additional_noise_a, color=filter_color)
 
-def update(val):
+def update():
+    """
+    Update the plots based on the slider values.
+    args:
+        None
+    returns:
+        None
+    """
+    # Get the current values from the sliders
     q = 10 ** log_q_slider.val
     r = 10 ** log_r_slider.val
     p = 10 ** log_p_slider.val
