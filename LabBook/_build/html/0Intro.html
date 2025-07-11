@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Kalman Filters and IMU</title>
+    <title>Intro &#8212; Kalman Filters and IMU</title>
   
   
   
@@ -28,7 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=f0c89327" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -41,7 +41,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=60c0e2ec"></script>
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -62,6 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '0Intro';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="1 Basics Of Filtering" href="1FilterBasics.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -155,8 +156,8 @@
       
     
     
-    <img src="_static/logo.png" class="logo__image only-light" alt="None - Home"/>
-    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="None - Home"/>`);</script>
+    <img src="_static/logo.png" class="logo__image only-light" alt="Kalman Filters and IMU - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Kalman Filters and IMU - Home"/>`);</script>
   
   
 </a></div>
@@ -182,15 +183,15 @@
             </li>
         </ul>
         <ul class="nav bd-sidenav">
-
-
-
-
-
-
-
-
-
+<li class="toctree-l1"><a class="reference internal" href="1FilterBasics.html">1 Basics Of Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2KalmanFilters.html">2 Kalman filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3ExampleBatteryOutput.html">3 Example: Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4ExampleVelocityFromPosition.html">4 Example: Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">5 Example: Attitude using a gyroscope and accelerometer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">6 Example : Position using GPS and accelerometer data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7RealData.html">7 Experiment: Attitude Using a 6/9 axis IMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="8TestingFilters.html">8 Experiment: Quantitative Comparison of Kalman Filter Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -282,6 +283,54 @@
 
 
 
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/0Intro.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
 <button onclick="toggleFullScreen()"
   class="btn btn-sm btn-fullscreen-button"
   title="Fullscreen mode"
@@ -338,17 +387,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-1FilterBasics">1 Basics Of Filtering</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-2KalmanFilters">2 Kalman filters</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-3ExampleBatteryOutput">3 Example: Battery output</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-4ExampleVelocityFromPosition">4 Example: Velocity from position</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-5IMU">5 Example: Attitude using a gyroscope and accelerometer</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-6ExtendedKalman">6 Example : Position using GPS and accelerometer data</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-7RealData">7 Experiment: Attitude Using a 6/9 axis IMU</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-8TestingFilters">8 Experiment: Quantitative Comparison of Kalman Filter Performance</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-99Bibliography">Bibliography</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contents">Contents</a></li>
 </ul>
-
             </nav>
         </div>
     </div>
@@ -366,997 +406,17 @@ document.write(`
 <section id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Link to this heading">#</a></h2>
 <div class="toctree-wrapper compound">
-<span id="document-1FilterBasics"></span><section class="tex2jax_ignore mathjax_ignore" id="basics-of-filtering">
-<h3>1 Basics Of Filtering<a class="headerlink" href="#basics-of-filtering" title="Link to this heading">#</a></h3>
-<p>Before looking at how Kalman filters worked basic recursive filters were tested. Later the performance between these and the Kalman filter will be compared. The purpose of a filter is to consider measurments and use these to form an estimate of the true state <span class="math notranslate nohighlight">\(x_k\)</span> which is a column vector describing the system, in these example the state is 1D. Measurements of the true state, <span class="math notranslate nohighlight">\(z_k\)</span> are corrupted by noise. The filters output an estimate of the true state <span class="math notranslate nohighlight">\(\hat{x}_k\)</span>.</p>
-<section id="average-filters">
-<h4>1.1 Average filters<a class="headerlink" href="#average-filters" title="Link to this heading">#</a></h4>
-<p>For a signal where <span class="math notranslate nohighlight">\(x_k\)</span> is constant, e.g. calculating the output from a battery, computing the mean is a reasonable way to determine <span class="math notranslate nohighlight">\(\hat{x}_k\)</span>. The average is computed as:</p>
-<div class="math notranslate nohighlight" id="equation-eq-average">
-<span class="eqno">(1)<a class="headerlink" href="#equation-eq-average" title="Link to this equation">#</a></span>\[\hat{x}_k = \frac{z_1+z_2+z_3+...+z_k}{k}\]</div>
-<p>In this case <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> is the average. However <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> needs to be computed at every time-step, <a class="reference internal" href="#equation-eq-average">(1)</a> isn’t going to be very efficient to compute. Written in a more computationally efficient form:</p>
-<div class="math notranslate nohighlight" id="equation-eq-recursive">
-<span class="eqno">(2)<a class="headerlink" href="#equation-eq-recursive" title="Link to this equation">#</a></span>\[\hat{x}_k = \left(\frac{k-1}{k}\right)\hat{x}_{k-1} + \frac{z_k}{k}\]</div>
-<p>Let <span class="math notranslate nohighlight">\(\alpha = \frac{k-1}{k}\)</span>, <a class="reference internal" href="#equation-eq-recursive">(2)</a> can be rewritten as:</p>
-<div class="math notranslate nohighlight" id="equation-eq-alpha">
-<span class="eqno">(3)<a class="headerlink" href="#equation-eq-alpha" title="Link to this equation">#</a></span>\[\hat{x}_k = \alpha \hat{x}_{k-1} + (1 - \alpha) z_k\]</div>
-<p>This will be referred to as the recursive average filter.
-The code for this filter can be found in <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/1AverageFilter">github</a>. The programme is made up from 3 files: <code class="docutils literal notranslate"><span class="pre">GetVolt.py</span></code>, <code class="docutils literal notranslate"><span class="pre">RcsAvgFilter.py</span></code> and <code class="docutils literal notranslate"><span class="pre">Test.py</span></code>. The first file generates a noisy signal, the second contains the filter and the third runs the filter on the generated signal.</p>
-<figure class="align-default" id="fig-noisy-signal">
-<img alt="_images/image-8.png" src="_images/image-8.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">A noisy signal with mean 25 and standard deviation 0.5, fitted with a moving average filter.</span><a class="headerlink" href="#fig-noisy-signal" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>The filter is efficient and converges to the correct value very quickly. Due to random variation the filter fluctuates around the correct value. The average filter is very good when <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> is constant, however it won’t converge to a changing signal.</p>
-</section>
-<section id="moving-average-filters">
-<h4>1.2 Moving Average filters<a class="headerlink" href="#moving-average-filters" title="Link to this heading">#</a></h4>
-<p>The moving average is used to remove noise over a constantly varying signal. Here <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> represents the moving average at time <span class="math notranslate nohighlight">\(t_k\)</span> and <span class="math notranslate nohighlight">\(n\)</span> represents the window size which is a parameter to be tuned. The moving average can be written as:</p>
-<div class="math notranslate nohighlight" id="equation-eq-moving-average">
-<span class="eqno">(4)<a class="headerlink" href="#equation-eq-moving-average" title="Link to this equation">#</a></span>\[\hat{x}_k = \frac{z_{k-n+1} + z_{k-n+2}+...+z_k}{n}\]</div>
-<p><span class="math notranslate nohighlight">\(\hat{x}_k\)</span> can be written recursively using the previous estimate <span class="math notranslate nohighlight">\(\hat{x}_{k-1}\)</span> and the new measurement <span class="math notranslate nohighlight">\(z_k\)</span>:</p>
-<div class="math notranslate nohighlight" id="equation-eq-moving-average-rec">
-<span class="eqno">(5)<a class="headerlink" href="#equation-eq-moving-average-rec" title="Link to this equation">#</a></span>\[\hat{x}_k = \hat{x}_{k-1} + \frac{z_n - z_{k-n}}{n} \]</div>
-<p>for more efficient computation. The code for the following graphs can be found in <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/2MovingAverageFilter">github</a>. The programme is made up from 3 files: <code class="docutils literal notranslate"><span class="pre">GenTestSig.py</span></code>, <code class="docutils literal notranslate"><span class="pre">MovAvgFilter.py</span></code> and <code class="docutils literal notranslate"><span class="pre">Main.py</span></code>. The first file generates a signal (the true signal) which is a combination of 3 <span class="math notranslate nohighlight">\(\sin\)</span> waves and then adds random gaussian noise to this signal, the noisy signal. The second contains the filter algorithm which will be used to fit the noisy signal and the third runs the filter on the generated signal.</p>
-<figure class="align-default" id="fig-moving-average-k25">
-<img alt="_images/image-9.png" src="_images/image-9.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Moving average filter applied to a noisy signal with <span class="math notranslate nohighlight">\(n = 25\)</span>.</span><a class="headerlink" href="#fig-moving-average-k25" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>The moving average lags behind the true signal but has roughly the right shape. This is expected as the moving average relies on previous estimates.</p>
-<figure class="align-default" id="fig-moving-average-k5">
-<img alt="_images/image-15.png" src="_images/image-15.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Moving average filter applied to a noisy signal with <span class="math notranslate nohighlight">\(n=5\)</span>.</span><a class="headerlink" href="#fig-moving-average-k5" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>In this example the delay is smaller but less noise is removed. There is a tradeoff between noise reduction and minimizing delay limiting the accuracy of the moving average filter.</p>
-</section>
-<section id="exponential-moving-average-filter-low-pass">
-<h4>1.3 Exponential Moving Average filter (Low Pass)<a class="headerlink" href="#exponential-moving-average-filter-low-pass" title="Link to this heading">#</a></h4>
-<p>All terms in <a class="reference internal" href="#equation-eq-moving-average">(4)</a> have equal weighting (<span class="math notranslate nohighlight">\(1/n\)</span>), however it makes more sense to give more recent terms a larger weighting, this should help minimize delay whilst preserving the smoothing effect. A result of this is it allows low frequencies to pass through but filters out high frequencies. Noise is usually high frequency. Below is an example of a first order exponential moving average, low pass filter (EMALPF):</p>
-<div class="math notranslate nohighlight" id="equation-eq-lowpass-1">
-<span class="eqno">(6)<a class="headerlink" href="#equation-eq-lowpass-1" title="Link to this equation">#</a></span>\[\hat{x}_k = \alpha \hat{x}_{k-1} + (1 - \alpha) z_k \quad 0&lt;\alpha&lt;1\]</div>
-<p>Looks similar to <a class="reference internal" href="#equation-eq-alpha">(3)</a> except here <span class="math notranslate nohighlight">\(\alpha\)</span> is a parameter to be tuned. It is also true that:</p>
-<div class="math notranslate nohighlight" id="equation-eq-lowpass-2">
-<span class="eqno">(7)<a class="headerlink" href="#equation-eq-lowpass-2" title="Link to this equation">#</a></span>\[\hat{x}_{k-1} = \alpha \hat{x}_{k-2} + (1 - \alpha) z_{k-1} \quad 0&lt;\alpha&lt;1\]</div>
-<p>Combining these equations helps to overcome some problems associated with the moving average since more distant terms disappear exponentially quickly:</p>
-<div class="math notranslate nohighlight" id="equation-eq-lowpass-3">
-<span class="eqno">(8)<a class="headerlink" href="#equation-eq-lowpass-3" title="Link to this equation">#</a></span>\[\hat{x}_k = \alpha^2 \hat{x}_{k-2} + \alpha(1-\alpha) z_{k-1} + (1-\alpha)z_k \quad 0&lt;\alpha&lt;1\]</div>
-<p>Due to the restriction on alpha larger <span class="math notranslate nohighlight">\(n\)</span> means greater weighting on <span class="math notranslate nohighlight">\(\hat{x}_n\)</span> since <span class="math notranslate nohighlight">\(\alpha(1-\alpha)\leq 1-\alpha\)</span>. Previous data gets weighted exponentially less.</p>
-<p>The code for this section can be found in <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/2MovingAverageFilter">github</a>. Similarly to the other two examples the code is made up of 3 files: <code class="docutils literal notranslate"><span class="pre">GenTestSig.py</span></code>, <code class="docutils literal notranslate"><span class="pre">LowPassFilter.py</span></code> and <code class="docutils literal notranslate"><span class="pre">Main.py</span></code>. The first file generates a signal (the true signal) which is again a combination of 3 <span class="math notranslate nohighlight">\(\sin\)</span> waves and then adds random gaussian noise to this signal, the noisy signal. The second contains the filter algorithm which will be used to fit the noisy signal and the third runs the filter on the generated signal.</p>
-<figure class="align-default" id="fig-lowpass-vs-moving-average">
-<img alt="_images/image-10.png" src="_images/image-10.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Figure 3.1: EMALPF with optimized <span class="math notranslate nohighlight">\(\alpha = 0.93\)</span> (visually).</span><a class="headerlink" href="#fig-lowpass-vs-moving-average" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>The low pass filter has a smaller delay compared to the moving average filter, but was nosier. This makes sense as the moving average filter gives equal weight to all previous estimates, so noisy measurements will have a smaller effect on the fit.</p>
-<figure class="align-default" id="fig-lowpass-alpha-08">
-<img alt="_images/image-13.png" src="_images/image-13.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 5 </span><span class="caption-text">Figure 3.2: Low pass filter with <span class="math notranslate nohighlight">\(\alpha = 0.8\)</span>.</span><a class="headerlink" href="#fig-lowpass-alpha-08" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Here the delay is less significant but the filter doesn’t remove as much noise compared to <a class="reference internal" href="#fig-lowpass-vs-moving-average"><span class="std std-numref">Fig. 4</span></a>, since the weighting on previous estimates is smaller.</p>
-<figure class="align-default" id="fig-lowpass-alpha-095">
-<img alt="_images/image-14.png" src="_images/image-14.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 6 </span><span class="caption-text">Figure 3.3: Low pass filter with <span class="math notranslate nohighlight">\(\alpha = 0.97\)</span>.</span><a class="headerlink" href="#fig-lowpass-alpha-095" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Here the delay is more significant since previous results are given larger weightings. The choice of <span class="math notranslate nohighlight">\(\alpha\)</span> represents a tradeoff between a noisy signal and a delayed signal, which means its difficult to find optimal <span class="math notranslate nohighlight">\(\alpha\)</span>.</p>
-</section>
-<section id="exponential-moving-average-filter-high-pass">
-<h4>1.4 Exponential Moving Average Filter (High Pass)<a class="headerlink" href="#exponential-moving-average-filter-high-pass" title="Link to this heading">#</a></h4>
-<p>An exponential moving average high pass filter (EMAHPF) works by subtracting the EMALPF <span class="math notranslate nohighlight">\(\hat{x}^{LP}_k\)</span> from <span class="math notranslate nohighlight">\(z_k\)</span>. This corresponds to removing the low frequencies from the signal. The high pass filter estimates the state <span class="math notranslate nohighlight">\(\hat{x}^{HP}_k\)</span> as:</p>
-<div class="math notranslate nohighlight" id="equation-eq-highpass">
-<span class="eqno">(9)<a class="headerlink" href="#equation-eq-highpass" title="Link to this equation">#</a></span>\[\hat{x}_k^{HP} = z_k - \hat{x}^{LP}_k \]</div>
-<p>Subbing in <a class="reference internal" href="#equation-eq-lowpass-1">(6)</a> gives:</p>
-<div class="math notranslate nohighlight" id="equation-eq-highpass-2">
-<span class="eqno">(10)<a class="headerlink" href="#equation-eq-highpass-2" title="Link to this equation">#</a></span>\[\hat{x}_k^{HP} = \alpha (\hat{x}^{LP}_{k-1} + z_k)\]</div>
-<p>Then subbing <a class="reference internal" href="#equation-eq-highpass">(9)</a> rearranged into <a class="reference internal" href="#equation-eq-highpass-2">(10)</a> gives:</p>
-<div class="math notranslate nohighlight" id="equation-eq-highpass-3">
-<span class="eqno">(11)<a class="headerlink" href="#equation-eq-highpass-3" title="Link to this equation">#</a></span>\[\hat{x}_k^{HP} = \hat{x}_{k-1}^{HP} + z_k - z_{k-1}\]</div>
-<p>Which is the recursive formula for the EMAHPF. These are useful for removing low frequency background noise, such as integration drift.</p>
-</section>
-<section id="summary">
-<h4>1.5 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h4>
-<p>The above are examples of passive filters as they filter data without using feedback from a physical model. Kalman filters are active filters which compare measurements with feedback to determine an improved estimate of the state.</p>
-</section>
-</section>
-<span id="document-2KalmanFilters"></span><section class="tex2jax_ignore mathjax_ignore" id="kalman-filters">
-<h3>2 Kalman filters<a class="headerlink" href="#kalman-filters" title="Link to this heading">#</a></h3>
-<p><strong>A Kalman filter compares the predicted state, <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span>, with measurements, <span class="math notranslate nohighlight">\(z_k\)</span>, to create an estimate of the true state, <span class="math notranslate nohighlight">\(\hat{x}_k\)</span></strong>. This section introduces the Kalman filter, its algorithm and why its useful. The state is a vector that contains the variables required to describe the system at a specific time.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>Predictions and estimates are not interchangeable when talking about Kalman filters. A prediction is a forecast of the next state based on the previous state and the mathematical model. Whereas a estimate is an update of the predicted state once new measurements have been taken.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>In all future sections scalars will be written as plain text <span class="math notranslate nohighlight">\(a\)</span> and vectors will be written in bold <span class="math notranslate nohighlight">\(\boldsymbol{a}\)</span>. Here the symbols are context free so so are all in plain text.</p>
-</div>
-<section id="dictionary">
-<h4>2.1 Dictionary<a class="headerlink" href="#dictionary" title="Link to this heading">#</a></h4>
-<p>The Kalman filter deals with the linear state model. Where the state evolves linearly according to <span class="math notranslate nohighlight">\(A\)</span>:</p>
-<div class="math notranslate nohighlight" id="equation-state">
-<span class="eqno">(12)<a class="headerlink" href="#equation-state" title="Link to this equation">#</a></span>\[x_{k+1} = Ax_k + w_k\]</div>
-<p>As long as no forcing function is present. The measurement can be described as:</p>
-<div class="math notranslate nohighlight" id="equation-measurement">
-<span class="eqno">(13)<a class="headerlink" href="#equation-measurement" title="Link to this equation">#</a></span>\[z_k = Hx_k + v_k \]</div>
-<p>Where <span class="math notranslate nohighlight">\(w_k\)</span> and <span class="math notranslate nohighlight">\(v_k\)</span> are both distributed normally with mean <span class="math notranslate nohighlight">\(0\)</span>.</p>
-<aside class="margin sidebar">
-<p class="sidebar-title"></p>
-<p>A forcing function is something external that <strong>deliberately</strong> changes how the system behaves. E.g. When modelling a car rolling down a hill the cars motion is determined by gravity. Applying the cars breaks would be an example of a forcing function.**</p>
-</aside>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(x_k\)</span> is the actual (but unknown) state vector at time <span class="math notranslate nohighlight">\(t_k\)</span> e.g. the true position and velocity of a car. <span class="math notranslate nohighlight">\(x_k\)</span>. <strong><span class="math notranslate nohighlight">\(n\times 1\)</span> column vector</strong>.</p></li>
-<li><p><span class="math notranslate nohighlight">\(z_k\)</span> is the measurement of the state from the sensor at time <span class="math notranslate nohighlight">\(t_k\)</span>, but contains noise and errors e.g. the GPS position of the car. <strong><span class="math notranslate nohighlight">\(m \times 1\)</span> column vector</strong>.</p></li>
-<li><p><span class="math notranslate nohighlight">\(A\)</span> is the state transition matrix. <span class="math notranslate nohighlight">\(A\)</span> represents the “rules of motion” of the system. It describes how <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> evolves from one time step to the next, assuming there is no external factors changing it (a forcing function). For example if you knew a cars velocity at time <span class="math notranslate nohighlight">\(t_k\)</span> you could use <span class="math notranslate nohighlight">\(A\)</span> to predict where it would be at time <span class="math notranslate nohighlight">\(t_{k+1}\)</span>. <strong><span class="math notranslate nohighlight">\(n\times n\)</span> matrix</strong>.</p></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="1FilterBasics.html">1 Basics Of Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2KalmanFilters.html">2 Kalman filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3ExampleBatteryOutput.html">3 Example: Battery output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4ExampleVelocityFromPosition.html">4 Example: Velocity from position</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5IMU.html">5 Example: Attitude using a gyroscope and accelerometer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6ExtendedKalman.html">6 Example : Position using GPS and accelerometer data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7RealData.html">7 Experiment: Attitude Using a 6/9 axis IMU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="8TestingFilters.html">8 Experiment: Quantitative Comparison of Kalman Filter Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="99Bibliography.html">Bibliography</a></li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(A\)</span> isn’t always a constant matrix, it can be dependent on time, or measurements from other sensors.</p>
-</div>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\hat{x}_k\)</span> and <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> represent the best estimate and prediction of <span class="math notranslate nohighlight">\(x_k\)</span> respectively. <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> is a prediction of the next state based on the physics of the system which is modeled using <span class="math notranslate nohighlight">\(A\)</span>. <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> is a updated estimate which blends the model based prediction <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> and the measurement <span class="math notranslate nohighlight">\(z_k\)</span>. <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> is the end output from the Kalman filter.</p></li>
-<li><p><span class="math notranslate nohighlight">\(H\)</span> is the state to measurement matrix. <span class="math notranslate nohighlight">\(H\)</span> is the translator between the system’s state and what can be measured. It explains how, if there were no noise or errors, the true state would appear in the sensor. E.g. if the model uses position to predict velocity but the sensor only measures position how <span class="math notranslate nohighlight">\(H\)</span> only picks out position. <strong><span class="math notranslate nohighlight">\(m \times n\)</span> matrix</strong>.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\hat{z}^-_k\)</span> and <span class="math notranslate nohighlight">\(\hat{z}_k\)</span> is the what the model predicts and estimates the measurements should be respectively:</p></li>
-</ul>
-<div class="math notranslate nohighlight" id="equation-eq-h-calculate">
-<span class="eqno">(14)<a class="headerlink" href="#equation-eq-h-calculate" title="Link to this equation">#</a></span>\[ \begin{align}\begin{aligned}\hat{z}_k &amp;= H\hat{x}_k\\\hat{z}^-_k &amp;= H\hat{x}^-_k\end{aligned}\end{align} \]</div>
-<p><a class="reference internal" href="#equation-eq-h-calculate">(14)</a> is useful for determining <span class="math notranslate nohighlight">\(H\)</span>.</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(w_k\)</span> is the linear process noise vector or noise associated with the prediction. <span class="math notranslate nohighlight">\(w_k\)</span> is white sequence noise (random noise uncorrelated with time), which makes the models prediction imperfect. E.g. unexpected bumps in the road for a moving car. <strong><span class="math notranslate nohighlight">\(n \times 1\)</span> column vector</strong>.</p></li>
-<li><p><span class="math notranslate nohighlight">\(v_k\)</span> is the linear measurement noise vector, noise associated that corrupts <span class="math notranslate nohighlight">\(z_k\)</span>. Even if the true state is fixed, the measurements can change due to sensor imperfections. E.g. temperature measurements using a thermometer will be slightly different each time you measure. <strong><span class="math notranslate nohighlight">\(m \times 1\)</span> column vector</strong>.</p></li>
-<li><p><span class="math notranslate nohighlight">\(Q\)</span> is the covariance matrix of <span class="math notranslate nohighlight">\(w_k\)</span> i.e. how much the true state is expected to deviate from the predictions made by the state transition model. Large <span class="math notranslate nohighlight">\(Q\)</span> assumes the measurements are more reliable than the model and puts a larger weighting on <span class="math notranslate nohighlight">\(z_k\)</span> compared to <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> when computing <span class="math notranslate nohighlight">\(\hat{x}_{k+1}\)</span>. Smaller <span class="math notranslate nohighlight">\(Q\)</span> puts more trust in the model <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> compared to <span class="math notranslate nohighlight">\(z_k\)</span>. <strong><span class="math notranslate nohighlight">\(n \times n\)</span> matrix</strong>.</p></li>
-</ul>
-<div class="math notranslate nohighlight" id="equation-eq-process-noise-cov">
-<span class="eqno">(15)<a class="headerlink" href="#equation-eq-process-noise-cov" title="Link to this equation">#</a></span>\[Q_k = \mathbb{E}[w_k w_k^T]\]</div>
-<p><span id="id1">[<a class="reference internal" href="0Intro.html#id2" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span> (chapter 4)</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(R\)</span> is the covariance matrix of <span class="math notranslate nohighlight">\(v_k\)</span>. i.e. how much the measured state is effected by noise in the state transition model. <span class="math notranslate nohighlight">\(R\)</span> tells the Kalman filter how much to “trust” the measurements compared to model predictions.  Large <span class="math notranslate nohighlight">\(R\)</span> suggests the model is more reliable than the measurements and puts more emphasis on <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> compared to <span class="math notranslate nohighlight">\(z_k\)</span> when computing <span class="math notranslate nohighlight">\(\hat{x}_{k+1}\)</span>, small <span class="math notranslate nohighlight">\(R\)</span> puts more emphasis on <span class="math notranslate nohighlight">\(z_k\)</span> compared to <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span>. <strong><span class="math notranslate nohighlight">\(m \times m\)</span> matrix</strong>.</p></li>
-</ul>
-<div class="math notranslate nohighlight" id="equation-eq-measurement-noise-cov">
-<span class="eqno">(16)<a class="headerlink" href="#equation-eq-measurement-noise-cov" title="Link to this equation">#</a></span>\[R_k = \mathbb{E}[v_k v_k^T]\]</div>
-<p><span id="id2">[<a class="reference internal" href="0Intro.html#id2" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span> (chapter 4)</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(e_k\)</span> and <span class="math notranslate nohighlight">\(e^-_k\)</span> are the error in the estimation and the error in the prediction respectively defined as <span class="math notranslate nohighlight">\(e_k = x_k-\hat{x}_k\)</span> and <span class="math notranslate nohighlight">\(e^-_k = x_k-\hat{x}^-_k\)</span>. <strong><span class="math notranslate nohighlight">\(n \times 1\)</span> column vector.</strong></p></li>
-<li><p><span class="math notranslate nohighlight">\(P_k\)</span> and <span class="math notranslate nohighlight">\(P^-_k\)</span> are the associated error covariance matrices for <span class="math notranslate nohighlight">\(e_k\)</span> and <span class="math notranslate nohighlight">\(e^-_k\)</span> respectively defined by: <strong><span class="math notranslate nohighlight">\(n \times n\)</span></strong> matrix.</p></li>
-</ul>
-<div class="math notranslate nohighlight" id="equation-eq-estimation-cov">
-<span class="eqno">(17)<a class="headerlink" href="#equation-eq-estimation-cov" title="Link to this equation">#</a></span>\[P_k = \mathbb{E}[e_k e_k^T]\]</div>
-<p>and</p>
-<div class="math notranslate nohighlight" id="equation-eq-prediction-cov">
-<span class="eqno">(18)<a class="headerlink" href="#equation-eq-prediction-cov" title="Link to this equation">#</a></span>\[P^-_k = \mathbb{E}[e^-_k (e^-_k)^T]\]</div>
-<p><span id="id3">[<a class="reference internal" href="0Intro.html#id2" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span> (chapter 4)</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(K_k\)</span> is the Kalman gain which has similar effects to <span class="math notranslate nohighlight">\(\alpha\)</span> in the low pass filter. <strong><span class="math notranslate nohighlight">\(n \times m\)</span> matrix</strong>. It is a blending factor that determines how much of the prediction and measurement goes into the updated estimate <span class="math notranslate nohighlight">\(\hat{x}_k\)</span>. The Kalman gain is determined by the covariance matrices <span class="math notranslate nohighlight">\(P^-_k\)</span>, <span class="math notranslate nohighlight">\(H\)</span>, <span class="math notranslate nohighlight">\(R\)</span> and <span class="math notranslate nohighlight">\(Q\)</span>.</p></li>
-<li><p><span class="math notranslate nohighlight">\(x_0\)</span> is the initial state estimate. provided at the start of the estimation process.</p></li>
-<li><p><span class="math notranslate nohighlight">\(P_0\)</span> is the initial error covariance matrix estimate.</p></li>
-</ul>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>The Kalman filter parameters are the parameters set by the user before fitting the data they are: <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(Q\)</span>, <span class="math notranslate nohighlight">\(H\)</span>, <span class="math notranslate nohighlight">\(R\)</span>, <span class="math notranslate nohighlight">\(\hat{x}_0\)</span> and <span class="math notranslate nohighlight">\(P_0\)</span>.</p>
-</div>
-</section>
-<section id="estimation-step">
-<h4>2.2 Estimation step<a class="headerlink" href="#estimation-step" title="Link to this heading">#</a></h4>
-<p>The prediction <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> and measurement are combined using the blending factor <span class="math notranslate nohighlight">\(K_k\)</span> (yet to be determined) below to determine the updated estimate <span class="math notranslate nohighlight">\(\hat{x}_k\)</span>.</p>
-<div class="math notranslate nohighlight" id="equation-eq-kalman-update">
-<span class="eqno">(19)<a class="headerlink" href="#equation-eq-kalman-update" title="Link to this equation">#</a></span>\[\hat{x}_k = \hat{x}^-_k + K_k(z_k - H\hat{x}^-_k)\]</div>
-<p>this is known as the <strong>update step</strong> <span class="math notranslate nohighlight">\(K_k\)</span> determines how much of each <span class="math notranslate nohighlight">\(z_k\)</span> and <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> goes into <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> i.e. how much the measurement is trusted compared to the prediction.</p>
-<div class="admonition-aside-connection-between-kalman-filter-and-low-pass-filter admonition">
-<p class="admonition-title">Aside: Connection between Kalman filter and low pass filter</p>
-<p>Equation <a class="reference internal" href="#equation-eq-kalman-update">(19)</a> can be rewritten as:</p>
-<div class="math notranslate nohighlight" id="equation-eq-kalman-lowpass">
-<span class="eqno">(20)<a class="headerlink" href="#equation-eq-kalman-lowpass" title="Link to this equation">#</a></span>\[\hat{x}_k = (\mathbb{I} + K_k H)\hat{x}^-_k + K_k z_k\]</div>
-<p>Letting <span class="math notranslate nohighlight">\(H = \mathbb{I}\)</span> and <span class="math notranslate nohighlight">\(\alpha= 1-K_k\)</span> a first order low pass filter is recovered similar to <a class="reference internal" href="0Intro.html#equation-eq-lowpass-2">(7)</a>.</p>
-<div class="math notranslate nohighlight" id="equation-eq-kalman-alpha">
-<span class="eqno">(21)<a class="headerlink" href="#equation-eq-kalman-alpha" title="Link to this equation">#</a></span>\[\hat{x}_k = \alpha \hat{x}^-_{k} + (1 - \alpha) z_k\]</div>
-<p>A low pass filter smooths out noisy data by blending the previous estimate with new data using a fixed weighting factor <span class="math notranslate nohighlight">\(\alpha\)</span>. The Kalman filter automatically adjusts its version of <span class="math notranslate nohighlight">\(\alpha\)</span> essentially <span class="math notranslate nohighlight">\(K_k\)</span> to decide how to weight the previous estimate and the new data for each time step depending on how much uncertainty there is in the prediction and measurement.</p>
-</div>
-<p>The mean square error (MSE) between <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> and <span class="math notranslate nohighlight">\(x_k\)</span> is the performance criterion for the Kalman filter. The MSE is related to the terms in the leading diagonal of <span class="math notranslate nohighlight">\(P_k\)</span>. Here an expression for <span class="math notranslate nohighlight">\(K_k\)</span> is derived that minimizes the MSE. An expression from the definition of <span class="math notranslate nohighlight">\(P_k\)</span> from <a class="reference internal" href="#equation-eq-estimation-cov">(17)</a> in terms of our Kalman parameters is required. The problem is <a class="reference internal" href="#equation-eq-estimation-cov">(17)</a> contains <span class="math notranslate nohighlight">\(e_k\)</span> which can’t be computed since <span class="math notranslate nohighlight">\(x_k\)</span> is unknown.</p>
-<p>First an expression for <span class="math notranslate nohighlight">\(\hat{x}_k\)</span>  was determined by subbing <a class="reference internal" href="#equation-measurement">(13)</a> into <a class="reference internal" href="#equation-eq-kalman-update">(19)</a>, to rewrite the estimation update equation:</p>
-<div class="math notranslate nohighlight" id="equation-eq-intermediate-step">
-<span class="eqno">(22)<a class="headerlink" href="#equation-eq-intermediate-step" title="Link to this equation">#</a></span>\[\hat{x}_k = \hat{x}^-_k + K_k(Hx_k+v_k-H\hat{x}^-_k)\]</div>
-<p>then an expression for <span class="math notranslate nohighlight">\(P_k\)</span> was obtained by subbing <a class="reference internal" href="#equation-eq-intermediate-step">(22)</a> into <a class="reference internal" href="#equation-eq-estimation-cov">(17)</a>:</p>
-<div class="math notranslate nohighlight" id="equation-eq-expectation">
-<span class="eqno">(23)<a class="headerlink" href="#equation-eq-expectation" title="Link to this equation">#</a></span>\[P_k = \mathbb{E} \left\{ 
-\left[ 
-(x_k - \hat{x}_k^-) - K_k \left( H_k {x}_k + v_k - H_k \hat{x}_k^- \right)
-\right]
-\left[ 
-(x_k - \hat{x}_k^-) - K_k \left( H_k {x}_k + v_k - H_k \hat{x}_k^- \right)
-\right]^T
-\right\}\]</div>
-<div class="admonition-in-depth-expectation-simplification admonition">
-<p class="admonition-title">In depth expectation simplification</p>
-<p>By comparing <a class="reference internal" href="#equation-eq-expectation">(23)</a> and <a class="reference internal" href="#equation-eq-estimation-cov">(17)</a> the estimation error <span class="math notranslate nohighlight">\(e_k\)</span> is built from the error in prediction and the error effect of measurement noise. The estimation error after the update step is:</p>
-<div class="math notranslate nohighlight" id="equation-eq-e1">
-<span class="eqno">(24)<a class="headerlink" href="#equation-eq-e1" title="Link to this equation">#</a></span>\[e_k = (x_k - \hat{x}_k^-) - K_k \left( H_k {x}_k + v_k - H_k \hat{x}_k^- \right)\]</div>
-<p>Initially <span class="math notranslate nohighlight">\(e_k\)</span> is the error between the true state and the prediction. The Kalman gain adjusts this based on what is actually measured <span class="math notranslate nohighlight">\(z_k = H_k {x}_k + v_k\)</span> and what the expected measurment is <span class="math notranslate nohighlight">\(\hat{z} = H_k \hat{x}_k^-\)</span> based on the model.
-Grouping the terms more intuitively by substituting in the definition for the prediction error <span class="math notranslate nohighlight">\(e^-_k = x_k - \hat{x}_k^-\)</span> gets:</p>
-<div class="math notranslate nohighlight" id="equation-eq-e2">
-<span class="eqno">(25)<a class="headerlink" href="#equation-eq-e2" title="Link to this equation">#</a></span>\[e_k = e^-_k \Omega_k - K_kv_k\]</div>
-<p>Where <span class="math notranslate nohighlight">\(\Omega_k = I - K_k H_k\)</span> describes how much of the prediction error remains after the update. Subbing <a class="reference internal" href="#equation-eq-e2">(25)</a> into <a class="reference internal" href="#equation-eq-estimation-cov">(17)</a> gives:</p>
-<div class="math notranslate nohighlight" id="equation-eq-e3">
-<span class="eqno">(26)<a class="headerlink" href="#equation-eq-e3" title="Link to this equation">#</a></span>\[P_k = \mathbb{E}[(e^-_k \Omega_k - K_kv_k)(e^-_k\Omega_k - K_kv_k)^T]\]</div>
-<p>After expanding the brackets 4 terms are obtained:</p>
-<div class="math notranslate nohighlight" id="equation-eq-e4">
-<span class="eqno">(27)<a class="headerlink" href="#equation-eq-e4" title="Link to this equation">#</a></span>\[P_k = \mathbb{E}[ 
-\Omega_k, e^-_k (e^-_k)^T \Omega_k^T 
-- \Omega_k, e^-_k v^T K_k^T 
-- K_k v (e^-_k)^T \Omega^T 
-+ K_k v v^T K_k^T]\]</div>
-<p>Then using the useful identity <span class="math notranslate nohighlight">\(\mathbb{E}[Ax + By] \equiv A\mathbb{E}[x] + B \mathbb{E}[y]\)</span> <a class="reference internal" href="#equation-eq-e4">(27)</a> can be rewritten:</p>
-<div class="math notranslate nohighlight" id="equation-eq-e5">
-<span class="eqno">(28)<a class="headerlink" href="#equation-eq-e5" title="Link to this equation">#</a></span>\[P_k =  
-\Omega_k, \mathbb{E}[e^-_k (e^-_k)^T] \Omega_k^T 
-- \Omega_k \mathbb{E}[e^-_k v^T] K_k^T
-- K_k \mathbb{E}[v (e^-_k)^T] \Omega^T 
-+ K_k \mathbb{E}[v v^T] K_k^T\]</div>
-<p>The first term represents the uncertainty left from the prediction after the update. The last term represents the uncertainty added by the measurement noise. The two middle terms represent the interaction between the prediction error and the measurement noise they are both zero since <span class="math notranslate nohighlight">\(e_k\)</span> and <span class="math notranslate nohighlight">\(v_k\)</span> are both have mean of <span class="math notranslate nohighlight">\(0\)</span> and are independent. Subbing in <a class="reference internal" href="#equation-eq-prediction-cov">(18)</a> into the first term, <a class="reference internal" href="#equation-eq-measurement-noise-cov">(16)</a> into the last and our definition of <span class="math notranslate nohighlight">\(\Omega_k\)</span> term gets <a class="reference internal" href="#equation-p-k-minimise">(29)</a>.</p>
-</div>
-<p>Performing the expectations leaves an equation for <span class="math notranslate nohighlight">\(P_k\)</span> in terms of Kalman filter parameters:</p>
-<div class="math notranslate nohighlight" id="equation-p-k-minimise">
-<span class="eqno">(29)<a class="headerlink" href="#equation-p-k-minimise" title="Link to this equation">#</a></span>\[P_k = (I-K_kH_k)P^-_k(I-K_kH_k)^T+K_kR_kK^T_k\]</div>
-<p>Which is a general expression for the updated error covariance matrix for suboptimal <span class="math notranslate nohighlight">\(K_k\)</span>. Now optimize <span class="math notranslate nohighlight">\(K_k\)</span> by minimizing the MSE corresponding to finding the value of <span class="math notranslate nohighlight">\(K_k\)</span> that minimizes the individual terms along the leading diagonal of <span class="math notranslate nohighlight">\(P_k\)</span> as these terms represent the estimation error variances for the elements of the state vector elements being selected. This leaves:</p>
-<aside class="margin sidebar">
-<p class="sidebar-title"></p>
-<p>For a more detailed derivation see <span id="id4">[<a class="reference internal" href="0Intro.html#id2" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span> (chapter 4).</p>
-</aside>
-<div class="math notranslate nohighlight" id="equation-eq-kalman-gain">
-<span class="eqno">(30)<a class="headerlink" href="#equation-eq-kalman-gain" title="Link to this equation">#</a></span>\[K_k = P^-_k H^T (H P^-_k H^T + R)^{-1}\]</div>
-<p>In this case <span class="math notranslate nohighlight">\(K_k\)</span> is the optimum Kalman gain. When considering the optimum Kalman gain <a class="reference internal" href="#equation-p-k-minimise">(29)</a> can be simplified by ignoring the last two terms:</p>
-<div class="math notranslate nohighlight" id="equation-eq-error-covariance-update">
-<span class="eqno">(31)<a class="headerlink" href="#equation-eq-error-covariance-update" title="Link to this equation">#</a></span>\[P_k = P^-_k - K_k H P^-_k\]</div>
-<p><span id="id5">[<a class="reference internal" href="0Intro.html#id2" title="Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: http://proquest.safaribooksonline.com/9780470609699.">BH12</a>]</span> (chapter 4).</p>
-<p>Whereas the low pass filter passes <span class="math notranslate nohighlight">\(\hat{x}_{k-1}\)</span> directly between time steps <span class="math notranslate nohighlight">\(t_{k-1}\)</span> and <span class="math notranslate nohighlight">\(t_{k}\)</span> the Kalman filter predicts the next step before a measurement is carried out and compares this with the measurement to give new estimate.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(H\)</span> and <span class="math notranslate nohighlight">\(R\)</span> are only used in the prediction step.</p>
-</div>
-<p>The equations <a class="reference internal" href="#equation-eq-kalman-update">(19)</a>, <a class="reference internal" href="#equation-eq-kalman-gain">(30)</a> and <a class="reference internal" href="#equation-eq-error-covariance-update">(31)</a> together describe the estimation step of the Kalman filter.</p>
-</section>
-<section id="prediction-step">
-<h4>2.3 Prediction step<a class="headerlink" href="#prediction-step" title="Link to this heading">#</a></h4>
-<p>Unlike the low pass filter Kalman filters also consider the physics of the system, the predictions which are used alongside measurements for state estimation. The system dynamically changes over time and is modelled using <span class="math notranslate nohighlight">\(A\)</span>, which describes how the state is predicted to change between <span class="math notranslate nohighlight">\(t_k\)</span> and <span class="math notranslate nohighlight">\(t_{k+1}\)</span>:</p>
-<div class="math notranslate nohighlight" id="equation-projection">
-<span class="eqno">(32)<a class="headerlink" href="#equation-projection" title="Link to this equation">#</a></span>\[\hat{x}^-_{k+1} = A \hat{x}_k\]</div>
-<p>The error covariance matrix associated with this prediction <span class="math notranslate nohighlight">\(\hat{x}^-_{k+1}\)</span> is obtained from:</p>
-<aside class="margin sidebar">
-<p class="sidebar-title"></p>
-<p>If <span class="math notranslate nohighlight">\(\mu_x\)</span> is transformed linearly <span class="math notranslate nohighlight">\(\mu_y = F\mu_x\)</span> its covariance matrix, <span class="math notranslate nohighlight">\(\Sigma_x\)</span>, can be transformed using <span class="math notranslate nohighlight">\(\Sigma_y = F\Sigma_xF^T\)</span>. <span id="id6">[<a class="reference internal" href="0Intro.html#id3" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> (chapter 2)</p>
-</aside>
-<div class="math notranslate nohighlight" id="equation-projection-covariance">
-<span class="eqno">(33)<a class="headerlink" href="#equation-projection-covariance" title="Link to this equation">#</a></span>\[P^-_k = AP_kA^T+Q\]</div>
-<p><span class="math notranslate nohighlight">\(Q\)</span> also appears here as this is how much the true state is expected to vary from the predictions. Together equations <a class="reference internal" href="#equation-projection">(32)</a> and <a class="reference internal" href="#equation-projection-covariance">(33)</a> equations encode the prediction phase of the filter.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(Q\)</span> are only used in the prediction step.</p>
-</div>
-</section>
-<section id="summary">
-<h4>2.4 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h4>
-<figure class="align-default" id="fig-kalman-block-diagram">
-<img alt="_images/BasicKalman.jpg" src="_images/BasicKalman.jpg" />
-<figcaption>
-<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Block diagram of the Kalman filter process.</span><a class="headerlink" href="#fig-kalman-block-diagram" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(H\)</span> are essential for the Kalman filter if these are incorrect the filter will not converge.</p></li>
-<li><p><span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span> are used for tuning and ensure an optimum fit.</p></li>
-<li><p><span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(P_0\)</span> are initial estimates the filter will still converge even if these are wrong.</p></li>
-<li><p><span class="math notranslate nohighlight">\(K_k\)</span> and <span class="math notranslate nohighlight">\(P_k\)</span> are internal parameters.</p></li>
-<li><p><span class="math notranslate nohighlight">\(z_k\)</span> are the inputs (measured state)</p></li>
-<li><p><span class="math notranslate nohighlight">\(\hat{x}_k\)</span> are the outputs (estimated state)</p></li>
-</ul>
-</section>
-</section>
-<span id="document-3ExampleBatteryOutput"></span><section class="tex2jax_ignore mathjax_ignore" id="example-battery-output">
-<h3>3 Example: Battery output<a class="headerlink" href="#example-battery-output" title="Link to this heading">#</a></h3>
-<p>This example looks at how a Kalman filter can be used to fit a constant signal in this case the output from a battery. The aim of this simple example is to experiment with changing the Kalman parameters <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(H\)</span>, <span class="math notranslate nohighlight">\(Q\)</span>, <span class="math notranslate nohighlight">\(R\)</span>, <span class="math notranslate nohighlight">\(\hat{x}_0\)</span> and <span class="math notranslate nohighlight">\(P_0\)</span>. This example was inspired by Dr Shane Ross a link to the video can be found <a class="reference external" href="https://www.youtube.com/watch?v=qCZ2UTgLM_g&amp;amp;t=1527s">here</a>.</p>
-<section id="model">
-<h4>3.1 Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h4>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\hat{x}_k\)</span> is the estimate of the true battery output in volts, <span class="math notranslate nohighlight">\(n = 1\)</span>,</p></li>
-<li><p><span class="math notranslate nohighlight">\(z_k\)</span> is the measured battery output in volts, <span class="math notranslate nohighlight">\(m=1\)</span>
-In this very simple example <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(H\)</span>, <span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span> are all scalars since <span class="math notranslate nohighlight">\(m=n=1\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(A=1\)</span> the battery output is constant which means <span class="math notranslate nohighlight">\(x_{k+1}\)</span> = <span class="math notranslate nohighlight">\(x_k\)</span> comparing with <a class="reference internal" href="0Intro.html#equation-projection">(32)</a> shows <span class="math notranslate nohighlight">\(A = 1\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(Q = 0\)</span> Since the battery output is known to be constant.</p></li>
-<li><p><span class="math notranslate nohighlight">\(H = 1\)</span> since estimate corresponds directly to measurement see <a class="reference internal" href="0Intro.html#equation-eq-h-calculate">(14)</a>.</p></li>
-<li><p><span class="math notranslate nohighlight">\(R = 4\)</span> initially but was determined through tuning.</p></li>
-<li><p><span class="math notranslate nohighlight">\(x_0\)</span> was set to 5</p></li>
-<li><p><span class="math notranslate nohighlight">\(P_0\)</span> was set to 1</p></li>
-</ul>
-</section>
-<section id="testing">
-<h4>3.2 Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h4>
-<p>The code for this example can be found <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/4aSimpleKalman">here</a>. The code is broken up into 3 files: <code class="docutils literal notranslate"><span class="pre">GenTestSig.py</span></code> which generates the true signal (a constant value) and adds gaussian noise to it; <code class="docutils literal notranslate"><span class="pre">SimpleKalman.py</span></code> contains the algorithm for the kalman filter for the 1D case; and <code class="docutils literal notranslate"><span class="pre">TestWidget.py</span></code> calls functions from the other files and plots the results, with a widget so the effects of the kalman parameters can be easily visualized.</p>
-<figure class="align-default" id="fig-kalman-constant">
-<img alt="_images/image-2.png" src="_images/image-2.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Kalman filter used to fit a non-varying signal with a large amount of noise.</span><a class="headerlink" href="#fig-kalman-constant" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#fig-kalman-constant"><span class="std std-numref">Fig. 8</span></a> shows that convergence is faster and smoother than the average filter. This makes sense as the kalman filter looks at both the model and the data to reduce noise.</p>
-<figure class="align-default" id="fig-small-r">
-<img alt="_images/image-3.png" src="_images/image-3.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 9 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant"><span class="std std-numref">Fig. 8</span></a> but with smaller <span class="math notranslate nohighlight">\(R\)</span>.</span><a class="headerlink" href="#fig-small-r" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#fig-small-r"><span class="std std-numref">Fig. 9</span></a> shows smaller <span class="math notranslate nohighlight">\(R\)</span> makes convergence less smooth. This puts more faith in noisy <span class="math notranslate nohighlight">\(z_k\)</span> compared to less noisy <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> so in the correction stage of the kalman filter more emphasis will be put on noisy <span class="math notranslate nohighlight">\(z_k\)</span> than on less noisy <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span>. The signal will converge faster when <span class="math notranslate nohighlight">\(R\)</span> is smaller as the initial guess is far from <span class="math notranslate nohighlight">\(x_k\)</span>, this means initially <span class="math notranslate nohighlight">\(x^-_k\)</span> will be less accurate than <span class="math notranslate nohighlight">\(z_k\)</span> since the prediction phase assumes that <span class="math notranslate nohighlight">\(\hat{x}^-_{k} = \)</span>\hat{x-1}_k$ which for the initial guess is incorrect. The downside of this is that the signal is more effected by noise.</p>
-<figure class="align-default" id="fig-larger-r">
-<img alt="_images/image-4.png" src="_images/image-4.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 10 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant"><span class="std std-numref">Fig. 8</span></a> but with larger <span class="math notranslate nohighlight">\(R\)</span>.</span><a class="headerlink" href="#fig-larger-r" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#fig-larger-r"><span class="std std-numref">Fig. 10</span></a> shows slower convergence than figures 4.1 and 4.2 but has the smoothest convergence of the three. <a class="reference internal" href="#fig-kalman-constant"><span class="std std-numref">Fig. 8</span></a> seems to be best as it has a good tradeoff between a noise free filtered signal and fast convergence.</p>
-<figure class="align-default" id="figu-kalman-wrong-h">
-<img alt="_images/image-5.png" src="_images/image-5.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 11 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant"><span class="std std-numref">Fig. 8</span></a> with H set to <span class="math notranslate nohighlight">\(1.115\)</span> rather than <span class="math notranslate nohighlight">\(1\)</span></span><a class="headerlink" href="#figu-kalman-wrong-h" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Varying <span class="math notranslate nohighlight">\(H\)</span> will lead to the Kalman filter converging to the wrong value since the measurement directly measures the state only satisfied by <span class="math notranslate nohighlight">\(H = 1\)</span>.</p>
-<figure class="align-default" id="fig-kalman-a-1004">
-<img alt="_images/image-6.png" src="_images/image-6.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 12 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant"><span class="std std-numref">Fig. 8</span></a> with <span class="math notranslate nohighlight">\(A\)</span> set to 1.004 rather than 1.</span><a class="headerlink" href="#fig-kalman-a-1004" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>This causes the Kalman filter to diverge since only <span class="math notranslate nohighlight">\(A=1\)</span> describes a straight line. It diverges quickly since <span class="math notranslate nohighlight">\(Q=0\)</span> puts more weighting on <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> compared to <span class="math notranslate nohighlight">\(\hat{z_k}\)</span>.</p>
-<figure class="align-default" id="fig-kalman-q-0817">
-<img alt="_images/image-7.png" src="_images/image-7.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 13 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant"><span class="std std-numref">Fig. 8</span></a> except with <span class="math notranslate nohighlight">\(Q = 0.817\)</span> rather than 1.</span><a class="headerlink" href="#fig-kalman-q-0817" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Setting <span class="math notranslate nohighlight">\(Q\)</span> to anything other than <span class="math notranslate nohighlight">\(0\)</span> in this example makes the filtered signal noisy, because it assumes the model is noisy. Increasing <span class="math notranslate nohighlight">\(Q\)</span> puts more trust <span class="math notranslate nohighlight">\(\hat{z}_k\)</span> over <span class="math notranslate nohighlight">\(\hat{x}^-_{k}\)</span> when predicting <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> which means the signal becomes noisy like the data.</p>
-</section>
-<section id="summary">
-<h4>3.3 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h4>
-<p><span class="math notranslate nohighlight">\(A\)</span> describes the model and <span class="math notranslate nohighlight">\(H\)</span> describes how the measurement relates to the state. If these are incorrect the fit will converge to the wrong value or diverge completely. <span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span> are covariance matrices, these are “tuned” to achieve optimum fit.</p>
-</section>
-</section>
-<span id="document-4ExampleVelocityFromPosition"></span><section class="tex2jax_ignore mathjax_ignore" id="example-velocity-from-position">
-<h3>4 Example: Velocity from position<a class="headerlink" href="#example-velocity-from-position" title="Link to this heading">#</a></h3>
-<p>This example looks at applying a Kalman filter to estimate the true position and velocity from noisy position data. This example was inspired by Dr Shane Ross a link to the videos are here: <a class="reference external" href="https://www.youtube.com/watch?v=qCZ2UTgLM_g&amp;amp;t=1527s">Video 1</a> and <a class="reference external" href="https://www.youtube.com/watch?v=DbE4PMgqp3s&amp;amp;t=2152s">Video 2</a>.</p>
-<section id="model">
-<h4>4.1 Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h4>
-<p>In this case <span class="math notranslate nohighlight">\(\hat{\boldsymbol{x}}_k = \begin{bmatrix} s_k \\ \nu_k \end{bmatrix}\)</span> where <span class="math notranslate nohighlight">\(s_k\)</span> and <span class="math notranslate nohighlight">\(\nu_k\)</span> are the position and velocity (in the same direction) respectively at time <span class="math notranslate nohighlight">\(t_k\)</span>.  The correction measurement is position therefore <span class="math notranslate nohighlight">\(z_k = s_k\)</span>. The measurement and the state are related by <a class="reference internal" href="0Intro.html#equation-eq-h-calculate">(14)</a> from this <span class="math notranslate nohighlight">\(H\)</span> can be calculated.</p>
-<div class="math notranslate nohighlight" id="equation-h">
-<span class="eqno">(34)<a class="headerlink" href="#equation-h" title="Link to this equation">#</a></span>\[\begin{split}z_k &amp;= H \begin{bmatrix} s_k \\ \nu_k \end{bmatrix} \\
-\implies H &amp;= \begin{bmatrix} 1 &amp; 0 \end{bmatrix}\end{split}\]</div>
-<p>For simplicity and to avoid needing to use a forcing function the model assumes no acceleration. The equations of motion are:</p>
-<div class="math notranslate nohighlight" id="equation-eq-motion-equations">
-<span class="eqno">(35)<a class="headerlink" href="#equation-eq-motion-equations" title="Link to this equation">#</a></span>\[\begin{split}s_{k+1} &amp;\approx s_k + \nu_k\Delta t \\
-\nu_{k+1} &amp;\approx \nu_k\end{split}\]</div>
-<div class="admonition-why-use-approx-not admonition">
-<p class="admonition-title">why use <span class="math notranslate nohighlight">\(\approx\)</span> not <span class="math notranslate nohighlight">\(=\)</span></p>
-<p>There is a small error associated with discretizing <span class="math notranslate nohighlight">\(dt\)</span> since <span class="math notranslate nohighlight">\(\Delta t\)</span> isn’t infinitesimally small. This is negligible term to term but over a large number of terms such as in this example the error accumulates and causes drift.</p>
-</div>
-<p>Where <span class="math notranslate nohighlight">\(\Delta t = t_{k+1} - t_k\)</span>. Now writing the update equations in matrix form the following are obtained:</p>
-<div class="math notranslate nohighlight" id="equation-velocity">
-<span class="eqno">(36)<a class="headerlink" href="#equation-velocity" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} s \\ \nu \end{bmatrix}^-_{k+1} = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix} \begin{bmatrix} s \\ \nu \end{bmatrix}_k\end{split}\]</div>
-<p><span class="math notranslate nohighlight">\(Q\)</span> is more complicated to calculate and is going to be a <span class="math notranslate nohighlight">\(2 \times 2\)</span> matrix of the form below:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}Q = E[w_kw_k^T] =  \begin{bmatrix} VAR(s) &amp; COV(s,\nu) \\ COV(\nu,s) &amp; VAR(\nu) \end{bmatrix} = \sigma_Q^2 \begin{bmatrix} \frac{\Delta t^4}{4} &amp; \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} &amp; \Delta t^2 \end{bmatrix} \end{split}\]</div>
-<p><span id="id1">[<a class="reference internal" href="0Intro.html#id3" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> (chapter 2.3) <span id="id2">[<a class="reference internal" href="0Intro.html#id3" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> (chapter 10.2)
-where <span class="math notranslate nohighlight">\(\sigma_Q^2\)</span> is the variance in the true acceleration, which is the model assumes is zero. <span class="math notranslate nohighlight">\(\sigma_Q^2\)</span> will be used as a tuning parameter.
-<span class="math notranslate nohighlight">\(R = VAR(z_k)\)</span> is going to be the variance in the measurements of the position which will be denoted as <span class="math notranslate nohighlight">\(\sigma_R\)</span> <span id="id3">[<a class="reference internal" href="0Intro.html#id3" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> (chapter 10).</p>
-<p>The following parameters will be used for the Kalman filter.</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\hat{\boldsymbol{x}}_k = \begin{bmatrix} s_k \\ \nu_k \end{bmatrix}\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(z_k = s_k\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(A = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix}\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(H = \begin{bmatrix} 1 &amp; 0 \end{bmatrix}\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span> will are tuned using the parameters <span class="math notranslate nohighlight">\(\sigma_a\)</span> and <span class="math notranslate nohighlight">\(\sigma_s\)</span>.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\boldsymbol{\hat{x}}_0 = \boldsymbol{0}\)</span> and <span class="math notranslate nohighlight">\(P_0 \approx \begin{bmatrix} P_s &amp; 0 \\ 0 &amp; P_v\end{bmatrix}\)</span> initially, these don’t matter so much as the Kalman filter will eventually find the correct values as <span class="math notranslate nohighlight">\(k\)</span> increases.</p></li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>While optimal <span class="math notranslate nohighlight">\(P_0\)</span> isn’t necessarily always diagonal matrix this is a good enough initial approximation as the kalman filter will converge if <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(H\)</span> are correct.</p>
-</div>
-</section>
-<section id="implementation">
-<h4>4.2 Implementation<a class="headerlink" href="#implementation" title="Link to this heading">#</a></h4>
-<p>The code for this example can be found <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/4bIntermKalman">here</a>. The code is broken up into 3 files: <code class="docutils literal notranslate"><span class="pre">GenTestSig.py</span></code> which generates the true signal (a combination of sine waves of different frequencies) and adds gaussian noise to it; <code class="docutils literal notranslate"><span class="pre">AdvKalman.py</span></code> contains the algorithm for the Kalman filter for the multidimensional case; and <code class="docutils literal notranslate"><span class="pre">TestUpdated.py</span></code> calls functions from the other files and plots the results, with a widget so the effects of the Kalman parameters can be easily visualized.</p>
-<p>The true signal in the graphs below is generated using a combination of <span class="math notranslate nohighlight">\(\sin\)</span> waves of varying amplitudes and speeds, the velocity version is the analytical derivative of this. The signal the Kalman filter is being used to fit is generated by adding random noise to the true signal and its analytical derivative. The Kalman filter is applied to the noisy position data and outputs the filtered position data and filtered velocity data. Which are graphed below.
-The <span class="math notranslate nohighlight">\(r^2\)</span> value, mean squared error (MSE) and mean absolute error (MAE) are given for both velocity and position.</p>
-<figure class="align-default" id="fig-original">
-<img alt="_images/image-23.png" src="_images/image-23.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Filtered, unfiltered and true position and velocity plotted against index.</span><a class="headerlink" href="#fig-original" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>In both cases the kalman filtered fit is lagging behind the true and noisy signal. This is because too much emphasis is being put on the predicted values which assumes that velocity stays the same. The true signal shows this clearly this isn’t the case. This means the velocity prediction is consistently delayed so the position will also be delayed. Since the model is erroneous it was assumed that <span class="math notranslate nohighlight">\(w_k\)</span> was larger and therefore <span class="math notranslate nohighlight">\(\sigma_Q\)</span> should be increased. A similar effect can be achieved by assuming smaller measurement noise (smaller <span class="math notranslate nohighlight">\(v_k\)</span>) therefore <span class="math notranslate nohighlight">\(\sigma_R\)</span> should be decreased.</p>
-<figure class="align-default" id="fig-increased-r-and-increased-q">
-<img alt="_images/image-24.png" src="_images/image-24.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 15 </span><span class="caption-text">See <a class="reference internal" href="#fig-original"><span class="std std-numref">Fig. 14</span></a> with increased <span class="math notranslate nohighlight">\(\sigma_Q\)</span> and decreased <span class="math notranslate nohighlight">\(\sigma_R\)</span>.</span><a class="headerlink" href="#fig-increased-r-and-increased-q" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Figure <a class="reference internal" href="#fig-increased-r-and-increased-q"><span class="std std-numref">Fig. 15</span></a> shows a slightly improved fit with position and a significantly improved fit with velocity. This makes sense for the position data since decreasing <span class="math notranslate nohighlight">\(R\)</span> increases the weighting for the measurement. However the velocity fit is now significantly less smooth since more emphasis is being put on the measured positions which is always nosier than the prediction. There is a clear tradeoff between having a a smooth fit and having an accurate fit. Smoother fits more accurately represent the true shape of the data, but will often result often this comes with drift.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>If the Kalman filter fit is too noisy, due to an over emphasis on <span class="math notranslate nohighlight">\(\hat{z}_k\)</span> compared to <span class="math notranslate nohighlight">\(\hat{x}^-_k\)</span> to calculate <span class="math notranslate nohighlight">\(\hat{x}_{k}\)</span> increasing <span class="math notranslate nohighlight">\(R\)</span> or decreasing <span class="math notranslate nohighlight">\(Q\)</span> will make the fit smoother. If the Kalman filter fit is delayed increasing <span class="math notranslate nohighlight">\(Q\)</span> or decreasing <span class="math notranslate nohighlight">\(R\)</span> will reduce the delay. Increasing <span class="math notranslate nohighlight">\(Q\)</span> has a similar effect to decreasing <span class="math notranslate nohighlight">\(R\)</span>.</p>
-</div>
-</section>
-<section id="summary">
-<h4>4.3 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h4>
-<p>The kalman filter does a good job of estimating the true position from the data and the model. The velocity fit is less accurate and significantly delayed, but is good considering there are no measurements for the velocity. The fit for velocity would be greatly improved using an additional sensor to easily measure velocity or acceleration to be used in the prediction step.</p>
-</section>
-</section>
-<span id="document-5IMU"></span><section class="tex2jax_ignore mathjax_ignore" id="example-attitude-using-a-gyroscope-and-accelerometer">
-<h3>5 Example: Attitude using a gyroscope and accelerometer<a class="headerlink" href="#example-attitude-using-a-gyroscope-and-accelerometer" title="Link to this heading">#</a></h3>
-<p>This section calculating the attitude of an object (yaw-pitch-roll), using real world sensor data. Firstly using the gyroscope to measure the angular velocity and then using Euler’s method for integration to obtain a prediction for the attitude, then improving this using a kalman filter, however this estimate drifts and becomes less accurate over time. To reduce drift accelerometer is used and the Kalman filter fuses data from the accelerometer and gyroscope.</p>
-<p>The code for this section can be found in <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">here</a>. The code is broken up into 3 files: <code class="docutils literal notranslate"><span class="pre">Test.py</span></code> which runs the filter and plots the results; <code class="docutils literal notranslate"><span class="pre">AdvKalman.py</span></code> which contains the kalman filter algorithm; and <code class="docutils literal notranslate"><span class="pre">Integrate.py</span></code> which contains the integration algorithm which calculates the attitude without the kalman filter.</p>
-<p>This example and data was provided by Dr Shane Ross a link to the video can be found <a class="reference external" href="https://www.youtube.com/watch?v=DbE4PMgqp3s&amp;amp;t=2152s">here</a>.</p>
-<section id="euler-s-method">
-<h4>5.1 Euler’s method<a class="headerlink" href="#euler-s-method" title="Link to this heading">#</a></h4>
-<p>Using gyroscope (measures angular velocity, <span class="math notranslate nohighlight">\(\boldsymbol{\omega}\)</span>) and knowing the attitude at <span class="math notranslate nohighlight">\(t_0\)</span> it is possible to determine the attitude of a craft at <span class="math notranslate nohighlight">\(t_k\)</span>. The relationship between the body angular velocity <span class="math notranslate nohighlight">\(\boldsymbol{\omega} = (\omega_1, \omega_2, \omega_3)\)</span> and the time derivatives of the Euler angles <span class="math notranslate nohighlight">\(\boldsymbol{\alpha} = (\psi, \theta, \phi)\)</span> in the 3-2-1 (yaw-pitch-roll) sequence is given by the kinematic differential equation (KDE) below:</p>
-<aside class="margin sidebar">
-<p class="sidebar-title"></p>
-<p><span class="math notranslate nohighlight">\(\phi\)</span>, <span class="math notranslate nohighlight">\(\theta\)</span> and <span class="math notranslate nohighlight">\(\psi\)</span> are euler angles that describe the orientation of the object in space. Whereas <span class="math notranslate nohighlight">\(\omega_1\)</span>, <span class="math notranslate nohighlight">\(\omega_2\)</span>, <span class="math notranslate nohighlight">\(\omega_3\)</span>  are rates of rotation i.e. roll rate pitch rate and yaw rate.</p>
-<p><span class="math notranslate nohighlight">\(\psi\)</span>, yaw: measures the rotation around the vertical (z) axis e.g. turning your head left and right in a “no” motion</p>
-<p><span class="math notranslate nohighlight">\(\theta\)</span>, pitch: measures the rotation around the sided-to-side (y) axis e.g. nodding your head up and down in a “yes” motion.</p>
-<p><span class="math notranslate nohighlight">\(\phi\)</span>, roll: rotation around the front-to-back (x) axis. E.g tilting your head to touch your ear to your shoulder.</p>
-<p>The Euler angle rates <span class="math notranslate nohighlight">\(\dot{\phi}\)</span>, <span class="math notranslate nohighlight">\(\dot{\theta}\)</span>, <span class="math notranslate nohighlight">\(\dot{\psi}\)</span> are not the same as body angular rates because the orientation of the body axes changes as the object rotates.</p>
-</aside>
-<div class="math notranslate nohighlight" id="equation-h">
-<span class="eqno">(37)<a class="headerlink" href="#equation-h" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix}
-\dot{\psi} \\
-\dot{\theta} \\
-\dot{\phi}
-\end{bmatrix} =
-\frac{1}{\cos{\theta}}\begin{bmatrix}
-0 &amp; \sin\phi  &amp; \cos\phi  \\
-0 &amp; \cos\phi\cos\theta &amp; -\sin\phi\cos\theta \\
-\cos\theta &amp; \sin\phi\sin\theta &amp; \cos\phi  \sin\theta
-\end{bmatrix}
-\begin{bmatrix}
-\omega_1 \\
-\omega_2 \\
-\omega_3
-\end{bmatrix}\end{split}\]</div>
-<p>Or more simply :</p>
-<div class="math notranslate nohighlight" id="equation-eq-simple">
-<span class="eqno">(38)<a class="headerlink" href="#equation-eq-simple" title="Link to this equation">#</a></span>\[\dot{\boldsymbol{\alpha}} = \Phi(\boldsymbol{\alpha}) {\boldsymbol{\omega}}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\Phi(\boldsymbol{\alpha}) = \frac{1}{\cos{\boldsymbol{\theta}}}\begin{bmatrix}
-0 &amp; \sin\phi  &amp; \cos\phi  \\
-0 &amp; \cos\phi\cos\theta &amp; -\sin\phi\cos\theta \\
-\cos\theta &amp; \sin\phi\sin\theta &amp; \cos\phi  \sin\theta
-\end{bmatrix}\)</span></p>
-<p>The rates of rotation (provided by the gyroscope) are integrated step by step to predict the craft’s attitude at any later time <span class="math notranslate nohighlight">\(t_k\)</span>:</p>
-<div class="math notranslate nohighlight" id="equation-eq-euler">
-<span class="eqno">(39)<a class="headerlink" href="#equation-eq-euler" title="Link to this equation">#</a></span>\[\boldsymbol{\alpha}_{k+1} \approx \boldsymbol{\alpha}_k + \dot{\boldsymbol{\alpha}}_k \Delta t\]</div>
-<p>Subbing the relationship between <span class="math notranslate nohighlight">\(\dot{\alpha}_k\)</span> and <span class="math notranslate nohighlight">\(\omega\)</span> <a class="reference internal" href="#equation-eq-simple">(38)</a> into the update rule <a class="reference internal" href="#equation-eq-euler">(39)</a> gives:</p>
-<div class="math notranslate nohighlight" id="equation-euler-method2">
-<span class="eqno">(40)<a class="headerlink" href="#equation-euler-method2" title="Link to this equation">#</a></span>\[\boldsymbol{\alpha}_{k+1} \approx \boldsymbol{\alpha}_{k} + \Phi(\boldsymbol{\alpha}_k) \boldsymbol{\omega}_k \Delta t\]</div>
-<p>where <span class="math notranslate nohighlight">\(\Delta t = t_k - t_{k-1}\)</span>.</p>
-<div class="admonition-why-use-approx-not admonition">
-<p class="admonition-title">why use <span class="math notranslate nohighlight">\(\approx\)</span> not <span class="math notranslate nohighlight">\(=\)</span></p>
-<p>There is a small error associated with discretizing <span class="math notranslate nohighlight">\(dt\)</span> since <span class="math notranslate nohighlight">\(\Delta t\)</span> isn’t infinitesimally small. This is negligible term to term but over a large number of terms such as in this example the error accumulates and causes drift.</p>
-</div>
-<figure class="align-default" id="cal1">
-<img alt="_images/image-25.png" src="_images/image-25.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Calibration signal involved shaking the device in just the <span class="math notranslate nohighlight">\(\omega_1\)</span> direction then pausing and shaking the device in the <span class="math notranslate nohighlight">\(\omega_1\)</span> and <span class="math notranslate nohighlight">\(\omega_2\)</span> directions before pausing again and shaking the device in the <span class="math notranslate nohighlight">\(\omega_3\)</span>. The observed motion in the <span class="math notranslate nohighlight">\(\omega_3\)</span> direction was erroneous. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#cal1" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Using the calibration data in <a class="reference internal" href="#cal1"><span class="std std-numref">Fig. 16</span></a> and knowing the initial attitude <a class="reference internal" href="#equation-euler-method2">(40)</a> can be used to estimate the attitude over time:</p>
-<figure class="align-default" id="roll-pitch-yaw-drift-real">
-<img alt="_images/image-26.png" src="_images/image-26.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 17 </span><span class="caption-text"><span class="math notranslate nohighlight">\(\boldsymbol{\alpha}_k\)</span> in each direction plotted against <span class="math notranslate nohighlight">\(t_k\)</span>. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#roll-pitch-yaw-drift-real" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Overall the attitude <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}_k\)</span> follows the generic shape of the true attude. The drift is least significant in the <span class="math notranslate nohighlight">\(\phi\)</span> direction but was predicting oscillations in the third part of the calibration even though there were no oscillations in the <span class="math notranslate nohighlight">\(\omega_3\)</span> direction at that time, and the drift also changes direction randomly. Drift was most pronounced in the <span class="math notranslate nohighlight">\(\theta\)</span> direction therefore the estimate becomes less accurate over time.</p>
-<p>Drift is caused by the error associated with the numerical integration accumulating over time. The unexpected oscillations are likely from the gyroscope being sensetive to noise. Furthermore the oscillations could be coupled meaning small oscillations in one direction can be amplified in another.</p>
-</section>
-<section id="kalman-filters">
-<h4>5.2 Kalman filters<a class="headerlink" href="#kalman-filters" title="Link to this heading">#</a></h4>
-<p>The model can be improved using a Kalman filter. However there is a problem as its not possible to put our update equation <a class="reference internal" href="#equation-euler-method2">(40)</a> into the form required for the kalman filter <a class="reference internal" href="0Intro.html#equation-projection">(32)</a>. To fix this the attitude was instead written in quaternions.</p>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>Use Euler parameters:</p>
-<div class="math notranslate nohighlight" id="equation-eq-eps">
-<span class="eqno">(41)<a class="headerlink" href="#equation-eq-eps" title="Link to this equation">#</a></span>\[ \begin{align}\begin{aligned}\beta_0 = \sin\frac{\phi}{2}\sin\frac{\theta}{2}\sin\frac{\psi}{2} + \cos\frac{\phi}{2}\cos\frac{\theta}{2}\cos\frac{\psi}{2}\\\beta_1 = \sin\frac{\phi}{2}\cos\frac{\theta}{2}\cos\frac{\psi}{2} + \cos\frac{\phi}{2}\sin\frac{\theta}{2}\sin\frac{\psi}{2}\\\beta_2 = \cos\frac{\phi}{2}\sin\frac{\theta}{2}\cos\frac{\psi}{2} + \sin\frac{\phi}{2}\cos\frac{\theta}{2}\sin\frac{\psi}{2}\\\beta_3 = \cos\frac{\phi}{2}\cos\frac{\theta}{2}\sin\frac{\psi}{2} + \sin\frac{\phi}{2}\sin\frac{\theta}{2}\cos\frac{\psi}{2}\end{aligned}\end{align} \]</div>
-</div>
-<p>Below is the corresponding Euler parameters KDE:</p>
-<div class="math notranslate nohighlight" id="equation-ep-kde">
-<span class="eqno">(42)<a class="headerlink" href="#equation-ep-kde" title="Link to this equation">#</a></span>\[\begin{split}\begin{bmatrix} \dot{\beta_0} \\ \dot{\beta_1} \\ \dot{\beta_2} \\ \dot{\beta_3} \end{bmatrix} = \frac{1}{2} \begin{bmatrix} 0 &amp; -\omega_1 &amp; -\omega_2 &amp; -\omega_3 \\ \omega_1 &amp; 0 &amp; \omega_3 &amp; -\omega_2 \\ \omega_2 &amp; -\omega_3 &amp; 0 &amp; \omega_1 \\ \omega_3 &amp; \omega_2 &amp; -\omega_1 &amp; 0\end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix}\end{split}\]</div>
-<p><span id="id1">[<a class="reference internal" href="0Intro.html#id3" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> (chapter 11.3) or more simply:</p>
-<aside class="margin sidebar">
-<p class="sidebar-title"></p>
-<p>Where: <span class="math notranslate nohighlight">\(\Psi(\omega) = \frac{1}{2} \begin{bmatrix} 0 &amp; -\omega_1 &amp; -\omega_2 &amp; -\omega_3 \\ \omega_1 &amp; 0 &amp; \omega_3 &amp; -\omega_2 \\ \omega_2 &amp; -\omega_3 &amp; 0 &amp; \omega_1 \\ \omega_3 &amp; \omega_2 &amp; -\omega_1 &amp; 0\end{bmatrix}\)</span></p>
-</aside>
-<div class="math notranslate nohighlight" id="equation-eq-kde-simp">
-<span class="eqno">(43)<a class="headerlink" href="#equation-eq-kde-simp" title="Link to this equation">#</a></span>\[\boldsymbol{\dot{\beta}} = \Psi(\boldsymbol{\omega}) \boldsymbol{\beta}\]</div>
-<p><span class="math notranslate nohighlight">\(\boldsymbol{\dot{\beta}}\)</span> was integrated using the same method as <a class="reference internal" href="#equation-eq-euler">(39)</a>.</p>
-<div class="math notranslate nohighlight" id="equation-eq-euler3">
-<span class="eqno">(44)<a class="headerlink" href="#equation-eq-euler3" title="Link to this equation">#</a></span>\[\boldsymbol{\beta_{k+1}} \approx \boldsymbol{\beta}_k + \dot{\boldsymbol{\beta}}_k\Delta t\]</div>
-<p><span class="math notranslate nohighlight">\(\approx\)</span> was used instead of <span class="math notranslate nohighlight">\(=\)</span> for the same reason as in the previous example the numerical integration will mean <span class="math notranslate nohighlight">\(\beta_{k}\)</span> drifts further away from its true value as <span class="math notranslate nohighlight">\(k\)</span> increases. Now sub in <a class="reference internal" href="#equation-eq-kde-simp">(43)</a>:</p>
-<div class="math notranslate nohighlight" id="equation-eq-euler4">
-<span class="eqno">(45)<a class="headerlink" href="#equation-eq-euler4" title="Link to this equation">#</a></span>\[\boldsymbol{\beta}_{k+1} \approx (\mathbb{I} + \Delta t \Psi(\boldsymbol{\omega}))\boldsymbol{\beta}_k\]</div>
-<p>Rewriting <a class="reference internal" href="#equation-eq-euler4">(45)</a> with <span class="math notranslate nohighlight">\(\beta_{k-1}\)</span> on the right hand side side being the previous estimate estimate of the state and <span class="math notranslate nohighlight">\(\beta\)</span> on the left hand side becoming the prediction of the state:</p>
-<div class="math notranslate nohighlight" id="equation-eq-proj-att">
-<span class="eqno">(46)<a class="headerlink" href="#equation-eq-proj-att" title="Link to this equation">#</a></span>\[\hat{\boldsymbol{x}}^-_{k+1} = (I + \Delta t \Psi(\boldsymbol{\omega}))\hat{\boldsymbol{x}}_k\]</div>
-<p>Which is in the form required by <a class="reference internal" href="0Intro.html#equation-projection">(32)</a> with <span class="math notranslate nohighlight">\(A = (I + \Delta t \Psi(\omega))\)</span>
-It follows from the euler parameters <a class="reference internal" href="#equation-eq-eps">(41)</a> and <span class="math notranslate nohighlight">\(\boldsymbol{\alpha}_0 = \boldsymbol{0}\)</span> that <span class="math notranslate nohighlight">\(\hat{x}_0 = \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}\)</span>.</p>
-<p>The gyroscope data was used in the prediction step of the kalman filter, since it relies on the previous state to be able to predict the next state. The correction measurement used in this example will be the previous state <span class="math notranslate nohighlight">\(\hat{x}_k\)</span>, this will help reduce noise in the estimate.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>A correction measurement measures the state without needing to rely on previous measurements or approximations its error should be random. A prediction relies on previous measurements. In this case the prediction measurement error is systematic because of integration drift.</p>
-</div>
-<p>Since both <span class="math notranslate nohighlight">\(z_k\)</span> and <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> represent euler parameters <span class="math notranslate nohighlight">\(H = \mathbb{I}_{4 \times 4}\)</span> which can be understood from <a class="reference internal" href="0Intro.html#equation-eq-h-calculate">(14)</a>. Finally the tuning parameters were set <span class="math notranslate nohighlight">\(Q = q\mathbb{I}_{4 \times 4}\)</span>, <span class="math notranslate nohighlight">\(R = r\mathbb{I}_{4 \times 4}\)</span> and <span class="math notranslate nohighlight">\(P_0 = p\mathbb{I}_{4 \times 4}\)</span> to allow for simple tuning.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>It is unlikely that optimal <span class="math notranslate nohighlight">\(Q\)</span>, <span class="math notranslate nohighlight">\(R\)</span> and <span class="math notranslate nohighlight">\(P^-_0\)</span> are scalar multiples of the identity, but this method reduces the number of parameters that need to be tuned.</p>
-</div>
-<figure class="align-default" id="id2">
-<img alt="_images/AttitudeKalman.jpg" src="_images/AttitudeKalman.jpg" />
-<figcaption>
-<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Kalman filter block diagram specific to attitude determination.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<figure class="align-default" id="id3">
-<img alt="_images/Compare2.png" src="_images/Compare2.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 19 </span><span class="caption-text">The euler method for calculating attitude alongside the kalman filtered example discussed above. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>This kalman filter example hasn’t improved the fit. The integration drift hasn’t been corrected for. This is because the measurement in this case didn’t contain any corrective information so didn’t correct for drift. <strong>The only difference the kalman filter makes in this case is it puts a greater emphasis on previous measurements</strong>. A better choice would be to use a sensor which doesn’t rely on the previous measurement to calculate attitude.</p>
-</section>
-<section id="kalman-filters-with-sensor-fusion">
-<h4>5.3 Kalman filters with sensor fusion<a class="headerlink" href="#kalman-filters-with-sensor-fusion" title="Link to this heading">#</a></h4>
-<p>Sensor fusion involves combining different sensors to get a better estimate. A typical six axis IMU will contain a gyroscope and an accelerometer. Accelerometer data to calculate attitude but is noisier than gyroscope data. However accelerometer data can be used to calculate attitude without drift as it doesn’t involve numerical integration. The aim of this part is to use the kalman filter to do sensor fusion to produce a filtered signal with less noise than the accelerometer and no drift.</p>
-<section id="accelerometer-data">
-<h5>Accelerometer Data<a class="headerlink" href="#accelerometer-data" title="Link to this heading">#</a></h5>
-<p>Here accelerometer data is used to calculate <span class="math notranslate nohighlight">\(\boldsymbol{z}_k\)</span> which represents the attitude in terms of euler parameters as measured using the accelerometer. The accelerometer measures the acceleration, <span class="math notranslate nohighlight">\(\boldsymbol{a}\)</span> in the x, y and z directions. A accelerometer moving at a constant velocity can always identify which direction is down due to the acceleration from gravity. This means it can determine <span class="math notranslate nohighlight">\(\theta\)</span> and <span class="math notranslate nohighlight">\(\phi\)</span> but not <span class="math notranslate nohighlight">\(\psi\)</span>.</p>
-<p>The acceleration in the body fixed frame, the frame of the craft as seen by a stationary observer on earth is given by:</p>
-<aside class="margin sidebar">
-<p class="sidebar-title"></p>
-<p>Where <span class="math notranslate nohighlight">\(\boldsymbol{g} = \begin{bmatrix} 0 \\ 0 \\ g \end{bmatrix}\)</span></p>
-</aside>
-<div class="math notranslate nohighlight" id="equation-accelerometer2">
-<span class="eqno">(47)<a class="headerlink" href="#equation-accelerometer2" title="Link to this equation">#</a></span>\[[\boldsymbol{a}]_B = [\dot{\boldsymbol{v}}]_B - [\boldsymbol{g}]_B\]</div>
-<p>Where <span class="math notranslate nohighlight">\(\dot{\boldsymbol{v}}\)</span> is the translational acceleration and <span class="math notranslate nohighlight">\(\boldsymbol{g}\)</span> is the acceleration due to gravity. <strong>Assumption: the translational acceleration of the body is zero and the accelerometer is located at the center of rotation for this example.</strong></p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>B is the linear transformation matrix which transforms form the frame of the earth to the frame of the device.</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}B = \begin{bmatrix}
-\cos \psi \cos \theta &amp; \sin \psi \cos \theta &amp; -\sin \theta \\
-\cos \psi \sin \theta \sin \phi - \cos \phi \sin \psi &amp; \sin \psi \sin \theta \sin \phi + \cos \phi \cos \psi &amp; \cos \theta \sin \phi \\
-\cos \psi \sin \theta \cos \phi + \sin \phi \sin \psi &amp; \sin \psi \sin \theta \cos \phi - \sin \phi \cos \psi &amp; \cos \theta \cos \phi
-\end{bmatrix} \end{split}\]</div>
-<p>This can be written in terms of unit vectors describing the effects on the <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(z\)</span> components.</p>
-<div class="math notranslate nohighlight">
-\[B = \begin{bmatrix} \hat{\boldsymbol{n}}_x &amp; \hat{\boldsymbol{n}}_y &amp; \hat{\boldsymbol{n}}_z \end{bmatrix}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\hat{n}_x\)</span>, <span class="math notranslate nohighlight">\(\hat{n}_y\)</span> and <span class="math notranslate nohighlight">\(\hat{n}_z\)</span> are 3 dimensional unit vectors in the <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(z\)</span> directions.</p>
-</div>
-<p>The acceleration in the frame of the body can be calculated from its position relative to the earth:</p>
-<div class="math notranslate nohighlight" id="equation-eq-accelerometer2">
-<span class="eqno">(48)<a class="headerlink" href="#equation-eq-accelerometer2" title="Link to this equation">#</a></span>\[\begin{split}[\boldsymbol{a}]_B = - B\boldsymbol{g}  = - g \hat{\boldsymbol{n}}_z = g \begin{bmatrix} \sin{\theta} \\ -\cos{\theta}\sin{\phi} \\ -\cos{\theta}\cos{\phi} \end{bmatrix}\end{split}\]</div>
-<p>In component form <span class="math notranslate nohighlight">\(\boldsymbol{a} = \begin{bmatrix} a_1 \\ a_2 \\ a_3 \end{bmatrix}\)</span> rearranging <a class="reference internal" href="#equation-eq-accelerometer2">(48)</a> gets:</p>
-<div class="math notranslate nohighlight" id="equation-accelerometer3">
-<span class="eqno">(49)<a class="headerlink" href="#equation-accelerometer3" title="Link to this equation">#</a></span>\[\theta = \arcsin(\frac{a_1}{g}) \quad \phi = \arcsin(\frac{-a_2}{g\cos{\theta}})\]</div>
-<p>From the accelerometer data alone it is possible to directly calculate <span class="math notranslate nohighlight">\(\theta\)</span> and <span class="math notranslate nohighlight">\(\phi\)</span> but not <span class="math notranslate nohighlight">\(\psi\)</span>. In this example let <span class="math notranslate nohighlight">\(\psi = 0\)</span> since no oscillations were performed in the <span class="math notranslate nohighlight">\(\omega_3\)</span> direction.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Additional noise has been added to the accelerometer readings to make the effects of the kalman filter more visible. Usually the accelerometer is more sensitive to noise than the gyroscope. Although the accelerometer data in the next few examples is definitely nosier it is hard to visualize, therefore additional gaussian noise has been added.</p>
-</div>
-<figure class="align-default" id="acc">
-<img alt="_images/Acc.png" src="_images/Acc.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 20 </span><span class="caption-text">yaw-pitch-roll against time using only accelerometer data for the same calibration mentioned above. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#acc" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#acc"><span class="std std-numref">Fig. 20</span></a> is much nosier than the predicted data from the gyroscope, see <a class="reference internal" href="#roll-pitch-yaw-drift-real"><span class="std std-numref">Fig. 17</span></a>. For small <span class="math notranslate nohighlight">\(k\)</span> the gyroscope is more accurate as the drift is less significant compared to the noise from the accelerometer however for large <span class="math notranslate nohighlight">\(k\)</span> the accelerometer is more accurate as the gyroscope measurements are subject to drift.</p>
-</section>
-<section id="improved-kalman-filter">
-<h5>Improved Kalman Filter<a class="headerlink" href="#improved-kalman-filter" title="Link to this heading">#</a></h5>
-<p>Using the real world accelerometer and gyroscope data <span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span> were tuned to obtain the optimal fit for the data.</p>
-<aside class="margin sidebar">
-<p class="sidebar-title"></p>
-<p>Given quaternion components <span class="math notranslate nohighlight">\(\boldsymbol{\beta}_0\)</span> ( <span class="math notranslate nohighlight">\(\beta_1\)</span>, <span class="math notranslate nohighlight">\(\beta_2\)</span>, and <span class="math notranslate nohighlight">\(\beta_3\)</span>) the Euler angles ( <span class="math notranslate nohighlight">\(\phi\)</span>, <span class="math notranslate nohighlight">\(\theta\)</span>, <span class="math notranslate nohighlight">\(\psi\)</span>) can be calculated as:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\phi &amp;= \arctan\left(\frac{2(\beta_1 \beta_2 + \beta_0 \beta_3)}{\beta_0^2 + \beta_1^2 - \beta_2^2 - \beta_3^2}\right) \\
-\theta &amp;= \arcsin\left(-2(\beta_1 \beta_3 - \beta_0 \beta_2)\right) \\
-\psi &amp;= \arctan\left(\frac{2(\beta_2 \beta_3 + \beta_0 \beta_1)}{\beta_0^2 - \beta_1^2 - \beta_2^2 + \beta_3^2}\right)\end{split}\]</div>
-</aside>
-<figure class="align-default" id="test1">
-<img alt="_images/Kalman_Filter_Tuning_test.png" src="_images/Kalman_Filter_Tuning_test.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 21 </span><span class="caption-text">Testing the kalman filter with small <span class="math notranslate nohighlight">\(q\)</span> and large <span class="math notranslate nohighlight">\(r\)</span>. <span class="math notranslate nohighlight">\(\phi_a\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> measured from accelerometer data. <span class="math notranslate nohighlight">\(\phi_f\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> from the kalman filter with sensor fusion. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#test1" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#test1"><span class="std std-numref">Fig. 21</span></a> is similar to the predicted data in <a class="reference internal" href="#roll-pitch-yaw-drift-real"><span class="std std-numref">Fig. 17</span></a> which would suggest the filter is working correctly as small <span class="math notranslate nohighlight">\(q\)</span> and large <span class="math notranslate nohighlight">\(r\)</span> mean the filter gives more weighting to predicted (gyroscope) data compared to measured (accelerometer) data.</p>
-<figure class="align-default" id="test2">
-<img alt="_images/Kalman_Filter_Tuning_test2.png" src="_images/Kalman_Filter_Tuning_test2.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 22 </span><span class="caption-text">Testing the kalman filter with large <span class="math notranslate nohighlight">\(q\)</span> and small <span class="math notranslate nohighlight">\(r\)</span>. <span class="math notranslate nohighlight">\(\phi_a\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> measured from accelerometer data. <span class="math notranslate nohighlight">\(\phi_f\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> from the kalman filter with sensor fusion. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#test2" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#test2"><span class="std std-numref">Fig. 22</span></a> is very noisy and is similar to the predicted data in <a class="reference internal" href="#acc"><span class="std std-numref">Fig. 20</span></a>, similarly this would suggest the filter is working correctly since large <span class="math notranslate nohighlight">\(q\)</span> and small <span class="math notranslate nohighlight">\(r\)</span> mean the filter gives more weighting to measured data compared to predicted data.</p>
-<figure class="align-default" id="tuning">
-<img alt="_images/Kalman_Filter_Tuning1.png" src="_images/Kalman_Filter_Tuning1.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 23 </span><span class="caption-text">Kalman filter tuned optimally by eye. <span class="math notranslate nohighlight">\(\phi_a\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> measured from accelerometer data. <span class="math notranslate nohighlight">\(\phi_f\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> from the kalman filter with sensor fusion. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#tuning" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<figure class="align-default" id="tuningzoomed">
-<img alt="_images/Kalman_Filter_Tuning_zoomed.png" src="_images/Kalman_Filter_Tuning_zoomed.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 24 </span><span class="caption-text">Zoomed in <a class="reference internal" href="#tuning"><span class="std std-numref">Fig. 23</span></a>. <span class="math notranslate nohighlight">\(\phi_a\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> measured from accelerometer data. <span class="math notranslate nohighlight">\(\phi_f\)</span> represents <span class="math notranslate nohighlight">\(\phi\)</span> from the kalman filter with sensor fusion. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#tuningzoomed" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#tuning"><span class="std std-numref">Fig. 23</span></a> and <a class="reference internal" href="#tuningzoomed"><span class="std std-numref">Fig. 24</span></a> show the kalman filter has produced a very good fit. The filtered signal appears both noise, drift and delay free.</p>
-</section>
-</section>
-<section id="summary">
-<h4>5.4 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h4>
-<p>Lets compare all three filters side by side.</p>
-<figure class="align-default" id="fig-comparison3">
-<img alt="_images/Comparison3.png" src="_images/Comparison3.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 25 </span><span class="caption-text">All three filters side by side. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/5IMU">View in Github</a></span><a class="headerlink" href="#fig-comparison3" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Figure <a class="reference internal" href="#fig-comparison3"><span class="std std-numref">Fig. 25</span></a> shows the only the kalman filter (with fusion) is accurate for determining attitude in the longrun. Even though the error from numerical integration is small if it isn’t regularly corrected for will be subject to integration drift.</p>
-<p>The Kalman filter produced an excellent fit in this case as the prediction (from gyroscope) and measurement (from accelerometer) were complimentary to each other. The gyroscope was less susceptible to noise but was susceptible to drift whereas the accelerometer was more susceptible to noise and less susceptible to drift. Sensor fusion gets the best of both worlds.</p>
-<div class="admonition-idea admonition">
-<p class="admonition-title">Idea</p>
-<p>Rewrite the part of the code that carries out kalman filter calculations and determines A in C++ as the programme runs really slowly.</p>
-</div>
-</section>
-</section>
-<span id="document-6ExtendedKalman"></span><section class="tex2jax_ignore mathjax_ignore" id="example-position-using-gps-and-accelerometer-data">
-<h3>6 Example : Position using GPS and accelerometer data<a class="headerlink" href="#example-position-using-gps-and-accelerometer-data" title="Link to this heading">#</a></h3>
-<p>This section improves on the <a class="reference internal" href="#4bExampleVelocityFromPosition.md"><span class="xref myst">the velocity from position example</span></a> example by using sensor fusion. While the system using only position data (theoretically measured using GPS) works well for predicting the position, its not so good at predicting the velocity. The current model <a class="reference internal" href="0Intro.html#equation-eq-motion-equations">(35)</a> represents an oversimplification as it assumes no acceleration (the acceleration doesn’t change between steps) which means that the velocity has to be corrected for by the measurements which is what causes lag. The model could be improved using real world accelerometer data which can be integrated to find velocity and position. There are other reasons for including the accelerometer data for example when GPS isn’t available due to some form of blocking e.g. being in a tunnel, the device can still roughly determine its position.</p>
-<section id="model">
-<h4>6.1 Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h4>
-<p>Starting with the 1D case the new model is built on <a class="reference internal" href="0Intro.html#equation-eq-motion-equations">(35)</a> with an additional 2nd order term:</p>
-<div class="math notranslate nohighlight" id="equation-eq-motion-equations2">
-<span class="eqno">(50)<a class="headerlink" href="#equation-eq-motion-equations2" title="Link to this equation">#</a></span>\[\begin{split}s_{k+1} &amp;\approx s_k + \nu_k\Delta t + \frac{1}{2}a_k \Delta t^2\\
-\nu_{k+1} &amp;\approx \nu_k + a_k\Delta t\end{split}\]</div>
-<p>The parameters from <a class="reference internal" href="#4bExampleVelocityFromPosition.md#model"><span class="xref myst">the velocity from position model</span></a> remain the same, except for the model <span class="math notranslate nohighlight">\(A\)</span>:</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\hat{\boldsymbol{x}}\)</span> is the column vector of position and velocity</p></li>
-<li><p><span class="math notranslate nohighlight">\(z\)</span> is the measurment of position from the GPS</p></li>
-<li><p><span class="math notranslate nohighlight">\(H = \begin{bmatrix} 1 &amp; 0 \end{bmatrix}\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(Q = \sigma_a^2 \begin{bmatrix} \frac{\Delta t^4}{4} &amp; \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} &amp; \Delta t^2 \end{bmatrix}\)</span> Where <span class="math notranslate nohighlight">\(\sigma_a\)</span> will be the standard deviation in the acceleration measurements.</p></li>
-<li><p><span class="math notranslate nohighlight">\(R = \sigma_s^2\)</span> Where <span class="math notranslate nohighlight">\(\sigma_s\)</span> will be the standard deviation in the position measurements.
-<span class="math notranslate nohighlight">\(A\)</span> needs to be a <span class="math notranslate nohighlight">\(2 \times 2\)</span> matrix, since it has the same number of rows and columns as the number of entries in <span class="math notranslate nohighlight">\(\hat{z}\)</span>, but this isn’t possible since <a class="reference internal" href="#equation-eq-motion-equations2">(50)</a> contains 3 terms.</p></li>
-</ul>
-<aside class="margin sidebar">
-<p class="sidebar-title"></p>
-<p>If <span class="math notranslate nohighlight">\(\mu_x\)</span> is transformed linearly <span class="math notranslate nohighlight">\(\mu_y = F\mu_x\)</span> its covariance matrix, <span class="math notranslate nohighlight">\(\Sigma_x\)</span>, can be transformed using <span class="math notranslate nohighlight">\(\Sigma_y = F\Sigma_xF^T\)</span>. <span id="id1">[<a class="reference internal" href="0Intro.html#id3" title="Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305, doi:10.1201/9780429200656.">BAOOl21</a>]</span> (chapter 2)</p>
-</aside>
-<div class="admonition-extended-kalman-filters admonition">
-<p class="admonition-title">Extended Kalman Filters</p>
-<p>Its not possible to write the prediction stage of the kalman filter as a linear transformation. The extended kalman filter predicts the next state using:</p>
-<div class="math notranslate nohighlight" id="equation-eq-proj-ext">
-<span class="eqno">(51)<a class="headerlink" href="#equation-eq-proj-ext" title="Link to this equation">#</a></span>\[\hat{\boldsymbol{x}}^-_{k+1} = A\hat{\boldsymbol{x}}_k + B\boldsymbol{u}_k\]</div>
-<p>Where <span class="math notranslate nohighlight">\(u_k\)</span> is the forcing function and <span class="math notranslate nohighlight">\(B\)</span> is its associated control matrix where <span class="math notranslate nohighlight">\(u_k\)</span> is the forcing function and <span class="math notranslate nohighlight">\(B\)</span> is its associated control matrix.</p>
-<div class="math notranslate nohighlight" id="equation-eq-proj-cov-ext">
-<span class="eqno">(52)<a class="headerlink" href="#equation-eq-proj-cov-ext" title="Link to this equation">#</a></span>\[P^-_{k+1} = A_kP_kA_k^T+B_kR^uB_k^T+Q\]</div>
-<p>Where <span class="math notranslate nohighlight">\(R^u\)</span> is the associated error covariance matrix for <span class="math notranslate nohighlight">\(u_k\)</span>. Equation <a class="reference internal" href="#equation-eq-proj-cov-ext">(52)</a> is the updated form of <a class="reference internal" href="0Intro.html#equation-eq-error-covariance-update">(31)</a> with the final term <span class="math notranslate nohighlight">\(B_kR^uB_k^T\)</span> corresponding to the covariance update for <span class="math notranslate nohighlight">\(R^u\)</span>. <span class="math notranslate nohighlight">\(R^u\)</span> becomes one of our kalman parameters when using the extended kalman filter.</p>
-<figure class="align-default" id="fig-block-kalman">
-<img alt="_images/ExpandedKalman.jpg" src="_images/ExpandedKalman.jpg" />
-<figcaption>
-<p><span class="caption-number">Fig. 26 </span><span class="caption-text">Block diagram for the extended kalman filter. The estimation phase is equivalent to <a class="reference internal" href="0Intro.html#fig-kalman-block-diagram"><span class="std std-numref">Fig. 7</span></a> but the prediction stage has been updated.</span><a class="headerlink" href="#fig-block-kalman" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-</div>
-<p>So <a class="reference internal" href="#equation-eq-motion-equations2">(50)</a> was rewritten in the form of <a class="reference internal" href="#equation-eq-proj-cov-ext">(52)</a> to determine <span class="math notranslate nohighlight">\(u_k\)</span> and <span class="math notranslate nohighlight">\(B\)</span>.</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{bmatrix} s \\ \nu \end{bmatrix}^-_{k+1} = \begin{bmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{bmatrix} \begin{bmatrix} s \\ \nu \end{bmatrix}_k + \begin{bmatrix} \frac{1}{2} \Delta t^2 \\ \Delta t \end{bmatrix} a_k.\end{split}\]</div>
-<p>Which gives <span class="math notranslate nohighlight">\(u_k = \begin{bmatrix} \frac{1}{2} \Delta t^2 \\ \Delta t \end{bmatrix}\)</span> and <span class="math notranslate nohighlight">\(u_k = a_k\)</span>. The tuning parameter will be <span class="math notranslate nohighlight">\(R^u = \sigma_a'^2\)</span> determine by tuning.</p>
-<figure class="align-default" id="fig-improved-vel-pos">
-<img alt="_images/image-31.png" src="_images/image-31.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 27 </span><span class="caption-text">Velocity and position as a function of time plotted for the extended kalman filter using the same parameters in <a class="reference internal" href="0Intro.html#fig-increased-r-and-increased-q"><span class="std std-numref">Fig. 15</span></a>, tuned by eye. <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/6ExtendedKalman">View in Github</a></span><a class="headerlink" href="#fig-improved-vel-pos" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Compared to <a class="reference internal" href="0Intro.html#fig-increased-r-and-increased-q"><span class="std std-numref">Fig. 15</span></a> the extended kalman filter with acceleration measurements gives a better fit for position and a significantly better fit for velocity, helped by the significantly better model. Even without measurement corrections the accelerometer gives a surprisingly good fit although there is a tiny bit of drift visible at the end. However the drift is significantly larger when integrated twice.</p>
-</section>
-<section id="smartphone-experiment">
-<h4>6.2 Smartphone experiment<a class="headerlink" href="#smartphone-experiment" title="Link to this heading">#</a></h4>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Incomplete section. It is left here as a placeholder for future work. The experiment would have involved using kalman filters to determine the real world position and velocity of a smartphone using accelerometer and GPS data. This would have needed to consider the GPS and accelerometer having different sampling rates and noise characteristics.</p>
-</div>
-</section>
-</section>
-<span id="document-7RealData"></span><section class="tex2jax_ignore mathjax_ignore" id="experiment-attitude-using-a-6-9-axis-imu">
-<h3>7 Experiment: Attitude Using a 6/9 axis IMU<a class="headerlink" href="#experiment-attitude-using-a-6-9-axis-imu" title="Link to this heading">#</a></h3>
-<p>This section explores examples similar to <a class="reference internal" href="#document-5IMU"><span class="std std-doc">section 5</span></a> but using real data. Initially using a gyroscope and an accelerometer, a 6 axis IMU, and later using a magnetometer as well, a 9 axis IMU. The 6 axis example uses the MPU6050 with an arduino controller and the 9 axis example used the mobile phone sensors with the <a class="reference external" href="https://play.google.com/store/apps/details?id=com.kelvin.sensorapp&amp;amp;hl=en-US&amp;amp;pli=1">sensor logger</a> app.</p>
-<section id="implementation">
-<h4>Implementation<a class="headerlink" href="#implementation" title="Link to this heading">#</a></h4>
-<p>The code for this section can be found <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/7IMUReal">here</a>. The main file is <code class="docutils literal notranslate"><span class="pre">Analysis.py</span></code> which contains <code class="docutils literal notranslate"><span class="pre">AnalyseMPU</span></code> class which is the parent class for <code class="docutils literal notranslate"><span class="pre">AnalysePhone</span></code> and <code class="docutils literal notranslate"><span class="pre">AnalyseTest</span></code>, these read data from the MPU6050, sensor logger and test data (from <a class="reference internal" href="#document-5IMU"><span class="std std-doc">section 5</span></a>) respectively.</p>
-<section id="raw-data-from-mpu6050">
-<h5>Raw Data from MPU6050<a class="headerlink" href="#raw-data-from-mpu6050" title="Link to this heading">#</a></h5>
-<p>Each file with measurements came with its own calibration file, which was used to determine the offset in each direction. Different tests were performed with the MPU6050, the data for these are contained in the folders:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">YawPitchRoll</span></code>: Involves fast oscillations in the yaw direction followed by a short break, then oscillations in the roll direction followed by a short break, then oscillations in the pitch direction.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">FullYaw</span></code>: Contains data where the MPU6050 was rotated in a full circle in the yaw direction and then rotated back in the opposite direction.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">FullPitch</span></code>: Contains data where the MPU6050 was rotated in a full circle in the pitch direction and then rotated back in the opposite direction.</p></li>
-</ul>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Currently the Kalman filter will only correctly fit <code class="docutils literal notranslate"><span class="pre">YawPitchRoll</span></code> data. When the sensor was rotated beyond <span class="math notranslate nohighlight">\(180^o\)</span> in the yaw and roll directions or beyond <span class="math notranslate nohighlight">\(90^o\)</span> in the pitch direction the Kalman filter will need to re-normalize the attitude, which made it difficult to fit the Kalman filter. This wasn’t a problem with <code class="docutils literal notranslate"><span class="pre">YawPitchRoll</span></code> data as no full rotations were performed.</p>
-</div>
-</section>
-<section id="raw-data-from-sensor-logger">
-<h5>Raw Data From Sensor Logger<a class="headerlink" href="#raw-data-from-sensor-logger" title="Link to this heading">#</a></h5>
-<p>The data collected can be found <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/7IMUReal/SensorLoggerData">here</a>. Each folder contains a different test and contains the following files:</p>
-<ul class="simple">
-<li><p><em>In all cases time was measured in seconds.</em></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Gravity.csv</span></code>: Contains the acceleration readings without the acceleration due to gravity removed. <em>The x, y and z components are measured in ms<span class="math notranslate nohighlight">\(^{-2}\)</span></em>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Magnetometer.csv</span></code>: Contains the magnetometer readings in the phone’s frame of reference. <em>The x, y and z components are measured in <span class="math notranslate nohighlight">\(\mu\)</span>T.</em></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Gyroscope.csv</span></code>: Contains the gyroscope readings in the phone’s frame of reference. <em>x, y and z are measured in radians rads<span class="math notranslate nohighlight">\(^{-1}\)</span></em></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Orientation.csv</span></code>: Contains the orientation of the phone in yaw-pitch-roll measured in radians. We will refer to this as the true orientation as its the orientation calculated by the phone.
-All other files are not used in this analysis.</p></li>
-</ul>
-<p>Tests were performed and stored in the folders:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">PitchRollCalibration</span></code>: Fast movement in the pitch direction followed by a short break, then motion in a combination of the pitch and roll directions followed by a short break, then motion in just the roll direction, this was the same test as in <a class="reference internal" href="#document-5IMU"><span class="std std-doc">section 5</span></a>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">YawRollPitchCalibration</span></code>: Contains data for a calibration test where the phone was moved in each direction alone followed by a short pause.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">FullYaw</span></code>: Contains data where the phone was rotated in a full circle in the yaw direction and then rotated back in the opposite direction.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">FullPitch</span></code>: Contains data where the phone was rotated in a full circle in the pitch direction and then rotated back in the opposite direction.</p></li>
-</ul>
-</section>
-<section id="programme-structure">
-<h5>Programme structure<a class="headerlink" href="#programme-structure" title="Link to this heading">#</a></h5>
-<p>The programme is structured with three files:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">AdvKalman.py</span></code>: Contains the Kalman filter implementation and handles the conversion between quaternions and Euler angles.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">OrientationKalman.py</span></code>: Contains the <code class="docutils literal notranslate"><span class="pre">run</span></code> function which runs the Kalman filter on the data and returns the filtered signal, Euler angles from the accelerometer and gyroscope, and the magnetometer readings. It acts as an interface between <a class="reference external" href="http://Analysis.py">Analysis.py</a> and <a class="reference external" href="http://AdvKalman.py">AdvKalman.py</a>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Analysis.py</span></code>: Contains the <code class="docutils literal notranslate"><span class="pre">AnalysePhone</span></code> class which is used to read in the data, run the Kalman filter and plot the results.</p></li>
-</ul>
-</section>
-</section>
-<section id="theory-9-axis">
-<h4>Theory, 9 axis<a class="headerlink" href="#theory-9-axis" title="Link to this heading">#</a></h4>
-<p>In <a class="reference internal" href="#document-5IMU"><span class="std std-doc">section 5</span></a> gyroscope data and accelerometer data were fused to determine the attitude of the phone. However the accelerometer on its own was unable to measure the yaw direction. When phone is lying flat in the xy plane <span class="math notranslate nohighlight">\(z^\psi\)</span>, can be determined easily:</p>
-<div class="math notranslate nohighlight" id="equation-eq-magnetometer">
-<span class="eqno">(53)<a class="headerlink" href="#equation-eq-magnetometer" title="Link to this equation">#</a></span>\[z^\psi = \arctan\left(\frac{m_y}{m_x}\right)\]</div>
-<p>Where <span class="math notranslate nohighlight">\(m_x\)</span> and <span class="math notranslate nohighlight">\(m_y\)</span> are the x and y components of the magnetometer reading. The magnetometer reading is in the phone’s frame of reference this is normally not the xy plane so the accelerometer data to is required to write the corrected magnetometer readings <span class="math notranslate nohighlight">\(m_x'\)</span> and <span class="math notranslate nohighlight">\(m_y'\)</span>.</p>
-<div class="math notranslate nohighlight" id="equation-eq-gyro-correction">
-<span class="eqno">(54)<a class="headerlink" href="#equation-eq-gyro-correction" title="Link to this equation">#</a></span>\[\begin{split}m_x^{'} = m_x \cos(z^\theta) + m_y \sin(z^\theta) \sin(z^\phi) + m_z \sin(z^\theta) \cos(z^\phi)\\
-m_y^{'} = m_y \cos(z^\theta) - m_x \sin(z^\theta) \sin(z^\phi) + m_z \sin(z^\theta) \cos(z^\phi)\\\end{split}\]</div>
-<p>Where <span class="math notranslate nohighlight">\(z^\phi\)</span> and <span class="math notranslate nohighlight">\(z^\theta\)</span> are the roll and pitch angles calculated using the accelerometer.</p>
-<p>Then as before <span class="math notranslate nohighlight">\(z^\psi\)</span> and <span class="math notranslate nohighlight">\(z^\phi\)</span> were calculated using the accelerometer and were used to correct <span class="math notranslate nohighlight">\(z^\psi\)</span> when the magnetometer isn’t lying flat in the xy plane. To summarize the update measurement will be formed from the accelerometer, for pitch and roll and the magnetometer for yaw. The prediction step will use measurements from the gyroscope in the same way as <a class="reference internal" href="#document-5IMU"><span class="std std-doc">section 5</span></a>.</p>
-</section>
-<section id="results">
-<h4>Results<a class="headerlink" href="#results" title="Link to this heading">#</a></h4>
-<section id="fast-yaw-pitch-roll">
-<h5>Fast Yaw Pitch Roll<a class="headerlink" href="#fast-yaw-pitch-roll" title="Link to this heading">#</a></h5>
-<p>These examples involved fast oscillations in the yaw directions followed by a short break, then oscillations in the roll direction followed by a short break, then oscillations in the pitch direction.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Here yaw-pitch-roll is normalized as follows: yaw is in the range <span class="math notranslate nohighlight">\([-\pi, \pi]\)</span>, pitch is in the range <span class="math notranslate nohighlight">\([-\pi/2, \pi/2]\)</span> and roll is in the range <span class="math notranslate nohighlight">\([-\pi, \pi]\)</span>.</p>
-</div>
-<section id="mpu6050-6-axis-imu">
-<h6>MPU6050 6-axis IMU<a class="headerlink" href="#mpu6050-6-axis-imu" title="Link to this heading">#</a></h6>
-<p>So that the correction was normalized the correction in the yaw direction was set to always be zero, the pitch and roll directions came from accelerometer measurements. The prediction came from gyroscope measurements.</p>
-<figure class="align-default" id="fig-fast-yaw-roll-pitch-6-axis">
-<img alt="_images/image-39.png" src="_images/image-39.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 28 </span><span class="caption-text">Fast oscillations in the yaw, roll and pitch directions. The orange line is the measurements from integrating the angular velocities from the gyro and red line is the measurements from the accelerometer. The blue line is the Kalman filtered attitude which fuses data from the gyroscope and accelerometer/magnetometer.</span><a class="headerlink" href="#fig-fast-yaw-roll-pitch-6-axis" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>The drift is clearly visible from the gyro. But the accelerometer measurements seem to be much more accurate. However it is unclear if Kalman filter improves on the accelerometer measurements with the current <span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span>.</p>
-<figure class="align-default" id="fig-fast-yaw-roll-pitch-6-axis-tuned">
-<img alt="_images/image-40.png" src="_images/image-40.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 29 </span><span class="caption-text">The same data as <a class="reference internal" href="#fig-fast-yaw-roll-pitch-6-axis"><span class="std std-numref">Fig. 28</span></a> but with the Kalman filter tuned, with larger <span class="math notranslate nohighlight">\(R\)</span> and smaller <span class="math notranslate nohighlight">\(Q\)</span>, increasing the weighting on the prediction, the gyro data.</span><a class="headerlink" href="#fig-fast-yaw-roll-pitch-6-axis-tuned" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Here the Kalman filter has a much better shape for the yaw direction since there is a greater weighting on the prediction meaning oscillations from the gyro are much more pronounced in the Kalman filter. The Kalman filter also still filters out the drift from the gyro data making it a very accurate fit.</p>
-<figure class="align-default" id="fig-fast-yaw-roll-pitch-6-axis-zoomed">
-<img alt="_images/image-43.png" src="_images/image-43.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 30 </span><span class="caption-text">Zoomed in on the pitch oscillations in <a class="reference internal" href="#fig-fast-yaw-roll-pitch-6-axis"><span class="std std-numref">Fig. 28</span></a>.</span><a class="headerlink" href="#fig-fast-yaw-roll-pitch-6-axis-zoomed" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>There is a problem in the oscillations in all directions are now delayed as the gyroscope is slower to to changes than the accelerometer, hence by putting more faith in the prediction although the fit more accurately resembles the shape of the true data it is slightly delayed.</p>
-<p>The Kalman filter is able to filter out some of the noise from the accelerometer data. The accelerometer data is typically noisier than the gyroscope data, so putting more emphasis on the gyroscope will help to filter out noise.</p>
-</section>
-<section id="phone-9-axis-imu">
-<h6>Phone, 9-axis IMU<a class="headerlink" href="#phone-9-axis-imu" title="Link to this heading">#</a></h6>
-<p>Introducing magnetometer measurements means there is 2 measurements for each axis, reducing the total drift.</p>
-<figure class="align-default" id="fig-fast-yaw-roll-pitch">
-<img alt="_images/image-32.png" src="_images/image-32.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 31 </span><span class="caption-text">Fast oscillations in the yaw, roll and pitch directions. The orange line is the measurements from integrating the angular velocities from the gyro and red line is the measurements from the magnetometer and accelerometer. The blue line is the Kalman filtered attitude which fuses data from the gyroscope and accelerometer/magnetometer.  The black line is the phones own attitude measurements.</span><a class="headerlink" href="#fig-fast-yaw-roll-pitch" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>There is significant drift in the measurements from the gyro alone the end measurements from the gyro alone has drifted by approximately <span class="math notranslate nohighlight">\(60^o\)</span> from the true value where as the Kalman filter and the magnetometer/accelerometer data are much better fits. Also the amplitude of the measurements oscillations in the roll direction is much smaller than the yaw and pitch directions. This was because its because of the way the phone had to be held.</p>
-<figure class="align-default" id="fig-fast-yaw-roll-pitch-2">
-<img alt="_images/image-34.png" src="_images/image-34.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 32 </span><span class="caption-text">Zoomed in on the yaw oscillations in <a class="reference internal" href="#fig-fast-yaw-roll-pitch"><span class="std std-numref">Fig. 31</span></a>.</span><a class="headerlink" href="#fig-fast-yaw-roll-pitch-2" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Here the Kalman filter is able to correct for both the drift from the gyro and noise from the magnetometer making it a very good fit for yaw. The is interference with the gyroscope in the pitch direction but the Kalman filter successfully filters this out.</p>
-<figure class="align-default" id="id1">
-<img alt="_images/image-35.png" src="_images/image-35.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 33 </span><span class="caption-text">Zoomed in on the pitch oscillations in <a class="reference internal" href="#fig-fast-yaw-roll-pitch"><span class="std std-numref">Fig. 31</span></a>.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>There is interference in the magnetometer/gyroscope measurements but the Kalman filter filters this out successfully but this does cause drift in the Kalman filter measurements. The gyroscope measurements for Pitch are incredibly noisy possibly due to oversensitivity of the gyroscope in the phone, but the Kalman filter remains a good fit. The Roll direction remains fairly stable.</p>
-<figure class="align-default" id="id2">
-<img alt="_images/image-36.png" src="_images/image-36.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 34 </span><span class="caption-text">Zoomed in on the roll oscillations in <a class="reference internal" href="#fig-fast-yaw-roll-pitch"><span class="std std-numref">Fig. 31</span></a>.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>For the yaw direction both sets of instruments are indicating the correct shape but there is drift especially in the gyro. There is interference in the pitch direction, again the Kalman filter does a good job of filtering this out.</p>
-</section>
-</section>
-<section id="full-rotation-yaw">
-<h5>Full Rotation, Yaw<a class="headerlink" href="#full-rotation-yaw" title="Link to this heading">#</a></h5>
-<figure class="align-default" id="fig-full-yaw">
-<img alt="_images/image-37.png" src="_images/image-37.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 35 </span><span class="caption-text">The phone was rotated in a full circle in the yaw direction and then rotated back in the opposite direction. The orange line is the measurements from integrating the angular velocities from the gyro and red line is the measurements from the magnetometer and accelerometer. The blue line is the Kalman filtered attitude which fuses data from the gyroscope and accelerometer/magnetometer.  The black line is the phones own attitude measurements.</span><a class="headerlink" href="#fig-full-yaw" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>The Kalman filter is able to reduce noise in the magnetometer measurements but the gyroscope seems to provide the best fit here. This could be because the magnetometer is overly sensitive. However it’s plausible that the phone reliable more on its gyroscope for measurements of orientation since magnetometer data isn’t as reliable due to additional magnetic fields meaning it can be poorly calibrated. Whereas a gyroscope with a small amount of drift will always work.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>I didn’t have enough time during the placement to test the Kalman filter for full rotations.</p>
-</div>
-</section>
-</section>
-</section>
-<span id="document-8TestingFilters"></span><section class="tex2jax_ignore mathjax_ignore" id="experiment-quantitative-comparison-of-kalman-filter-performance">
-<h3>8 Experiment: Quantitative Comparison of Kalman Filter Performance<a class="headerlink" href="#experiment-quantitative-comparison-of-kalman-filter-performance" title="Link to this heading">#</a></h3>
-<p>Using two sensors (magnetometer and gyroscope), four filters (a high pass, a low pass, a polynomial fitting and the kalman filter) were used to calculate estimates for the yaw angle, <span class="math notranslate nohighlight">\(\psi\)</span>, of a mobile phone. The results were compared to the data from the phones in built filter. The experiment involved two tests designed to see how the filters perform over a single frequency then a range of frequencies. In the first part of the experiment the phone oscillated with high frequency which the parameters were tuned, to test how the filters performed at a single frequency. The second part of the experiment the phone completed a full rotation at a low frequency without the parameters being re-tuned, to see how the filters responded when not tuned to a specific frequency.</p>
-<section id="implementation">
-<h4>8.1 Implementation<a class="headerlink" href="#implementation" title="Link to this heading">#</a></h4>
-<p>Data was recorded using the <a class="reference external" href="https://play.google.com/store/apps/details?id=com.kelvin.sensorapp&amp;amp;hl=en-US&amp;amp;pli=1">sensor logger app</a> allowing the phone to function as a 9-axis IMU. Only <span class="math notranslate nohighlight">\(\psi\)</span> was measured so only gyroscope and magnetometer data were necessary. The correction measurement was calculated using the magnetometer data <span class="math notranslate nohighlight">\(m_x\)</span> and <span class="math notranslate nohighlight">\(m_y\)</span>. <span class="math notranslate nohighlight">\(m_z\)</span> wasn’t required as the IMU was assumed to be in the plane perpendicular to the gravity vector, so didn’t need to be corrected. <span class="math notranslate nohighlight">\(\psi\)</span> was determined using <a class="reference internal" href="0Intro.html#equation-eq-magnetometer">(53)</a>.</p>
-<p>The gyroscope data was integrated using the euler method:</p>
-<div class="math notranslate nohighlight" id="eq-gyroscope-integration">
-<span id="equation-eq-gyroscope-integration"></span><span class="eqno">(55)<a class="headerlink" href="#eq-gyroscope-integration" title="Link to this equation">#</a></span>\[\psi_k \approx \psi_{k-1} + \omega_k \Delta t\]</div>
-<p>This time <span class="math notranslate nohighlight">\(\omega_k\)</span> is the gyroscope measurement of angular velocity at time <span class="math notranslate nohighlight">\(k\)</span> in the <span class="math notranslate nohighlight">\(z\)</span> direction. This formed the prediction measurement. The form required by the Kalman filter is <span class="math notranslate nohighlight">\(\hat{x}^-_k = A\hat{x}_{k-1} + Bu_k\)</span>. So <span class="math notranslate nohighlight">\(A = 1\)</span> and <span class="math notranslate nohighlight">\(B = dt\)</span> and <span class="math notranslate nohighlight">\(u_k = \omega_k\)</span>. The state to measurement matrix <span class="math notranslate nohighlight">\(H = 1\)</span> since <span class="math notranslate nohighlight">\(z_k\)</span> and <span class="math notranslate nohighlight">\(\hat{x}_k\)</span> are both the yaw angle.</p>
-<p>The code for this section can be found in <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/7IMUReal">github</a>. The programme comprises of one file <code class="docutils literal notranslate"><span class="pre">Main.py</span></code>. Each of the filters is written as a separate function and can be analyzed using the <code class="docutils literal notranslate"><span class="pre">AnalysePhone</span></code> class, which contains methods to generate interactive plots.</p>
-</section>
-<section id="filters">
-<h4>8.2 Filters<a class="headerlink" href="#filters" title="Link to this heading">#</a></h4>
-<p>The following filters were compared as well as unfiltered data from the gyroscope and the magnetometer:</p>
-<p><strong>Kalman Filter</strong> (KF): A standard Kalman filter which <strong>fused</strong> data from the magnetometer with gyroscope data with a constant process noise covariance and measurement noise covariance. The tuning parameters were:</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(Q\)</span>: Process noise covariance.</p></li>
-<li><p><span class="math notranslate nohighlight">\(R^m\)</span>: Measurement noise covariance for the magnetometer measurements.</p></li>
-<li><p><span class="math notranslate nohighlight">\(R^g\)</span>: Measurement noise covariance for the gyroscope measurements.</p></li>
-</ul>
-<p><strong><a class="reference internal" href="#EMAHP.md"><span class="xref myst">Exponential Moving Average Low Pass Filter</span></a></strong> (EMAHPF): Was applied to the <strong>magnetometer</strong> data where the Where <span class="math notranslate nohighlight">\(\alpha^{HP}\)</span> is the tuning parameter, to reduce noise.</p>
-<p><strong>Exponential Moving Average High Pass Filter</strong> (EMAHPF): Was applied to <strong>gyroscope data</strong> to cutout integration drift (low frequency). <span class="math notranslate nohighlight">\(\alpha^{LP}\)</span> was the tuning parameter.</p>
-<p><strong>Savitzky-Golay Filter</strong> (SGF): Was applied to the <strong>magnetometer data</strong> to help mitigate random noise. It has the following parameters:</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(W\)</span>: The length of the filter window.</p></li>
-<li><p><span class="math notranslate nohighlight">\(\mathbb{O}\)</span>: The order of the polynomial used to fit the samples.
-The SGF works by fitting a polynomial of order <span class="math notranslate nohighlight">\(\mathbb{O}\)</span> to a window of length <span class="math notranslate nohighlight">\(W\)</span>. The center of the window is the fitted value.</p></li>
-</ul>
-</section>
-<section id="results">
-<h4>8.3 Results<a class="headerlink" href="#results" title="Link to this heading">#</a></h4>
-<section id="high-frequency-oscillation-test">
-<h5>High frequency oscillation test<a class="headerlink" href="#high-frequency-oscillation-test" title="Link to this heading">#</a></h5>
-<p>The phone was initially held in a fixed position for around 5 seconds then oscillated at a high frequency for around <span class="math notranslate nohighlight">\(20\)</span> s, each of the filters was tuned to optimise the fit.</p>
-<figure class="align-default" id="high-freq-oscillation">
-<img alt="_images/image-44.png" src="_images/image-44.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 36 </span><span class="caption-text">Shows the signal used and gives an overview of the results and compares the phones own filters against the filters described above. Tuning parameters were set below.</span><a class="headerlink" href="#high-freq-oscillation" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#high-freq-oscillation"><span class="std std-numref">Fig. 36</span></a> shows integration drift is visible in the unfiltered gyroscope data. But all other filters seem to be a good fit from a distance.</p>
-<figure class="align-default" id="high-freq-oscillation-zoomed">
-<img alt="_images/image-45.png" src="_images/image-45.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 37 </span><span class="caption-text">Zoomed in view of the final few oscillations of the high frequency oscillation experiment with a visually optimized fit.</span><a class="headerlink" href="#high-freq-oscillation-zoomed" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#high-freq-oscillation-zoomed"><span class="std std-numref">Fig. 37</span></a> shows the there is integration drift from the unfiltered gyroscope data but not with the EMAHPF since the drift is low-frequency. The magnetometer measurments are lagging behind the true signal which also effects the EMALPF and SGF. Surprisingly the Kalman filter isn’t lagged as it relies heavily on the gyroscope measurements. The Kalman filter assumes a large amount of noise in the magnetometer, <span class="math notranslate nohighlight">\(R_m\)</span>, two orders of magnitude larger than <span class="math notranslate nohighlight">\(R_g\)</span>. There is also a small amount of linear process noise.</p>
-<figure class="align-default" id="high-freq-oscillation-zoomed-flat">
-<img alt="_images/image-46.png" src="_images/image-46.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 38 </span><span class="caption-text">Zoomed in view of the flat proportion of the graph, at the beginning.</span><a class="headerlink" href="#high-freq-oscillation-zoomed-flat" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#high-freq-oscillation-zoomed-flat"><span class="std std-numref">Fig. 38</span></a> shows the noisiest sensor is the magnetometer. The SGF reduces some of this noise. The EMALPF actually made the fit worse since the noise from the magnetometer was significantly less significant than its lag, which applying a low-pass filter actually worsened.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><span class="math notranslate nohighlight">\(R^2\)</span> measures the pattern-matching ability of the filter and is sensitive to phase shifts.
-MSE (mean squared error) measures absolute accuracy and heavily penalizes large errors due to squaring.</p>
-</div>
-<figure class="align-default" id="fig-correlation-coefficient">
-<img alt="_images/image-47.png" src="_images/image-47.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 39 </span><span class="caption-text">Correlation coefficient squared, <span class="math notranslate nohighlight">\(R^2\)</span> for each of the filters against the phones built in filter.</span><a class="headerlink" href="#fig-correlation-coefficient" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>None of the measurements using the magnetometer perform well. The best of the magnetometer measurements is the SGF, as it removes a small amount of noise and doesn’t cause significant lag. <a class="reference internal" href="#fig-correlation-coefficient"><span class="std std-numref">Fig. 39</span></a> suggests that the EMALPF fits the shape the best on the gyro data than the fused KF did, likely a result of lagging magnetometer data which wasn’t corrected for.</p>
-<figure class="align-default" id="fig-mean-squared-error">
-<img alt="_images/image-48.png" src="_images/image-48.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 40 </span><span class="caption-text">MSE for each of the filters against the phones builtin filter for the first test.</span><a class="headerlink" href="#fig-mean-squared-error" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Conversely <a class="reference internal" href="#fig-mean-squared-error"><span class="std std-numref">Fig. 40</span></a> suggests that KF has a more accurate fit. This suggests that EMALPF fits the shape of the data better than KF but KF is on average more accurate.</p>
-</section>
-<section id="low-frequency-rotations-test">
-<h5>Low frequency rotations test<a class="headerlink" href="#low-frequency-rotations-test" title="Link to this heading">#</a></h5>
-<p>The phone was held still for around <span class="math notranslate nohighlight">\(8\)</span>s and then was rotated a full circle over the space of the next <span class="math notranslate nohighlight">\(15\)</span>s. The tuning parameters for this experiment are those given in <a class="reference internal" href="#high-freq-oscillation"><span class="std std-numref">Fig. 36</span></a>.</p>
-<figure class="align-default" id="fig-low-frequency-rotations">
-<img alt="_images/image-49.png" src="_images/image-49.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 41 </span><span class="caption-text">Comparison of the phones own filters against the filters described above. With tuning parameters the same as <a class="reference internal" href="#high-freq-oscillation"><span class="std std-numref">Fig. 36</span></a>.</span><a class="headerlink" href="#fig-low-frequency-rotations" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#fig-low-frequency-rotations"><span class="std std-numref">Fig. 41</span></a> shows that all filters are a good fit for the data except the EMAHPF which filters out the low frequencies even if they are not related to noise, in this case the slow rotation.</p>
-<figure class="align-default" id="fig-low-frequency-rotations-zoom">
-<img alt="_images/image-50.png" src="_images/image-50.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 42 </span><span class="caption-text">Zooming in on the last couple of seconds of <a class="reference internal" href="#fig-low-frequency-rotations"><span class="std std-numref">Fig. 41</span></a>.</span><a class="headerlink" href="#fig-low-frequency-rotations-zoom" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#fig-low-frequency-rotations-zoom"><span class="std std-numref">Fig. 42</span></a> shows that there has been some drift from all the filters away from the true yaw. But the Kalman filter is closest to the true value. As expected the gyro produces a much smoother fit compared to the magnetometer. Applying a low pass filter to the magnetometer data would make the fit for gyro data better but this would result in some of the higher frequencies being lost which will result in a worse fit for the first test.</p>
-<figure class="align-default" id="r-squared-test2">
-<img alt="_images/image-51.png" src="_images/image-51.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 43 </span><span class="caption-text"><span class="math notranslate nohighlight">\(R^2\)</span> for each of the filters against the phones built in filter.</span><a class="headerlink" href="#r-squared-test2" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#r-squared-test2"><span class="std std-numref">Fig. 43</span></a> shows the Kalman filter produced the best fit as did all the other filters except the EMAHPF which had a very poor fit. The magnetometer data gave a much better fit in these examples compared to the previous test as the oscillations are significantly slower, the lag is less significant. In general the second signal is much easier to fit than the first.</p>
-<figure class="align-default" id="mse-test-2">
-<img alt="_images/image-52.png" src="_images/image-52.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 44 </span><span class="caption-text">MSE for each of the filters against the phones builtin filter for the second test.</span><a class="headerlink" href="#mse-test-2" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p><a class="reference internal" href="#mse-test-2"><span class="std std-numref">Fig. 44</span></a> indicates the same as <a class="reference internal" href="#r-squared-test2"><span class="std std-numref">Fig. 43</span></a>, the Kalman filter still provides a marginally better fit than the other filters. The EMAHPF, which had the best fit in the first test now has by far the worst fit as discussed earlier.</p>
-</section>
-</section>
-<section id="conclusion">
-<h4>8.4 Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h4>
-<p>Frequency based filters, like the EMAHPF and EMALPF work well for signals which are oscillating at a constant or near constant frequency, especially when there is only one sensor available. However they work less well for a signal made up from a range of different frequencies, like real world motion. Kalman filters work well in this situation as the combination of measurements minimizes noise from both sensors (which are subject to different types of noise) to achieve a reasonably accurate state estimate, without ignoring any specific frequency data. The parameters of the KF are independent of frequency whereas the EMAHPF and EMALPF have frequency dependent tuning parameters.</p>
-</section>
-</section>
-<span id="document-99Bibliography"></span><section class="tex2jax_ignore mathjax_ignore" id="bibliography">
-<h3>Bibliography<a class="headerlink" href="#bibliography" title="Link to this heading">#</a></h3>
-<section id="resources">
-<h4>Resources<a class="headerlink" href="#resources" title="Link to this heading">#</a></h4>
-<p>The videos from Dr Shane Ross act as a good introduction to Kalman filters and are what the basics of this research is based from. They are linked here: <a class="reference external" href="https://www.youtube.com/watch?v=HCd-leV8OkU">video 1</a>, <a class="reference external" href="https://www.youtube.com/watch?v=qCZ2UTgLM_g&amp;amp;t=1527s">video 2</a> and <a class="reference external" href="https://www.youtube.com/watch?v=DbE4PMgqp3s&amp;amp;t=2152s">video 3</a>.</p>
-</section>
-<section id="references">
-<h4>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h4>
-<div class="docutils container" id="id1">
-<div role="list" class="citation-list">
-<div class="citation" id="id3" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>BAOOl21<span class="fn-bracket">]</span></span>
-<p>Armando Barreto, Malek Adjouadi, Francisco R. Ortega, and Nonnarit O-larnnithipong. &quot;intuitive understanding of kalman filtering with matlab&quot;. 2021. URL: <a class="reference external" href="https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305">https://public.ebookcentral.proquest.com/choice/publicfullrecord.aspx?p=6236305</a>, <a class="reference external" href="https://doi.org/10.1201/9780429200656">doi:10.1201/9780429200656</a>.</p>
-</div>
-<div class="citation" id="id2" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>BH12<span class="fn-bracket">]</span></span>
-<p>Robert Grover Brown and Patrick Y. C. Hwang. Introduction to random signals and applied kalman filtering : with matlab exercises. 2012. URL: <a class="reference external" href="http://proquest.safaribooksonline.com/9780470609699">http://proquest.safaribooksonline.com/9780470609699</a>.</p>
-</div>
-</div>
-</div>
-</section>
-</section>
 </div>
 </section>
 </section>
@@ -1391,6 +451,15 @@ MSE (mean squared error) measures absolute accuracy and heavily penalizes large 
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="right-next"
+       href="1FilterBasics.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">1 Basics Of Filtering</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -1407,17 +476,8 @@ MSE (mean squared error) measures absolute accuracy and heavily penalizes large 
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-1FilterBasics">1 Basics Of Filtering</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-2KalmanFilters">2 Kalman filters</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-3ExampleBatteryOutput">3 Example: Battery output</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-4ExampleVelocityFromPosition">4 Example: Velocity from position</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-5IMU">5 Example: Attitude using a gyroscope and accelerometer</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-6ExtendedKalman">6 Example : Position using GPS and accelerometer data</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-7RealData">7 Experiment: Attitude Using a 6/9 axis IMU</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-8TestingFilters">8 Experiment: Quantitative Comparison of Kalman Filter Performance</a></li>
-<li class="toctree-l1 toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#document-99Bibliography">Bibliography</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contents">Contents</a></li>
 </ul>
-
   </nav></div>
 
 </div></div>
