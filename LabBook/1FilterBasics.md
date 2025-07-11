@@ -31,7 +31,7 @@ The code for this filter can be found in [github](https://github.com/MalachiHibb
 :name: fig-noisy-signal
 A noisy signal with mean 25 and standard deviation 0.5, fitted with a moving average filter.
 ```
-
+ 
 The filter is efficient and converges to the correct value very quickly. Due to random variation the filter fluctuates around the correct value. The average filter is very good when $\hat{x}_k$ is constant, however it won't converge to a changing signal.
 
 

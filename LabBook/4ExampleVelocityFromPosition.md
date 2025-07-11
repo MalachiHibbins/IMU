@@ -31,7 +31,7 @@ Q = E[w_kw_k^T] =  \begin{bmatrix} VAR(s) & COV(s,\nu) \\ COV(\nu,s) & VAR(\nu) 
 {cite}`Barreto2021` (chapter 2.3) {cite}`Barreto2021` (chapter 10.2)
 where $\sigma_Q^2$ is the variance in the true acceleration, which is the model assumes is zero. $\sigma_Q^2$ will be used as a tuning parameter.
 $R = VAR(z_k)$ is going to be the variance in the measurements of the position which will be denoted as $\sigma_R$ {cite}`Barreto2021,chapter=10.2` (chapter 10).
-
+ 
 The following parameters will be used for the Kalman filter.
 - $\hat{\boldsymbol{x}}_k = \begin{bmatrix} s_k \\ \nu_k \end{bmatrix}$
 - $z_k = s_k$

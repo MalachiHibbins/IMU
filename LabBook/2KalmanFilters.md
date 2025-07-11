@@ -229,7 +229,7 @@ The error covariance matrix associated with this prediction $\hat{x}^-_{k+1}$ is
 ```{margin}
 If $\mu_x$ is transformed linearly $\mu_y = F\mu_x$ its covariance matrix, $\Sigma_x$, can be transformed using $\Sigma_y = F\Sigma_xF^T$. {cite}`Barreto2021` (chapter 2)
 ```
-
+ 
 ```{math}
 :label: projection-covariance
 P^-_k = AP_kA^T+Q

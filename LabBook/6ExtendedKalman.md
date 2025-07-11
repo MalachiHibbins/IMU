@@ -24,7 +24,7 @@ If $\mu_x$ is transformed linearly $\mu_y = F\mu_x$ its covariance matrix, $\Sig
 
 ````{admonition} Extended Kalman Filters
 Its not possible to write the prediction stage of the kalman filter as a linear transformation. The extended kalman filter predicts the next state using:
-```{math}
+```{math} 
 :label: eq-proj-ext
 \hat{\boldsymbol{x}}^-_{k+1} = A\hat{\boldsymbol{x}}_k + B\boldsymbol{u}_k
 ```

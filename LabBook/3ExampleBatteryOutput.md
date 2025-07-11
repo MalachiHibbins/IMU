@@ -46,7 +46,7 @@ Varying $H$ will lead to the Kalman filter converging to the wrong value since t
 :name: fig-kalman-a-1004
 {numref}`fig-kalman-constant` with $A$ set to 1.004 rather than 1.
 ```
-
+ 
 This causes the Kalman filter to diverge since only $A=1$ describes a straight line. It diverges quickly since $Q=0$ puts more weighting on $\hat{x}_k$ compared to $\hat{z_k}$.
 ```{figure} image-7.png
 :name: fig-kalman-q-0817

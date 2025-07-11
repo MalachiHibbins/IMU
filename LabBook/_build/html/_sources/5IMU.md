@@ -117,7 +117,7 @@ Below is the corresponding Euler parameters KDE:
 ```{margin}
 Where: $\Psi(\omega) = \frac{1}{2} \begin{bmatrix} 0 & -\omega_1 & -\omega_2 & -\omega_3 \\ \omega_1 & 0 & \omega_3 & -\omega_2 \\ \omega_2 & -\omega_3 & 0 & \omega_1 \\ \omega_3 & \omega_2 & -\omega_1 & 0\end{bmatrix}$ 
 ```
-
+ 
 ```{math}
 :label: eq-KDE-simp
 \boldsymbol{\dot{\beta}} = \Psi(\boldsymbol{\omega}) \boldsymbol{\beta}
