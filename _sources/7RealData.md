@@ -99,7 +99,7 @@ The Kalman filter is able to filter out some of the noise from the accelerometer
 
 #### Phone, 9-axis IMU
 Introducing magnetometer measurements means there is 2 measurements for each axis, reducing the total drift.
-
+ 
 ```{figure} image-32.png
 :name: fig-fast-yaw-roll-pitch
 Fast oscillations in the yaw, roll and pitch directions. The orange line is the measurements from integrating the angular velocities from the gyro and red line is the measurements from the magnetometer and accelerometer. The blue line is the Kalman filtered attitude which fuses data from the gyroscope and accelerometer/magnetometer.  The black line is the phones own attitude measurements.
