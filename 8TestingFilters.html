@@ -386,14 +386,14 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filters">Filters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">8.1 Implementation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filters">8.2 Filters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">8.3 Results</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#high-frequency-oscillation-test">High frequency oscillation test</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#low-frequency-rotations-test">Low frequency rotations test</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">8.4 Conclusion</a></li>
 </ul>
             </nav>
         </div>
@@ -409,7 +409,7 @@ document.write(`
 <h1>8 Experiment: Quantitative Comparison of Kalman Filter Performance<a class="headerlink" href="#experiment-quantitative-comparison-of-kalman-filter-performance" title="Link to this heading">#</a></h1>
 <p>Using two sensors (magnetometer and gyroscope), four filters (a high pass, a low pass, a polynomial fitting and the kalman filter) were used to calculate estimates for the yaw angle, <span class="math notranslate nohighlight">\(\psi\)</span>, of a mobile phone. The results were compared to the data from the phones in built filter. The experiment involved two tests designed to see how the filters perform over a single frequency then a range of frequencies. In the first part of the experiment the phone oscillated with high frequency which the parameters were tuned, to test how the filters performed at a single frequency. The second part of the experiment the phone completed a full rotation at a low frequency without the parameters being re-tuned, to see how the filters responded when not tuned to a specific frequency.</p>
 <section id="implementation">
-<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading">#</a></h2>
+<h2>8.1 Implementation<a class="headerlink" href="#implementation" title="Link to this heading">#</a></h2>
 <p>Data was recorded using the <a class="reference external" href="https://play.google.com/store/apps/details?id=com.kelvin.sensorapp&amp;amp;hl=en-US&amp;amp;pli=1">sensor logger app</a> allowing the phone to function as a 9-axis IMU. Only <span class="math notranslate nohighlight">\(\psi\)</span> was measured so only gyroscope and magnetometer data were necessary. The correction measurement was calculated using the magnetometer data <span class="math notranslate nohighlight">\(m_x\)</span> and <span class="math notranslate nohighlight">\(m_y\)</span>. <span class="math notranslate nohighlight">\(m_z\)</span> wasn’t required as the IMU was assumed to be in the plane perpendicular to the gravity vector, so didn’t need to be corrected. <span class="math notranslate nohighlight">\(\psi\)</span> was determined using <a class="reference internal" href="7RealData.html#equation-eq-magnetometer">(53)</a>.</p>
 <p>The gyroscope data was integrated using the euler method:</p>
 <div class="math notranslate nohighlight" id="eq-gyroscope-integration">
@@ -418,7 +418,7 @@ document.write(`
 <p>The code for this section can be found in <a class="reference external" href="https://github.com/MalachiHibbins/IMU/tree/main/7IMUReal">github</a>. The programme comprises of one file <code class="docutils literal notranslate"><span class="pre">Main.py</span></code>. Each of the filters is written as a separate function and can be analyzed using the <code class="docutils literal notranslate"><span class="pre">AnalysePhone</span></code> class, which contains methods to generate interactive plots.</p>
 </section>
 <section id="filters">
-<h2>Filters<a class="headerlink" href="#filters" title="Link to this heading">#</a></h2>
+<h2>8.2 Filters<a class="headerlink" href="#filters" title="Link to this heading">#</a></h2>
 <p>The following filters were compared as well as unfiltered data from the gyroscope and the magnetometer:</p>
 <p><strong>Kalman Filter</strong> (KF): A standard Kalman filter which <strong>fused</strong> data from the magnetometer with gyroscope data with a constant process noise covariance and measurement noise covariance. The tuning parameters were:</p>
 <ul class="simple">
@@ -436,7 +436,7 @@ The SGF works by fitting a polynomial of order <span class="math notranslate noh
 </ul>
 </section>
 <section id="results">
-<h2>Results<a class="headerlink" href="#results" title="Link to this heading">#</a></h2>
+<h2>8.3 Results<a class="headerlink" href="#results" title="Link to this heading">#</a></h2>
 <section id="high-frequency-oscillation-test">
 <h3>High frequency oscillation test<a class="headerlink" href="#high-frequency-oscillation-test" title="Link to this heading">#</a></h3>
 <p>The phone was initially held in a fixed position for around 5 seconds then oscillated at a high frequency for around <span class="math notranslate nohighlight">\(20\)</span> s, each of the filters was tuned to optimise the fit.</p>
@@ -515,7 +515,7 @@ MSE (mean squared error) measures absolute accuracy and heavily penalizes large 
 </section>
 </section>
 <section id="conclusion">
-<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<h2>8.4 Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
 <p>Frequency based filters, like the EMAHPF and EMALPF work well for signals which are oscillating at a constant or near constant frequency, especially when there is only one sensor available. However they work less well for a signal made up from a range of different frequencies, like real world motion. Kalman filters work well in this situation as the combination of measurements minimizes noise from both sensors (which are subject to different types of noise) to achieve a reasonably accurate state estimate, without ignoring any specific frequency data. The parameters of the KF are independent of frequency whereas the EMAHPF and EMALPF have frequency dependent tuning parameters.</p>
 </section>
 </section>
@@ -584,14 +584,14 @@ MSE (mean squared error) measures absolute accuracy and heavily penalizes large 
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">Implementation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filters">Filters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation">8.1 Implementation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filters">8.2 Filters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">8.3 Results</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#high-frequency-oscillation-test">High frequency oscillation test</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#low-frequency-rotations-test">Low frequency rotations test</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">8.4 Conclusion</a></li>
 </ul>
   </nav></div>
 
@@ -613,13 +613,6 @@ By Malachi Hibbins
   
   <div class="footer-item">
     
-
-  <p class="copyright">
-    
-      © Copyright 2023.
-      <br/>
-    
-  </p>
 
   </div>
   

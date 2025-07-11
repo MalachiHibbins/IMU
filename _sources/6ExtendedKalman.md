@@ -1,29 +1,29 @@
 # 6 Example : Position using GPS and accelerometer data
-Here we will improve on the [the velocity from position example](4bExampleVelocityFromPosition.md) example using sensor fusion. While the system using only position data (which we measure using GPS) works well for predicting the position, its not so good at predicting the velocity. The current model {eq}`eq-motion-equations` represents an oversimplification as it assumes no acceleration (the acceleration doesn't change between steps) which means that the velocity has to be corrected for by the measurements which is what causes lag. We could improve our model using real world accelerometer data which we can integrate to find velocity and position. There are other reasons for including the accelerometer data for example when GPS isn't available due to some form of blocking e.g. being in a tunnel, the device can still roughly determine its position.  
+This section improves on the [the velocity from position example](4bExampleVelocityFromPosition.md) example by using sensor fusion. While the system using only position data (theoretically measured using GPS) works well for predicting the position, its not so good at predicting the velocity. The current model {eq}`eq-motion-equations` represents an oversimplification as it assumes no acceleration (the acceleration doesn't change between steps) which means that the velocity has to be corrected for by the measurements which is what causes lag. The model could be improved using real world accelerometer data which can be integrated to find velocity and position. There are other reasons for including the accelerometer data for example when GPS isn't available due to some form of blocking e.g. being in a tunnel, the device can still roughly determine its position.  
 
 ## 6.1 Model
-To begin with we will work with the simple 1D case. Our new model is built on {eq}`eq-motion-equations` with an additional 2nd order term:
+Starting with the 1D case the new model is built on {eq}`eq-motion-equations` with an additional 2nd order term:
 
 ```{math}
 :label: eq-motion-equations2
 s_{k+1} &\approx s_k + \nu_k\Delta t + \frac{1}{2}a_k \Delta t^2\\
-\nu_{k+1} &\approx \nu_k + a\Delta t
+\nu_{k+1} &\approx \nu_k + a_k\Delta t
 ```
 
-The parameters from [the velocity from position model](4bExampleVelocityFromPosition.md#model) remain the same except for $A$ which changes because the model changes.
+The parameters from [the velocity from position model](4bExampleVelocityFromPosition.md#model) remain the same, except for the model $A$:
 - $\hat{\boldsymbol{x}}$ is the column vector of position and velocity
 - $z$ is the measurment of position from the GPS
 - $H = \begin{bmatrix} 1 & 0 \end{bmatrix}$
 - $Q = \sigma_a^2 \begin{bmatrix} \frac{\Delta t^4}{4} & \frac{\Delta t^3}{2} \\ \frac{\Delta t^3}{2} & \Delta t^2 \end{bmatrix}$ Where $\sigma_a$ will be the standard deviation in the acceleration measurements.
 - $R = \sigma_s^2$ Where $\sigma_s$ will be the standard deviation in the position measurements.
-We need $A$ to be a $2 \times 2$ matrix, since it has the same number of rows and columns as the number of entries in $\hat{z}$, but this isn't possible since {eq}`eq-motion-equations2` contains 3 terms. 
+$A$ needs to be a $2 \times 2$ matrix, since it has the same number of rows and columns as the number of entries in $\hat{z}$, but this isn't possible since {eq}`eq-motion-equations2` contains 3 terms. 
 
 ```{margin}
-If $\mu_x$ is transformed linearly $\mu_y = F\mu_x$ its covariance matrix, $\Sigma_x$, can be transformed using $\Sigma_y = F\Sigma_xF^T$. {cite}`Barreto2021,chapter=2`
+If $\mu_x$ is transformed linearly $\mu_y = F\mu_x$ its covariance matrix, $\Sigma_x$, can be transformed using $\Sigma_y = F\Sigma_xF^T$. {cite}`Barreto2021,chapter=2` (chapter 2)
 ```
 
 ````{admonition} Extended Kalman Filters
-So we can't write our equations of motion in the correct for form for the simple kalman filter. This is because the equations of motion {eq}`eq-motion-equations2` in this case aren't linear. The extended kalman filter predicts the next state using:
+Its not possible to write the prediction stage of the kalman filter as a linear transformation. The extended kalman filter predicts the next state using:
 ```{math}
 :label: eq-proj-ext
 \hat{\boldsymbol{x}}^-_{k+1} = A\hat{\boldsymbol{x}}_k + B\boldsymbol{u}_k
@@ -42,13 +42,13 @@ Block diagram for the extended kalman filter. The estimation phase is equivalent
 ```
 ````
 
-So lets re-write {eq}`eq-motion-equations2` in the form of {eq}`eq-proj-cov-ext` to determine $u_k$ and $B$.
+So {eq}`eq-motion-equations2` was rewritten in the form of {eq}`eq-proj-cov-ext` to determine $u_k$ and $B$.
 
 ```{math}
-\begin{bmatrix} s \\ \nu \end{bmatrix}^-_{k+1} = \begin{bmatrix} 1 & \Delta t \\ 0 & 1 \end{bmatrix} \begin{bmatrix} s \\ \nu \end{bmatrix}_k + \begin{bmatrix} \Delta t^2 \\ \Delta t \end{bmatrix} a_k.
+\begin{bmatrix} s \\ \nu \end{bmatrix}^-_{k+1} = \begin{bmatrix} 1 & \Delta t \\ 0 & 1 \end{bmatrix} \begin{bmatrix} s \\ \nu \end{bmatrix}_k + \begin{bmatrix} \frac{1}{2} \Delta t^2 \\ \Delta t \end{bmatrix} a_k.
 ```
 
-Which gives $u_k = \begin{bmatrix} \Delta t^2 \\ \Delta t \end{bmatrix}$ and $u_k = a_k$. Sine we are working in one dimension $R^u = \sigma_a'^2$ which we will determine by tuning.
+Which gives $u_k = \begin{bmatrix} \frac{1}{2} \Delta t^2 \\ \Delta t \end{bmatrix}$ and $u_k = a_k$. The tuning parameter will be $R^u = \sigma_a'^2$ determine by tuning.
 
 ```{figure} image-31.png
 :name: fig-improved-vel-pos
@@ -57,13 +57,11 @@ Velocity and position as a function of time plotted for the extended kalman filt
 
 Compared to {numref}`fig-increased-R-and-increased-Q` the extended kalman filter with acceleration measurements gives a better fit for position and a significantly better fit for velocity, helped by the significantly better model. Even without measurement corrections the accelerometer gives a surprisingly good fit although there is a tiny bit of drift visible at the end. However the drift is significantly larger when integrated twice. 
  
-## Smartphone example
-Now we will consider a more realistic example of predicting 1D motion simulating sensors found in mobile phones. Mobile phones are equipped with low performance micro electrical mechanical systems (MEMS) from which we can implement IMU combined with correcting GPS data can form an inertial measurement system (INS).
+## 6.2 Smartphone experiment
 
-**accelerometer**. A typical mobile phone accelerometer takes readings at a rate of between $10$ Hz $6664$ Hz here we will assume about $400$ Hz {cite}`Grouios2022`, has an error of approximately $0.01$ ms$^{-1}$ {cite}`Capuano2023, section=3`. accelerometers become less reliable over time, there noise over time is described by random walks, hence they need to be corrected for by GPS.
+```{warning}
+Incomplete section. It is left here as a placeholder for future work. The experiment would have involved using kalman filters to determine the real world position and velocity of a smartphone using accelerometer and GPS data. This would have needed to consider the GPS and accelerometer having different sampling rates and noise characteristics.
+```
 
-**GPS** A typical GPS accelerometer takes readings at a rate of $1$ Hz and has an error of approximately $5$ m but this vary changeable due to geographical factors. Furthermore in some case GPS is blocked entirely. GPS is relied upon for correcting measurements as the noise is uncorrelated over time.
-
-Lets look 
 
 

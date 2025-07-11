@@ -1,10 +1,5 @@
 # 1 Basics Of Filtering
-Before looking at how Kalman filters worked a few more simplistic filters were tested. Later the performance between these and the Kalman filter will be compared. The purpose of a filter is to consider measurments and use these to form an estimate of the true state x. Here $x_k$ is the true state and $z_k$ are the measurements which are corrupted by noise. The filters output an estimate of the true state $\hat{x}_k$.
-
-```{note}
-In this section the state is the same thing being measured. Later sections will have a different definition.
-```
-
+Before looking at how Kalman filters worked basic recursive filters were tested. Later the performance between these and the Kalman filter will be compared. The purpose of a filter is to consider measurments and use these to form an estimate of the true state $x_k$ which is a column vector describing the system, in these example the state is 1D. Measurements of the true state, $z_k$ are corrupted by noise. The filters output an estimate of the true state $\hat{x}_k$.
 ## 1.1 Average filters
 
 For a signal where $x_k$ is constant, e.g. calculating the output from a battery, computing the mean is a reasonable way to determine $\hat{x}_k$. The average is computed as:
@@ -42,7 +37,7 @@ The filter is efficient and converges to the correct value very quickly. Due to 
 
 ## 1.2 Moving Average filters
 
-The moving average is used to remove noise over a constantly varying signal. Here $\hat{x_k}$ represents the moving average at time $t_k$ and $n$ represents the window size which is a parameter to be tuned. The moving average can be written as:
+The moving average is used to remove noise over a constantly varying signal. Here $\hat{x}_k$ represents the moving average at time $t_k$ and $n$ represents the window size which is a parameter to be tuned. The moving average can be written as:
 
 ```{math}
 :label: eq-moving-average
@@ -97,13 +92,15 @@ Combining these equations helps to overcome some problems associated with the mo
 \hat{x}_k = \alpha^2 \hat{x}_{k-2} + \alpha(1-\alpha) z_{k-1} + (1-\alpha)z_k \quad 0<\alpha<1
 ```
 
-Due to the restriction on alpha larger $n$ means greater weighting on $\hat{x}_n$ since $\alpha(1-\alpha)\leq 1-\alpha$. Previous data gets weighted exponentially less. The code for this section can be found in [github](https://github.com/MalachiHibbins/IMU/tree/main/2MovingAverageFilter). Similarly to the other two examples the code is made up of 3 files: `GenTestSig.py`, `LowPassFilter.py` and `Main.py`. The first file generates a signal (the true signal) which is again a combination of 3 $\sin$ waves and then adds random gaussian noise to this signal, the noisy signal. The second contains the filter algorithm which will be used to fit the noisy signal and the third runs the filter on the generated signal. 
+Due to the restriction on alpha larger $n$ means greater weighting on $\hat{x}_n$ since $\alpha(1-\alpha)\leq 1-\alpha$. Previous data gets weighted exponentially less. 
+
+The code for this section can be found in [github](https://github.com/MalachiHibbins/IMU/tree/main/2MovingAverageFilter). Similarly to the other two examples the code is made up of 3 files: `GenTestSig.py`, `LowPassFilter.py` and `Main.py`. The first file generates a signal (the true signal) which is again a combination of 3 $\sin$ waves and then adds random gaussian noise to this signal, the noisy signal. The second contains the filter algorithm which will be used to fit the noisy signal and the third runs the filter on the generated signal. 
 
 ```{figure} image-10.png
 :name: fig-lowpass-vs-moving-average
 Figure 3.1: EMALPF with optimized $\alpha = 0.93$ (visually).
 ```
-The low pass filter has a smaller delay compared to the moving average filter. However the low pass filter although the fit is less smooth. 
+The low pass filter has a smaller delay compared to the moving average filter, but was nosier. This makes sense as the moving average filter gives equal weight to all previous estimates, so noisy measurements will have a smaller effect on the fit.
 
 ```{figure} image-13.png
 :name: fig-lowpass-alpha-08
@@ -118,7 +115,7 @@ Figure 3.3: Low pass filter with $\alpha = 0.97$.
 Here the delay is more significant since previous results are given larger weightings. The choice of $\alpha$ represents a tradeoff between a noisy signal and a delayed signal, which means its difficult to find optimal $\alpha$.
 
 ## 1.4 Exponential Moving Average Filter (High Pass)
-An exponential moving average high pass filter (EMAHPF) works by subtracting the EMALPF signal (here we will call this \hat{x}^{LP}_k) from $z_k$. This corresponds to removing the low frequencies from the signal. The high pass filter estimates the state $\hat{x}^{HP}_k$ as:
+An exponential moving average high pass filter (EMAHPF) works by subtracting the EMALPF $\hat{x}^{LP}_k$ from $z_k$. This corresponds to removing the low frequencies from the signal. The high pass filter estimates the state $\hat{x}^{HP}_k$ as:
 
 ```{math}
 :label: eq-highpass
@@ -141,3 +138,5 @@ Then subbing {eq}`eq-highpass` rearranged into {eq}`eq-highpass-2` gives:
 
 Which is the recursive formula for the EMAHPF. These are useful for removing low frequency background noise, such as integration drift.
 
+## 1.5 Summary
+The above are examples of passive filters as they filter data without using feedback from a physical model. Kalman filters are active filters which compare measurements with feedback to determine an improved estimate of the state.

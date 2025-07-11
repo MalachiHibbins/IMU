@@ -44,22 +44,22 @@ The programme is structured with three files:
 
 ## Theory, 9 axis
 
-In [section 5](5IMU.md) gyroscope data and accelerometer data were fused to determine the attitude of the phone. However the accelerometer on its own was unable to measure the yaw direction. When phone is lying flat in the xy plane we can determine, our update measurement, $\psi^z$, accurately using the magnetometer.
+In [section 5](5IMU.md) gyroscope data and accelerometer data were fused to determine the attitude of the phone. However the accelerometer on its own was unable to measure the yaw direction. When phone is lying flat in the xy plane $z^\psi$, can be determined easily:
 ```{math}
 :label: eq-Magnetometer
-\psi^z = \arctan\left(\frac{m_y}{m_x}\right)
+z^\psi = \arctan\left(\frac{m_y}{m_x}\right)
 ```
 Where $m_x$ and $m_y$ are the x and y components of the magnetometer reading. The magnetometer reading is in the phone's frame of reference this is normally not the xy plane so the accelerometer data to is required to write the corrected magnetometer readings $m_x'$ and $m_y'$.
 
 ```{math}
 :label: eq-gyro-correction
-m_x^{'} = m_x \cos(\theta^z) + m_y \sin(\theta^z) \sin(\phi^z) + m_z \sin(\theta^z) \cos(\phi^z)\\
-m_y^{'} = m_y \cos(\theta^z) - m_x \sin(\theta^z) \sin(\phi^z) + m_z \sin(\theta^z) \cos(\phi^z)\\
+m_x^{'} = m_x \cos(z^\theta) + m_y \sin(z^\theta) \sin(z^\phi) + m_z \sin(z^\theta) \cos(z^\phi)\\
+m_y^{'} = m_y \cos(z^\theta) - m_x \sin(z^\theta) \sin(z^\phi) + m_z \sin(z^\theta) \cos(z^\phi)\\
 ```
 
-Where $\phi^z$ and $\theta^z$ are the roll and pitch angles calculated using the accelerometer.
+Where $z^\phi$ and $z^\theta$ are the roll and pitch angles calculated using the accelerometer.
 
-Then as before we can use our corrected values to determine $\psi^z$ when the magnetometer isn't lying flat in the xy plane. To summarize the update measurement will be formed from the accelerometer, for pitch and roll and the magnetometer for yaw. The prediction step will use measurements from the gyroscope in the same way as [section 5](5IMU.md).
+Then as before $z^\psi$ and $z^\phi$ were calculated using the accelerometer and were used to correct $z^\psi$ when the magnetometer isn't lying flat in the xy plane. To summarize the update measurement will be formed from the accelerometer, for pitch and roll and the magnetometer for yaw. The prediction step will use measurements from the gyroscope in the same way as [section 5](5IMU.md).
 
 ## Results
 

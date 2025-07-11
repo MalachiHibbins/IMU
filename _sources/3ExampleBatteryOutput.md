@@ -1,6 +1,6 @@
 # 3 Example: Battery output
 
-This example looks at how a Kalman filter can be used to fit a constant signal in this case the output from a battery. The aim of this simple example is to experiment with changing the Kalman parameters $A$, $H$, $Q$, $R$, $\hat{x}_0$ and $P_0$.
+This example looks at how a Kalman filter can be used to fit a constant signal in this case the output from a battery. The aim of this simple example is to experiment with changing the Kalman parameters $A$, $H$, $Q$, $R$, $\hat{x}_0$ and $P_0$. This example was inspired by Dr Shane Ross a link to the video can be found [here](https://www.youtube.com/watch?v=qCZ2UTgLM_g&t=1527s).
 
 ## 3.1 Model
 - $\hat{x}_k$ is the estimate of the true battery output in volts, $n = 1$, 
@@ -40,7 +40,7 @@ Kalman filter used to fit a non-varying signal with a large amount of noise.
 {numref}`fig-kalman-constant` with H set to $1.115$ rather than $1$
 ```
 
-Varying H will lead to the Kalman filter converging to the wrong value since the measurement directly measures the state only satisfied by $H = 1$.
+Varying $H$ will lead to the Kalman filter converging to the wrong value since the measurement directly measures the state only satisfied by $H = 1$.
 
 ```{figure} image-6.png
 :name: fig-kalman-a-1004

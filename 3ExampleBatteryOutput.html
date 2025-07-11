@@ -402,14 +402,14 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="example-battery-output">
 <h1>3 Example: Battery output<a class="headerlink" href="#example-battery-output" title="Link to this heading">#</a></h1>
-<p>This example looks at how a Kalman filter can be used to fit a constant signal in this case the output from a battery. The aim of this simple example is to experiment with changing the Kalman parameters <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(H\)</span>, <span class="math notranslate nohighlight">\(Q\)</span>, <span class="math notranslate nohighlight">\(R\)</span>, <span class="math notranslate nohighlight">\(\hat{x}_0\)</span> and <span class="math notranslate nohighlight">\(P_0\)</span>.</p>
+<p>This example looks at how a Kalman filter can be used to fit a constant signal in this case the output from a battery. The aim of this simple example is to experiment with changing the Kalman parameters <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(H\)</span>, <span class="math notranslate nohighlight">\(Q\)</span>, <span class="math notranslate nohighlight">\(R\)</span>, <span class="math notranslate nohighlight">\(\hat{x}_0\)</span> and <span class="math notranslate nohighlight">\(P_0\)</span>. This example was inspired by Dr Shane Ross a link to the video can be found <a class="reference external" href="https://www.youtube.com/watch?v=qCZ2UTgLM_g&amp;amp;t=1527s">here</a>.</p>
 <section id="model">
 <h2>3.1 Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(\hat{x}_k\)</span> is the estimate of the true battery output in volts, <span class="math notranslate nohighlight">\(n = 1\)</span>,</p></li>
 <li><p><span class="math notranslate nohighlight">\(z_k\)</span> is the measured battery output in volts, <span class="math notranslate nohighlight">\(m=1\)</span>
 In this very simple example <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(H\)</span>, <span class="math notranslate nohighlight">\(Q\)</span> and <span class="math notranslate nohighlight">\(R\)</span> are all scalars since <span class="math notranslate nohighlight">\(m=n=1\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(A=1\)</span> the battery output is constant which means <span class="math notranslate nohighlight">\(x_{k+1}\)</span> = <span class="math notranslate nohighlight">\(x_k\)</span> comparing with <a class="reference internal" href="2KalmanFilters.html#equation-projection">(31)</a> shows <span class="math notranslate nohighlight">\(A = 1\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(A=1\)</span> the battery output is constant which means <span class="math notranslate nohighlight">\(x_{k+1}\)</span> = <span class="math notranslate nohighlight">\(x_k\)</span> comparing with <a class="reference internal" href="2KalmanFilters.html#equation-projection">(32)</a> shows <span class="math notranslate nohighlight">\(A = 1\)</span></p></li>
 <li><p><span class="math notranslate nohighlight">\(Q = 0\)</span> Since the battery output is known to be constant.</p></li>
 <li><p><span class="math notranslate nohighlight">\(H = 1\)</span> since estimate corresponds directly to measurement see <a class="reference internal" href="2KalmanFilters.html#equation-eq-h-calculate">(14)</a>.</p></li>
 <li><p><span class="math notranslate nohighlight">\(R = 4\)</span> initially but was determined through tuning.</p></li>
@@ -447,7 +447,7 @@ In this very simple example <span class="math notranslate nohighlight">\(A\)</sp
 <p><span class="caption-number">Fig. 11 </span><span class="caption-text"><a class="reference internal" href="#fig-kalman-constant"><span class="std std-numref">Fig. 8</span></a> with H set to <span class="math notranslate nohighlight">\(1.115\)</span> rather than <span class="math notranslate nohighlight">\(1\)</span></span><a class="headerlink" href="#figu-kalman-wrong-h" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Varying H will lead to the Kalman filter converging to the wrong value since the measurement directly measures the state only satisfied by <span class="math notranslate nohighlight">\(H = 1\)</span>.</p>
+<p>Varying <span class="math notranslate nohighlight">\(H\)</span> will lead to the Kalman filter converging to the wrong value since the measurement directly measures the state only satisfied by <span class="math notranslate nohighlight">\(H = 1\)</span>.</p>
 <figure class="align-default" id="fig-kalman-a-1004">
 <img alt="_images/image-6.png" src="_images/image-6.png" />
 <figcaption>
@@ -557,13 +557,6 @@ By Malachi Hibbins
   
   <div class="footer-item">
     
-
-  <p class="copyright">
-    
-      © Copyright 2023.
-      <br/>
-    
-  </p>
 
   </div>
   
