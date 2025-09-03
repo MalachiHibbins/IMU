@@ -1,4 +1,4 @@
-This repository contains research and implementation of Kalman filters applied to IMU data, developed at the University of Bristol. This repository contains research and implementation of Kalman filters applied to IMU data, developed at the University of Bristol. Instructions for how to access this are written below.
+This repository contains research and implementation of Kalman filters applied to IMU data, developed at the University of Bristol. Instructions for how to access this are written below.
 
 ## Contents
 
