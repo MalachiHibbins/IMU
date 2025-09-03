@@ -15,7 +15,6 @@ To read the files as a Jupyter book, you can use the following command in the te
 ```bash
 jupyter-book build LabBook/
 ```
-
 You may need to install jupyter-book first if you haven't already:
 
 ```bash
