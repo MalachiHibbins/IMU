@@ -4,7 +4,7 @@ This repository contains research and implementation of Kalman filters applied t
 
 **LabBook/**: This contains a series of markdown files that explain the theory and implementation of the Kalman filter in various scenarios, including examples with velocity from position, battery output, and IMU data processing.
 
-**Code/**: Modular Python scripts, discussed in the Jupyter Book.
+**Code**: Modular Python scripts 1-9, discussed in the Jupyter Book.
 
 **Slides/**: Presentation slides made using marp
 
