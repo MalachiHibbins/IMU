@@ -26,4 +26,3 @@ Additionally, the Jupyter Book can be viewed online at [https://malachihibbins.g
 
 The Jupyterbook HTML files can be found in the `_build/html` directory after building the book. You can open the `index.html` file in a web browser to view the book.
 
-A PDF version of the book is also available in the `_build/pdf` directory. Although there are known formatting issues.
