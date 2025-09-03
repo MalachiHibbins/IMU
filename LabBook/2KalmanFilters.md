@@ -1,6 +1,6 @@
 # 2 Kalman filters
 
-**A Kalman filter compares the predicted state, $\hat{x}^-_k$, with measurements, $z_k$, to create an estimate of the true state, $\hat{x}_k$**. This section introduces the Kalman filter, its algorithm and why its useful. The state is a vector that contains the variables required to describe the system at a specific time.
+**A Kalman filter compares the predicted state, $\hat{x}^-_k$, with measurements, $z_k$, to create an estimate of the true state, $\hat{x}_k$**. This section introduces the Kalman filter, its algorithm and why its useful. 
 
 ```{important} 
 Predictions and estimates are not interchangeable when talking about Kalman filters. A prediction is a forecast of the next state based on the previous state and the mathematical model. Whereas a estimate is an update of the predicted state once new measurements have been taken.

@@ -3,7 +3,7 @@ This section calculating the attitude of an object (yaw-pitch-roll), using real 
 
 The code for this section can be found in [here](https://github.com/MalachiHibbins/IMU/tree/main/5IMU). The code is broken up into 3 files: `Test.py` which runs the filter and plots the results; `AdvKalman.py` which contains the kalman filter algorithm; and `Integrate.py` which contains the integration algorithm which calculates the attitude without the kalman filter. 
 
-This example and data was provided by Dr Shane Ross a link to the video can be found [here](https://www.youtube.com/watch?v=DbE4PMgqp3s&t=2152s).
+This example and raw data was provided by Dr Shane Ross a link to the video can be found [here](https://www.youtube.com/watch?v=DbE4PMgqp3s&t=2152s).
 
 
 ## 5.1 Euler's method

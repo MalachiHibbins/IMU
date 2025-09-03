@@ -1,5 +1,7 @@
 # 1 Basics Of Filtering
-Before looking at how Kalman filters worked basic recursive filters were tested. Later the performance between these and the Kalman filter will be compared. The purpose of a filter is to consider measurments and use these to form an estimate of the true state $x_k$ which is a column vector describing the system, in these example the state is 1D. Measurements of the true state, $z_k$ are corrupted by noise. The filters output an estimate of the true state $\hat{x}_k$.
+Before looking at how Kalman filters worked basic recursive filters were tested. Later the performance between these and the Kalman filter will be compared. The purpose of a filter is to consider measurements and use these to form an estimate of the true state. 
+
+The true state $x_k$ (at time $t_k$) is a column vector describing the system. The state estimate, $\hat{x}_k$ (at time $t_k$), is the estimate of the state based on the measurements $z_k$ (at time $t_k$), which are corrupted by noise.
 ## 1.1 Average filters
 
 For a signal where $x_k$ is constant, e.g. calculating the output from a battery, computing the mean is a reasonable way to determine $\hat{x}_k$. The average is computed as:
